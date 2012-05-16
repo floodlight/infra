@@ -1,0 +1,104 @@
+#!/usr/bin/python
+## SourceObject ##
+###############################################################################
+#
+# CMacroGenerator.py
+#
+# Macro object generator.
+#
+###############################################################################
+
+from cobjectgen import *
+import util
+
+class CMacroGenerator(CObjectGenerator):
+    objectType = 'macro'
+
+    def Construct(self):
+        self.body = None
+
+
+    def Signature(self, proto=True):
+        """ Macro Signature """
+        return self.f.MacroSignature(self.name, 
+                                     self.args)
+
+    def Name(self):
+        return self.f.MacroName(self.name)
+
+
+    def Call(self, *args):
+        if len(args) == 1 and isinstance(args[0], list):
+            args = args[0]
+
+        c = self.Name() + "("
+        for arg in args:
+            c += arg
+            c += util.commaspace(arg, args)
+        c += ")"
+        return c
+
+
+    ############################################################
+    #
+    # Generation Methods
+    #
+    ############################################################
+
+    def Body(self):
+        """ Generate the body of our macro """
+        # If you don't override the Body() method, you must specify the 
+        # body of the function as a string in 'self.body'
+        if self.body == None:
+            raise Exception("No macro body defined in Body()")
+        
+        return self.body
+
+        
+    def Define(self):
+        if self.args != None:
+            # Functional Macro
+            s = "#define %s \\\n" % self.Call(self.args)
+            s += self.Body()
+            s += '\n'
+        return s
+
+
+
+###############################################################################
+# 
+# Sanity Check
+#
+###############################################################################
+import yaml
+import cm
+
+if __name__ == "__main__":
+
+    class CTestMacro(CMacroGenerator):
+        
+        def Construct(self):
+            self.name = "TestMacro"
+            self.args = [ '_a', '_b', '_c' ]
+            self.body = """ (_a) + (_b) + (_c) """
+
+
+    d = { 'name' : 'foo', 
+          'args' : ['_a'], 
+          'body' : '_a++'
+          }
+
+    m = CMacroGenerator(initargs=d)
+    print m.Define()
+
+    m = CMacroGenerator(name="cmg", args=[ '_a', '_b' ], 
+                        body = """ (_a) + (_b) + (_c) """)
+    print m.Define()
+
+    m = CTestMacro()
+    print m.Define()
+    print
+    print m.Call('x', 'y', 'z')
+
+
+            
