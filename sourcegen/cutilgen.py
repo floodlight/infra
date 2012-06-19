@@ -29,13 +29,25 @@ class CUtilZMalloc(CFunctionGenerator):
     return p; """ % (self.prefix.upper(), self.prefix.upper())
 
 
+class CUtilStrlcpy(CFunctionGenerator):
+    def Init(self):
+        self.rv = "int"
+        self.args = [ "char* dst", "const char* src", "int size" ]; 
+        self.name = "%s_strlcpy" % self.prefix
+        self.body = """    %s_STRNCPY(dst, src, size);
+    if (size > 0)
+        dst[size-1] = 0;
+    return strlen(src); """ % (self.prefix.upper())
+
+
+        
 class CUtilGenerator(CObjectGenerator):
     objectType = 'util'
 
     def Init(self):
         self.pobjects = {}
         self.pobjects['zmalloc'] = CUtilZMalloc(prefix=self.name)
-
+        self.pobjects['strlcpy'] = CUtilStrlcpy(prefix=self.name)
         
     ############################################################
     #
