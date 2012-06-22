@@ -25,6 +25,7 @@ class CPortingMacroGenerator(CObjectGenerator):
 
         s = ""
         s += "#if %s_CONFIG_PORTING_INCLUDE_STDLIB_HEADERS == 1\n" % prefix
+        s += "#include <stdio.h>\n"
         s += "#include <stdlib.h>\n"
         s += "#include <string.h>\n"
         s += "#include <stdarg.h>\n"
