@@ -69,31 +69,74 @@ class CLogGenerator(CObjectGenerator):
                 continue
 
             s += """
-#define %s_M%s(_fmt, ...) \\
+#define %s_LOG_%s(_fmt, ...) \\
     %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
                   \"%s\" %s_LOG_PREFIX1 %s_LOG_PREFIX2 \": \" \"%s: \" _fmt, ##__VA_ARGS__);\n""" % (
                 NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
 
             s += """
-#define %s_M%s0(_msg) \\
+#define %s_LOG_%s0(_msg) \\
     %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
                   \"%s\" %s_LOG_PREFIX1 %s_LOG_PREFIX2 \": \" \"%s: \" _msg);\n""" % (
                 NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
      
             s += """
-#define %s_%s(_object, _fmt, ...) \\
+#define %s_OBJ_LOG_%s(_object, _fmt, ...) \\
     %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
                   \"%s\" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " _fmt, \\
                   (_object)->logString, ##__VA_ARGS__)\n""" % (
                 NAME, FLAG, NAME, name, flag, name, NAME, NAME)
 
             s += """
-#define %s_%s0(_object, _msg) \\
+#define %s_OBJ_LOG%s0(_object, _msg) \\
     %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
                   \"%s\" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " _msg, \\
                   (_object)->logString)\n""" % (
                 NAME, FLAG, NAME, name, flag, name, NAME, NAME)
        
+
+            s += """
+/*
+ * %s_LOG_%s and %s_OBJ_LOG_%s can always be called, but they're hard on the
+ * carpal tunnel. 
+ *
+ * These are short versions that are customizable -- 
+ */
+#ifdef %s_LOG_OBJ_DEFAULT
+/*
+ * The default log uses the object instance
+ */
+#define %s_%s   %s_OBJ_LOG_%s
+#define %s_%s0  %s_OBJ_LOG_%s0
+/*
+ * Call the message log, without an object, using the 'M' prefix
+ */
+#define %s_M%s  %s_LOG_%s
+#define %s_M%s0 %s_LOG_%s0
+#else
+/*
+ * The default log is the message-only log
+ */
+#define %s_%s   %s_LOG_%s
+#define %s_%s0  %s_LOG_%s0
+/*
+ * You can still call the object log by using the 'O' prefix
+ */
+#define %s_O%s  %s_OBJ_LOG_%s
+#define %s_O%s0 %s_OBJ_LOG_%s0
+#endif
+""" % (NAME, FLAG, NAME, FLAG, 
+       NAME, 
+       NAME, FLAG, NAME, FLAG, 
+       NAME, FLAG, NAME, FLAG, 
+       NAME, FLAG, NAME, FLAG, 
+       NAME, FLAG, NAME, FLAG, 
+       NAME, FLAG, NAME, FLAG, 
+       NAME, FLAG, NAME, FLAG, 
+       NAME, FLAG, NAME, FLAG, 
+       NAME, FLAG, NAME, FLAG)
+
+                  
         
         s += """
 #if %s_CONFIG_INCLUDE_LOGGING == 1
