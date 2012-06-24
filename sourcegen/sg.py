@@ -43,13 +43,13 @@ if gArgs.i:
         of = gArgs.o
         if of is None:
             of = inf
-
+        print "generate: %s:" % inf, 
         diff = sg.Generate(inf, of)
         if inf is of:
             if diff:
-                print "%s: updated" % (inf)
+                print "updated" 
             else:
-                print "%s: no changes" % (inf)
+                print "no changes" 
 
 
 
