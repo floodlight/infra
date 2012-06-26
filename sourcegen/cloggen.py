@@ -24,7 +24,8 @@ class CLogGenerator(CObjectGenerator):
                   ['Trace',   "1<<5"], 
                   ['Internal', "1<<6"], 
                   ['Bug',      "1<<6"], 
-
+                  # Lots and lots
+                  ['FTrace',   "1<<20"], 
                   # Log Options
                   ['FileLine', "1<<30"], 
                   ['Func',    "1<<31"], 
@@ -71,29 +72,56 @@ class CLogGenerator(CObjectGenerator):
             s += """
 #define %s_LOG_%s(_fmt, ...) \\
     %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
-                  \"%s\" %s_LOG_PREFIX1 %s_LOG_PREFIX2 \": \" \"%s: \" _fmt, ##__VA_ARGS__);\n""" % (
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "%s: " _fmt, ##__VA_ARGS__);\n""" % (
                 NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
 
             s += """
 #define %s_LOG_%s0(_msg) \\
     %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
-                  \"%s\" %s_LOG_PREFIX1 %s_LOG_PREFIX2 \": \" \"%s: \" _msg);\n""" % (
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "%s: " _msg);\n""" % (
                 NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
      
             s += """
 #define %s_OBJ_LOG_%s(_object, _fmt, ...) \\
     %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
-                  \"%s\" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " _fmt, \\
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " "%s: " _fmt, \\
                   (_object)->logString, ##__VA_ARGS__)\n""" % (
-                NAME, FLAG, NAME, name, flag, name, NAME, NAME)
+                NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
 
             s += """
 #define %s_OBJ_LOG%s0(_object, _msg) \\
     %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
-                  \"%s\" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " _msg, \\
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " "%s: " _msg, \\
                   (_object)->logString)\n""" % (
-                NAME, FLAG, NAME, name, flag, name, NAME, NAME)
+                NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
        
+            s += """
+/*
+ * Shortcut macros for function enter/exit tracing.
+ */
+#define %s_FENTER(_fmt, ...) \\
+     %s_LOG_OUTPUT(%sLogFlagFTrace, __func__, __FILE__, __LINE__, \\
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "ENTER(%%s): " _fmt, __func__, ##__VA_ARGS__)\n""" % (
+                NAME, NAME, name, name, NAME, NAME); 
+
+            s += """
+#define %s_FENTER0(msg) \\
+     %s_LOG_OUTPUT(%sLogFlagFTrace, __func__, __FILE__, __LINE__, \\
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "ENTER(%%s): %%s", __func__, msg)\n""" % (
+                NAME, NAME, name, name, NAME, NAME); 
+
+            s += """
+#define %s_FEXIT(_fmt, ...) \\
+     %s_LOG_OUTPUT(%sLogFlagFTrace, __func__, __FILE__, __LINE__, \\
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "EXIT(%%s): " _fmt, __func__, ##__VA_ARGS__)\n""" % (
+                NAME, NAME, name, name, NAME, NAME); 
+
+            s += """
+#define %s_FEXIT0(msg) \\
+     %s_LOG_OUTPUT(%sLogFlagFTrace, __func__, __FILE__, __LINE__, \\
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "EXIT(%%s): %%s", __func__, msg)\n""" % (
+                NAME, NAME, name, name, NAME, NAME); 
+
 
             s += """
 /*
