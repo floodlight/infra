@@ -23,7 +23,7 @@ gParser.add_argument('-o', help="""Output Source File. Default is to edit the
 replace the input file with the output. Does not change the input file if
 no changes are detected. Use --o stdout to output results to stdout""")
 gParser.add_argument('-v', help='Verbose Output')
-
+gParser.add_argument('-f', help="Formatter", default="default")
 gArgs = gParser.parse_args()
 
 cman = cm.ConfigManager()
