@@ -8,6 +8,7 @@
 ###############################################################################
 from sourceobjectgen import *
 from cdefaultsourceformatter import *
+from cknfsourceformatter import *
 
 class CObjectGenerator(SourceObjectGenerator):
     
@@ -17,11 +18,11 @@ class CObjectGenerator(SourceObjectGenerator):
 
     def SetFormatter(self, formatter=None):
         """ Sets the source formatter object to use in code generation"""
-        if formatter == None:
+        if formatter == "knf" or os.getenv("SG_FORMAT") == "knf":
+            self.f = CKNFSourceFormatter()
+        else:
             # Default Source Formatter
             self.f = CDefaultSourceFormatter()
-        else:
-            self.f = formatter
 
 
 class CObjectFactory(SourceObjectFactory):
