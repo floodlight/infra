@@ -171,7 +171,7 @@ class CKNFSourceFormatter(SourceFormatter):
         """ Transform a function name based on local naming conventions """
         if re.search("[a-z]", name):
             s = re.sub("([A-Z])", "_\\1", name)
-            return s
+            return s.lower()
         else:
             return name
 
