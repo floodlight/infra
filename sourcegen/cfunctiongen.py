@@ -53,6 +53,9 @@ class CFunctionGenerator(CObjectGenerator):
     #
     ############################################################
 
+    def Header(self):
+        return self.Prototype(); 
+
     def Prototype(self):
         """ Generates our function prototype """
         return self.Signature(proto=True) + ';\n'
