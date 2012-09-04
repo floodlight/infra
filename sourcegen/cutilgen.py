@@ -11,6 +11,7 @@
 from cobjectgen import *
 import util
 from cfunctiongen import *
+from cmacrogen import *
 
 #
 # zmalloc
@@ -40,7 +41,21 @@ class CUtilStrlcpy(CFunctionGenerator):
     return strlen(src); """ % (self.prefix.upper())
 
 
-        
+class CUtilArraySize(CMacroGenerator):
+    def Init(self):
+        self.name = "%s_ARRAYSIZE" % self.prefix.upper()
+        self.args = [ '_array' ]
+        self.body = """ (sizeof(_array)/sizeof(_array[0])) """
+
+    # Fixme - to avoid multiple definitions (in header and source file)
+    def Header(self):
+        return CMacroGenerator.Define(self); 
+
+    def Define(self):
+        return ""
+
+
+
 class CUtilGenerator(CObjectGenerator):
     objectType = 'util'
 
@@ -48,7 +63,8 @@ class CUtilGenerator(CObjectGenerator):
         self.pobjects = {}
         self.pobjects['zmalloc'] = CUtilZMalloc(prefix=self.name)
         self.pobjects['strlcpy'] = CUtilStrlcpy(prefix=self.name)
-        
+        self.pobjects['arraysize'] = CUtilArraySize(prefix=self.name)
+
     ############################################################
     #
     # Generation Methods
@@ -59,7 +75,7 @@ class CUtilGenerator(CObjectGenerator):
         s = ""
         for u in self.objects:
             if u in self.pobjects:
-                s += self.pobjects[u].Prototype(); 
+                s += self.pobjects[u].Header(); 
             else:
                 # Requested something we don't have.
                 s += "/* Utility '%s' does not exist */\n" % u
