@@ -63,7 +63,8 @@ class CMacroGenerator(CObjectGenerator):
             s += '\n'
         return s
 
-
+    def Header(self):
+        return self.Define()
 
 ###############################################################################
 # 
