@@ -89,7 +89,7 @@ class CLogGenerator(CObjectGenerator):
                 NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
 
             s += """
-#define %s_OBJ_LOG%s0(_object, _msg) \\
+#define %s_OBJ_LOG_%s0(_object, _msg) \\
     %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " "%s: " _msg, \\
                   (_object)->logString)\n""" % (
@@ -269,7 +269,7 @@ void %s_log_output(%sLogFlag_t flag, const char* fname, const char* file,
             rv = %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s]", fname); 
         }
         if(%s_log_info.flags & %sLogFlagFileLine) {         
-            rv = %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s:%%d]", file, line); 
+            %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s:%%d]", file, line); 
         }
         %s_log_info.output(logMsg); 
     }
