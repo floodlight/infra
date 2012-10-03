@@ -87,7 +87,7 @@ class CConfigDefsGenerator(CObjectGenerator):
     objectType = 'cdefs'
 
     def Init(self):
-        self.struct = CStructStringMap(name=self.basename + "Settings")
+        self.struct = CStructStringMap(name=self.basename + "_settings")
 
     def ConfigTableName(self):
         return "%s_settings" % self.basename
