@@ -17,22 +17,22 @@ from cmacrogen import *
 class CLogGenerator(CObjectGenerator):
     objectType = 'logger'
 
-    logFlags = [  ['Error',   "1<<1"], 
-                  ['Warn',    "1<<2"], 
-                  ['Info',    "1<<3"], 
-                  ['Verbose', "1<<4"], 
-                  ['Trace',   "1<<5"], 
-                  ['Internal', "1<<6"], 
-                  ['Bug',      "1<<6"], 
+    logFlags = [  ['ERROR',   "1<<1"], 
+                  ['WARN',    "1<<2"], 
+                  ['INFO',    "1<<3"], 
+                  ['VERBOSE', "1<<4"], 
+                  ['TRACE',   "1<<5"], 
+                  ['INTERNAL', "1<<6"], 
+                  ['BUG',      "1<<6"], 
                   # Lots and lots
-                  ['FTrace',   "1<<20"], 
+                  ['FTRACE',   "1<<20"], 
                   # Log Options
-                  ['FileLine', "1<<30"], 
-                  ['Func',    "1<<31"], 
+                  ['FILE_LINE', "1<<30"], 
+                  ['FUNC',    "1<<31"], 
                   ]; 
         
     def Init(self):
-        self.logEnum = CEnumGenerator(name="%sLogFlag" % self.name, 
+        self.logEnum = CEnumGenerator(name="%s_log_flag" % self.name, 
                                       members=self.logFlags); 
 
                                       
@@ -47,8 +47,9 @@ class CLogGenerator(CObjectGenerator):
         name = self.name
 
         s = ""
+        s += "#include <stdint.h>\n"
         s += self.logEnum.Define(); 
-        s += "extern unsigned int %s__log_flags;\n\n" % name
+        s += "extern uint32_t %s_log_flags;\n\n" % name
 
         s += "#ifndef %s_LOG_PREFIX1\n" % NAME
         s += "#define %s_LOG_PREFIX1 \"\"\n" % NAME
@@ -65,62 +66,62 @@ class CLogGenerator(CObjectGenerator):
             FLAG = f[0].upper()
             flag = f[0]; 
 
-            if flag == "Func" or flag == "FileLine":
+            if flag == "func" or flag == "file_line":
                 # These are options, not loggables
                 continue
 
             s += """
 #define %s_LOG_%s(_fmt, ...) \\
-    %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
+    %s_LOG_OUTPUT(%s_LOG_FLAG_%s, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "%s: " _fmt, ##__VA_ARGS__);\n""" % (
-                NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
+                NAME, FLAG, NAME, NAME, flag, name, NAME, NAME, FLAG)
 
             s += """
 #define %s_LOG_%s0(_msg) \\
-    %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
+    %s_LOG_OUTPUT(%s_LOG_FLAG_%s, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "%s: " _msg);\n""" % (
-                NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
+                NAME, FLAG, NAME, NAME, flag, name, NAME, NAME, FLAG)
      
             s += """
 #define %s_OBJ_LOG_%s(_object, _fmt, ...) \\
-    %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
+    %s_LOG_OUTPUT(%s_LOG_FLAG_%s, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " "%s: " _fmt, \\
-                  (_object)->logString, ##__VA_ARGS__)\n""" % (
-                NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
+                  (_object)->log_string, ##__VA_ARGS__)\n""" % (
+                NAME, FLAG, NAME, NAME, flag, name, NAME, NAME, FLAG)
 
             s += """
-#define %s_OBJ_LOG_%s0(_object, _msg) \\
-    %s_LOG_OUTPUT(%sLogFlag%s, __func__, __FILE__, __LINE__, \\
+#define %s_OBJ_LOG%s0(_object, _msg) \\
+    %s_LOG_OUTPUT(%s_LOG_FLAG_%s, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " "%s: " _msg, \\
-                  (_object)->logString)\n""" % (
-                NAME, FLAG, NAME, name, flag, name, NAME, NAME, FLAG)
+                  (_object)->log_string)\n""" % (
+                NAME, FLAG, NAME, NAME, flag, name, NAME, NAME, FLAG)
        
             s += """
 /*
  * Shortcut macros for function enter/exit tracing.
  */
 #define %s_FENTER(_fmt, ...) \\
-     %s_LOG_OUTPUT(%sLogFlagFTrace, __func__, __FILE__, __LINE__, \\
+     %s_LOG_OUTPUT(%s_LOG_FLAG_FTRACE, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "ENTER(%%s): " _fmt, __func__, ##__VA_ARGS__)\n""" % (
-                NAME, NAME, name, name, NAME, NAME); 
+                NAME, NAME, NAME, name, NAME, NAME); 
 
             s += """
 #define %s_FENTER0(msg) \\
-     %s_LOG_OUTPUT(%sLogFlagFTrace, __func__, __FILE__, __LINE__, \\
+     %s_LOG_OUTPUT(%s_LOG_FLAG_FTRACE, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "ENTER(%%s): %%s", __func__, msg)\n""" % (
-                NAME, NAME, name, name, NAME, NAME); 
+                NAME, NAME, NAME, name, NAME, NAME); 
 
             s += """
 #define %s_FEXIT(_fmt, ...) \\
-     %s_LOG_OUTPUT(%sLogFlagFTrace, __func__, __FILE__, __LINE__, \\
+     %s_LOG_OUTPUT(%s_LOG_FLAG_FTRACE, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "EXIT(%%s): " _fmt, __func__, ##__VA_ARGS__)\n""" % (
-                NAME, NAME, name, name, NAME, NAME); 
+                NAME, NAME, NAME, name, NAME, NAME); 
 
             s += """
 #define %s_FEXIT0(msg) \\
-     %s_LOG_OUTPUT(%sLogFlagFTrace, __func__, __FILE__, __LINE__, \\
+     %s_LOG_OUTPUT(%s_LOG_FLAG_FTRACE, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "EXIT(%%s): %%s", __func__, msg)\n""" % (
-                NAME, NAME, name, name, NAME, NAME); 
+                NAME, NAME, NAME, name, NAME, NAME); 
 
 
             s += """
@@ -179,7 +180,7 @@ class CLogGenerator(CObjectGenerator):
 /*
  * This function processes log messages for this module.
  */
-void %s_log_output(%sLogFlag_t flag, const char* fname, const char* file, 
+void %s_log_output(%s_log_flag_t flag, const char* fname, const char* file, 
                        int line, const char* fmt, ...);
 """ % (name, name)
 
@@ -193,7 +194,7 @@ void %s_log_output(%sLogFlag_t flag, const char* fname, const char* file,
 */
 typedef struct %s_log_info_s {
     /* Name of the module. For programmatic registration purposes. */
-    const char* moduleName; 
+    const char* module_name; 
 
     /* Current log flags. */
     int flags;
@@ -253,30 +254,30 @@ static void %s_log_output_default(const char* msg)
 #define %s_CONFIG_LOG_MESSAGE_SIZE 256
 #endif
 
-void %s_log_output(%sLogFlag_t flag, const char* fname, const char* file, 
+void %s_log_output(%s_log_flag_t flag, const char* fname, const char* file, 
                        int line, const char* fmt, ...)
 {
-    char logMsg[%s_CONFIG_LOG_MESSAGE_SIZE]; 
-    char* ptr = logMsg; 
-    int size = sizeof(logMsg); 
+    char log_msg[%s_CONFIG_LOG_MESSAGE_SIZE]; 
+    char* ptr = log_msg; 
+    int size = sizeof(log_msg); 
     va_list vargs; 
     va_start(vargs, fmt); 
     int rv = 0;
 
     if(%s_log_info.output && %s_log_info.flags & flag) {
         rv = %s_VSNPRINTF(ptr, size, fmt, vargs); 
-        if(%s_log_info.flags & %sLogFlagFunc) { 
+        if(%s_log_info.flags & %s_LOG_FLAG_FUNC) { 
             rv = %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s]", fname); 
         }
-        if(%s_log_info.flags & %sLogFlagFileLine) {         
-            %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s:%%d]", file, line); 
+        if(%s_log_info.flags & %s_LOG_FLAG_FILE_LINE) {         
+            rv = %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s:%%d]", file, line); 
         }
-        %s_log_info.output(logMsg); 
+        %s_log_info.output(log_msg); 
     }
     va_end(vargs); 
 }
-""" % (NAME, NAME, name, name, NAME, name, name, NAME, name, name, NAME, 
-       name, name, NAME, name)
+""" % (NAME, NAME, name, name, NAME, name, name, NAME, name, NAME, NAME, 
+       name, NAME, NAME, name)
 
         return s; 
 
