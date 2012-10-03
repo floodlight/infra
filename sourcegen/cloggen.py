@@ -270,7 +270,7 @@ void %s_log_output(%s_log_flag_t flag, const char* fname, const char* file,
             rv = %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s]", fname); 
         }
         if(%s_log_info.flags & %s_LOG_FLAG_FILE_LINE) {         
-            rv = %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s:%%d]", file, line); 
+            %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s:%%d]", file, line); 
         }
         %s_log_info.output(log_msg); 
     }
