@@ -390,6 +390,7 @@ class CEnumGenerator(CObjectGenerator):
             raise Exception('Cannot generate a STRINGS macro for'
                             ' nonlinear enum %s' % (self.name))
 
+
         s = "#define %s_STRINGS \\\n" % self.f.InMacro(self.name)
         s += "{\\\n"
 
@@ -451,7 +452,16 @@ class CEnumGenerator(CObjectGenerator):
             
         return s
 
+        for member in self.members:
+            s += "    \"%s\", \\\n" % member[0]
 
+    def __getitem__(self, item):
+        for m in self.members:
+            if m[0] == item:
+                return self.f.EnumEntry(m[0], self.name)
+        raise Exception("No enum entry named %s" % item)
+
+        
 ###############################################################################
 #
 # Enum Unit testing

@@ -39,6 +39,25 @@ class CKNFSourceFormatter(SourceFormatter):
         """ Return the function used for strstr() """
         return 'strstr'
 
+    def Identifier(self, name):
+        """ Basic Formatting for all identifiers """
+        return name
+    def CppIdentifier(self, name):
+        """ Formatting for all Preprocessor Identifiers """
+        return name.upper()
+
+    def StaticVariable(self, name):
+        """ Format static variable names """
+        return "%s__" % self.Identifier(name)
+
+    def GlobalVariable(self, name):
+        """ Format for global variable names """
+        return self.Identifier(name);
+
+    def LocalVariable(self, name):
+        """ Format for local variable names """
+        return self.Identifier(name); 
+
     ############################################################
     #
     # Structure Formatting
@@ -259,9 +278,9 @@ class CKNFSourceFormatter(SourceFormatter):
     def Comment(self, str):
         """ Format an arbitrary comment string """
         if '\n' in str:
-            return self.MultiLineComment(str)
+            return self.MultiLineComment(str) + "\n"
         else:
-            return self.SingleLineComment(str)
+            return self.SingleLineComment(str) + "\n"
 
 
 

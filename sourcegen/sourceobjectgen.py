@@ -21,15 +21,23 @@ class SourceObjectGenerator:
     # Created it, if present
     objectFactory = None
 
+    basename = None
 
     def __init__(self, **kwargs):
 
         # Everyone has a name
         self.name = None
+        self.prefix = None
+
         # Default construction - static initialization only
         self.Construct()
         # Update ourselves based on arguments
         self.Update(kwargs)
+
+        if self.name is None and self.basename:
+            self.name = self.basename
+            if self.prefix:
+                self.name = self.prefix + "_" + self.name
 
         if 'cm' in kwargs and 'name' in kwargs:
             # Initialize from config manager
@@ -38,6 +46,7 @@ class SourceObjectGenerator:
         if kwargs.get('init', True):
             self.Init()
 
+        
 
     def Update(self, d):
         if 'initargs' in d:

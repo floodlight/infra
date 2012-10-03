@@ -63,6 +63,10 @@ def fcall(name, args):
     return c
 
 
+def ifndef(def_, val):
+    return "#ifndef %s\n#define %s %s\n#endif\n" % (def_, def_, val)
+
+
 class DotDict(dict):
     """ Access keys in a nested dictionary using dot notation """
 
