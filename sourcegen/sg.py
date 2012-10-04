@@ -47,9 +47,9 @@ if gArgs.i:
         diff = sg.Generate(inf, of)
         if inf is of:
             if diff:
-                print "updated" 
+                print "\x1B[35m" + "\x1B[1m" + "updated" + "\x1B[39m" + "\x1B[0m"
             else:
-                print "no changes" 
+                print "\x1B[37m" + "no changes" + "\x1B[39m" 
 
 
 
