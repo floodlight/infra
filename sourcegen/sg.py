@@ -12,6 +12,7 @@ import cobjectgen
 import argparse
 import sys
 import cm
+import os
 
 gParser = argparse.ArgumentParser(description='sg -- Source Generators')
 
@@ -40,10 +41,14 @@ if gArgs.i:
         gArgs.i = [ gArgs.i ]
         
     for inf in gArgs.i:
+        if not os.path.isfile(inf):
+            continue
+
         of = gArgs.o
         if of is None:
             of = inf
         print "generate: %s:" % inf, 
+        
         diff = sg.Generate(inf, of)
         if inf is of:
             if diff:

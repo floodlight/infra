@@ -36,7 +36,7 @@ class CFlagsGenerator(CObjectGenerator):
             value = None
 
             if 'doc' in flag:
-                s += self.f.Comment(flag['doc']) + "\n"
+                s += self.f.Comment(flag['doc']) # + "\n"
             if 'value' in flag:
                 value = "%s" % (flag['value'])
             elif 'shift' in flag:

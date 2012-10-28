@@ -24,7 +24,7 @@ class CEnumFindByValueHelper(CFunctionGenerator):
                       [ 'int', 'size' ] ]
 
         self.body = """    int i;
-    for(i = 0; i < size; i++) {
+    for(i = 0; i < size-1; i++) {
         if(map[i].%s == e) {
             return map+i;
          }
@@ -42,7 +42,7 @@ class CEnumFindByNameHelper(CFunctionGenerator):
                       ]
         
         self.body = """    int i;
-    for(i = 0; i < size; i++) {
+    for(i = 0; i < size-1; i++) {
         if(!%s(str, map[i].%s)) {
             return map+i;
         }
@@ -50,7 +50,7 @@ class CEnumFindByNameHelper(CFunctionGenerator):
     /* No exact match */
     if(subsearch) {
         /* Substring search */
-        for(i = 0; i < size; i++) {
+        for(i = 0; i < size-1; i++) {
             if(%s(map[i].%s, str)) {
                 return map+i;
             }
@@ -195,6 +195,8 @@ class CEnumValueFunction(CFunctionGenerator):
                                                  'substr'))
 
 
+import pprint
+import copy
 
 class CEnumGenerator(CObjectGenerator):
     """ C Enum Generator Subclass """
@@ -203,6 +205,7 @@ class CEnumGenerator(CObjectGenerator):
 
     def Construct(self):
         self.util = CEnumUtilities()
+        self.novalue = False; 
 
     def Init(self):
         self.validatorFunction = CEnumValidatorFunction(enum=self)
@@ -221,7 +224,12 @@ class CEnumGenerator(CObjectGenerator):
         # 
         # We convert everything here to a list of lists representation
         # 
-        data['members'] = util.listifyElements(data['members'])
+        data['members'] = util.listifyElements(data['members']); 
+        
+        if 'memberfilter' in data:
+            data = copy.deepcopy(data); 
+            for member in data['members']:
+                member[0] = eval(data['memberfilter'])
 
         return data
 
@@ -336,7 +344,8 @@ class CEnumGenerator(CObjectGenerator):
         s += "enum %s {\n" % self.f.EnumName(self.name)
         for member in self.members:
             s += "    %s" % self.f.EnumEntry(member[0], self.name)
-            if len(member) > 1:
+            
+            if (len(member) > 1) and (self.novalue == False):            
                 # Value specified
                 if hasattr(self, 'hex'):
                     s += " = 0x%x" % int(member[1])
@@ -403,7 +412,7 @@ class CEnumGenerator(CObjectGenerator):
 
  
 
-    def MapTable(self, static=True):
+    def MapTable(self, static=False):
         """ Output the enum map table """
         s = ""
         if static:
@@ -413,10 +422,10 @@ class CEnumGenerator(CObjectGenerator):
         s += "{\n"; 
 
         for member in self.members:
-            s += """    { %s, "%s" }%s\n""" % (
+            s += """    { %s, "%s" },\n""" % (
             self.f.EnumEntry(member[0], self.name), 
-            member[0], util.comma(member, self.members))
-
+            member[0])
+        s += "    { 0, NULL }\n"    
         s += "};\n"
         return s
 

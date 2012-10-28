@@ -40,6 +40,26 @@ class CUtilStrlcpy(CFunctionGenerator):
         dst[size-1] = 0;
     return strlen(src); """ % (self.prefix.upper())
 
+class CUtilOcPrintf(CFunctionGenerator):
+    def Init(self):
+        self.rv = "int"
+        self.args = [ "void* oc", "const char* fmt", "..." ];
+        self.name = "%s_oc_printf" % self.prefix
+        self.body = """    va_list vargs; 
+    int rv; 
+    va_start(vargs, fmt); 
+    rv = %s_VPRINTF(fmt, vargs); 
+    va_end(vargs); 
+    return rv; """ % (self.prefix.upper())
+
+class CUtilOcVPrintf(CFunctionGenerator):
+    def Init(self):
+        self.rv = "int"
+        self.args = [ "void* oc", "const char* fmt", "va_list vargs" ];
+        self.name = "%s_oc_vprintf" % self.prefix
+        self.body = """    return %s_VPRINTF(fmt, vargs); 
+""" % (self.prefix.upper())
+    
 
 class CUtilArraySize(CMacroGenerator):
     def Init(self):
@@ -64,6 +84,8 @@ class CUtilGenerator(CObjectGenerator):
         self.pobjects['zmalloc'] = CUtilZMalloc(prefix=self.name)
         self.pobjects['strlcpy'] = CUtilStrlcpy(prefix=self.name)
         self.pobjects['arraysize'] = CUtilArraySize(prefix=self.name)
+        self.pobjects['oc_printf'] = CUtilOcPrintf(prefix=self.name)
+        self.pobjects['oc_vprintf'] = CUtilOcVPrintf(prefix=self.name)
 
     ############################################################
     #

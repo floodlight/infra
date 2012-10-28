@@ -72,10 +72,13 @@ class CConfigDefShowFunction(CFunctionGenerator):
     def Init(self):
         self.rv = "int"
         self.name = self.cobj.basename + "Show"
-        self.args = [ [ "int", "(*prn)(const char* fmt, ...)" ] ]
+        self.args = [ 
+            [ self.cobj.basename + "_out_f", "out" ], 
+            [ "void*", "oc" ]
+            ]
         self.body = """    int i;
     for(i = 0; %s[i].name; i++) {
-        prn("%%s = %%s\\n", %s[i].name, %s[i].value);
+        out(oc, "%%s = %%s\\n", %s[i].name, %s[i].value);
     }
     return i;""" % (self.cobj.ConfigTableName(), 
                     self.cobj.ConfigTableName(), 
@@ -156,6 +159,8 @@ class CConfigDefsGenerator(CObjectGenerator):
         s += self.DefineStruct() + "\n"
         s += self.ExternTable() + "\n"
         s += self.PrototypeLookup() + "\n"
+        s += "typedef int (*%s_out_f)(void* oc, const char* fmt, ...);\n" % (
+            self.basename)
         s += self.PrototypeShow() + "\n"
         return s
 
