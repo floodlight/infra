@@ -48,9 +48,16 @@ class CUtilOcPrintf(CFunctionGenerator):
         self.body = """    va_list vargs; 
     int rv; 
     va_start(vargs, fmt); 
-    rv = %s_VPRINTF(fmt, vargs); 
+    if(oc == NULL && fmt == NULL) { 
+        int (**voutp)(void*,const char*,va_list) = va_arg(vargs, 
+            int (**)(void*,const char*, va_list)); 
+        *voutp = %s_oc_vprintf; 
+        rv = 0; 
+    } else { 
+        rv = %s_VPRINTF(fmt, vargs); 
+    }
     va_end(vargs); 
-    return rv; """ % (self.prefix.upper())
+    return rv; """ % (self.prefix, self.prefix.upper())
 
 class CUtilOcVPrintf(CFunctionGenerator):
     def Init(self):
