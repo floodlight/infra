@@ -73,12 +73,11 @@ class CConfigDefShowFunction(CFunctionGenerator):
         self.rv = "int"
         self.name = self.cobj.basename + "Show"
         self.args = [ 
-            [ self.cobj.basename + "_out_f", "out" ], 
-            [ "void*", "oc" ]
+            [ "struct aim_pvs_s*", "pvs" ]
             ]
         self.body = """    int i;
     for(i = 0; %s[i].name; i++) {
-        out(oc, "%%s = %%s\\n", %s[i].name, %s[i].value);
+        aim_printf(pvs, "%%s = %%s\\n", %s[i].name, %s[i].value);
     }
     return i;""" % (self.cobj.ConfigTableName(), 
                     self.cobj.ConfigTableName(), 
@@ -153,20 +152,18 @@ class CConfigDefsGenerator(CObjectGenerator):
 
     def Header(self):
         s = ""
+        s += "#include <AIM/aim.h>\n"
         s += self.Define() + "\n"
         s += self.f.Comment("""All compile time options can be queried or displayed
 """)
         s += self.DefineStruct() + "\n"
         s += self.ExternTable() + "\n"
         s += self.PrototypeLookup() + "\n"
-        s += "typedef int (*%s_out_f)(void* oc, const char* fmt, ...);\n" % (
-            self.basename)
         s += self.PrototypeShow() + "\n"
         return s
 
     def Source(self):
         s = ""
-
         s += self.DefineTable() + "\n"
         s += self.DefineLookup() + "\n"
         s += self.DefineShow() + "\n"

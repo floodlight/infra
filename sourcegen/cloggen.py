@@ -192,6 +192,9 @@ void %s_log_output(%s_log_flag_t flag, const char* fname, const char* file,
 * External log providers can access this structure to affect
 * the module's log output. 
 */
+
+#include <AIM/aim.h>
+
 typedef struct %s_log_info_s {
     /* Name of the module. For programmatic registration purposes. */
     const char* module_name; 
@@ -203,7 +206,7 @@ typedef struct %s_log_info_s {
     int enabled; 
 
     /* Change the output vector for all log messages */
-    void (*output)(const char* msg); 
+    aim_pvs_t* pvs; 
 } %s_log_info_t; 
 
 extern %s_log_info_t %s_log_info;
@@ -218,16 +221,6 @@ extern %s_log_info_t %s_log_info;
 
         s = ""
         
-        s += """
-/*
- * This is the default log output vector
- */
-static void %s_log_output_default(const char* msg)
-{
-    %s_CONFIG_LOG_OUTPUT_DEFAULT(\"%%s\\n\", msg); 
-}
-""" % (self.name, self.name.upper())
-
         s += """
 /*
  * %s Log Info Structure 
@@ -245,9 +238,9 @@ static void %s_log_output_default(const char* msg)
     \"%s\", 
     %s_CONFIG_LOG_FLAGS_DEFAULT, 
     1, 
-    %s_log_output_default
+    &aim_pvs_stderr
 }; 
-""" % (name, name, name, NAME, name)
+""" % (name, name, name, NAME )
 
         s += """
 #ifndef %s_CONFIG_LOG_MESSAGE_SIZE
@@ -264,20 +257,21 @@ void %s_log_output(%s_log_flag_t flag, const char* fname, const char* file,
     va_start(vargs, fmt); 
     int rv = 0;
 
-    if(%s_log_info.output && %s_log_info.flags & flag) {
+    if(%s_log_info.pvs && %s_log_info.flags & flag) {
         rv = %s_VSNPRINTF(ptr, size, fmt, vargs); 
         if(%s_log_info.flags & %s_LOG_FLAG_FUNC) { 
             rv = %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s]", fname); 
         }
         if(%s_log_info.flags & %s_LOG_FLAG_FILE_LINE) {         
-            %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s:%%d]", file, line); 
+            rv = %s_SNPRINTF(ptr+=rv, size-=rv, " [%%s:%%d]", file, line); 
         }
-        %s_log_info.output(log_msg); 
+        %s_SNPRINTF(ptr+=rv, size-=rv, "\\n"); 
+        aim_printf(%s_log_info.pvs, log_msg); 
     }
     va_end(vargs); 
 }
 """ % (NAME, NAME, name, name, NAME, name, name, NAME, name, NAME, NAME, 
-       name, NAME, NAME, name)
+       name, NAME, NAME, NAME, name)
 
         return s; 
 
