@@ -90,7 +90,7 @@ class CLogGenerator(CObjectGenerator):
                 NAME, FLAG, NAME, NAME, flag, name, NAME, NAME, FLAG)
 
             s += """
-#define %s_OBJ_LOG%s0(_object, _msg) \\
+#define %s_OBJ_LOG_%s0(_object, _msg) \\
     %s_LOG_OUTPUT(%s_LOG_FLAG_%s, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " "%s: " _msg, \\
                   (_object)->log_string)\n""" % (
