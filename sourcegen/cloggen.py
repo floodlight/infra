@@ -73,7 +73,7 @@ class CLogGenerator(CObjectGenerator):
             s += """
 #define %s_LOG_%s(_fmt, ...) \\
     %s_LOG_OUTPUT(%s_LOG_FLAG_%s, __func__, __FILE__, __LINE__, \\
-                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "%s: " _fmt, ##__VA_ARGS__);\n""" % (
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "%s: " _fmt, __VA_ARGS__);\n""" % (
                 NAME, FLAG, NAME, NAME, flag, name, NAME, NAME, FLAG)
 
             s += """
@@ -86,7 +86,7 @@ class CLogGenerator(CObjectGenerator):
 #define %s_OBJ_LOG_%s(_object, _fmt, ...) \\
     %s_LOG_OUTPUT(%s_LOG_FLAG_%s, __func__, __FILE__, __LINE__, \\
                   "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 "(%%s): " "%s: " _fmt, \\
-                  (_object)->log_string, ##__VA_ARGS__)\n""" % (
+                  (_object)->log_string, __VA_ARGS__)\n""" % (
                 NAME, FLAG, NAME, NAME, flag, name, NAME, NAME, FLAG)
 
             s += """
@@ -102,7 +102,7 @@ class CLogGenerator(CObjectGenerator):
  */
 #define %s_FENTER(_fmt, ...) \\
      %s_LOG_OUTPUT(%s_LOG_FLAG_FTRACE, __func__, __FILE__, __LINE__, \\
-                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "ENTER(%%s): " _fmt, __func__, ##__VA_ARGS__)\n""" % (
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "ENTER(%%s): " _fmt, __func__, __VA_ARGS__)\n""" % (
                 NAME, NAME, NAME, name, NAME, NAME); 
 
             s += """
@@ -114,7 +114,7 @@ class CLogGenerator(CObjectGenerator):
             s += """
 #define %s_FEXIT(_fmt, ...) \\
      %s_LOG_OUTPUT(%s_LOG_FLAG_FTRACE, __func__, __FILE__, __LINE__, \\
-                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "EXIT(%%s): " _fmt, __func__, ##__VA_ARGS__)\n""" % (
+                  "%s" %s_LOG_PREFIX1 %s_LOG_PREFIX2 ": " "EXIT(%%s): " _fmt, __func__, __VA_ARGS__)\n""" % (
                 NAME, NAME, NAME, name, NAME, NAME); 
 
             s += """
