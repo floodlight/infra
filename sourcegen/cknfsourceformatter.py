@@ -263,12 +263,12 @@ class CKNFSourceFormatter(SourceFormatter):
 
     def SingleLineComment(self, str):
         """ Format a single-line comment """
-        return "/* %s */" % (str)
+        return "/** %s */" % (str)
     
     def MultiLineComment(self, str):
         """ Format a multiple-line comment """
         lines = str.splitlines(str.count('\n'))
-        s = "/*\n"
+        s = "/**\n"
         for line in lines:
             s += " * %s" % (line)
         s += " */\n"

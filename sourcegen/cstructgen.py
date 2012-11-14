@@ -31,7 +31,7 @@ class CStructGenerator(CObjectGenerator):
 
     def Define(self):
         s = ""
-        
+        s += self.comment
         s += "typedef %s {\n" % self.StructName()
         for member in self.members:
             if isinstance(member, str):
@@ -39,6 +39,7 @@ class CStructGenerator(CObjectGenerator):
             elif isinstance(member, list):
                 if member[0] == "__self__":
                     member[0] = "struct %s*" % self.StructName()
+                s += """    /** %s */\n""" % (member[1])
                 s += "    %s %s;\n" % (member[0], member[1])
             else:
                 raise Exception("bad struct definition")
@@ -75,8 +76,10 @@ class CStructIntMap(CStructGenerator):
         self.nameMember = "name"
 
     def Init(self):
-        self.members = [ 'int %s' % self.valueMember, 
-                         'const char* %s' % self.nameMember ]
+        self.members = [ ['int', self.valueMember ], 
+                         ['const char*', self.nameMember ], 
+                         ]
+        
 
 
    
@@ -89,8 +92,9 @@ class CStructStringMap(CStructGenerator):
 
 
     def Init(self):
-        self.members = ["const char* %s" % self.nameMember, 
-                        "const char* %s" % self.valueMember]
+        self.members = [ [ "const char*", self.nameMember ],
+                         [ "const char*", self.valueMember], 
+                         ]
 
    
 if __name__ == "__main__":

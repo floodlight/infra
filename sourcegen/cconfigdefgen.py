@@ -52,7 +52,11 @@ class CConfigDefLookupFunction(CFunctionGenerator):
     def Init(self):
 
         ctn = self.cobj.ConfigTableName()
-
+        self.comments = """/**
+ * @brief Lookup a configuration setting.
+ * @param setting The name of the configuration option to lookup. 
+ */
+"""
         self.rv = "const char*"
         self.name = self.cobj.basename + "Lookup"
         self.args = [ ["const char*", 'setting'] ]
@@ -70,6 +74,11 @@ class CConfigDefLookupFunction(CFunctionGenerator):
 class CConfigDefShowFunction(CFunctionGenerator):
 
     def Init(self):
+        self.comments = """/**
+ * @brief Show the compile-time configuration.
+ * @param pvs The output stream. 
+ */
+"""
         self.rv = "int"
         self.name = self.cobj.basename + "Show"
         self.args = [ 
@@ -89,7 +98,8 @@ class CConfigDefsGenerator(CObjectGenerator):
     objectType = 'cdefs'
 
     def Init(self):
-        self.struct = CStructStringMap(name=self.basename + "_settings")
+        self.struct = CStructStringMap(name=self.basename + "_settings", 
+                                       comment="""/** Configuration settings structure. */\n""")
 
     def ConfigTableName(self):
         return "%s_settings" % self.basename
@@ -117,7 +127,7 @@ class CConfigDefsGenerator(CObjectGenerator):
         return self.struct.Define()
 
     def ExternTable(self):
-        return self.struct.ExternTable(self.ConfigTableName())
+        return """/** Configuration settings table. */\n""" + self.struct.ExternTable(self.ConfigTableName())
 
     def DefineTable(self):
         stringname = "__%s_STRINGIFY_NAME" % self.basename

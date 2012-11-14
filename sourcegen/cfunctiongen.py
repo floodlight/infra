@@ -15,6 +15,7 @@ class CFunctionGenerator(CObjectGenerator):
     objectType = 'function'
 
     def Construct(self):
+        self.comments = ""
         self.static = False
         self.body = None
         self.rv = None
@@ -58,7 +59,7 @@ class CFunctionGenerator(CObjectGenerator):
 
     def Prototype(self):
         """ Generates our function prototype """
-        return self.Signature(proto=True) + ';\n'
+        return self.comments + self.Signature(proto=True) + ';\n'
 
 
     def Declare(self):

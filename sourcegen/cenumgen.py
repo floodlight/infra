@@ -72,7 +72,8 @@ class CEnumUtilities(CObjectGenerator):
         self.findByNameName = 'enum_find_by_name'
         
     def Init(self):
-        self.mapstruct = CStructIntMap(name=self.mapstructName)
+        self.mapstruct = CStructIntMap(name=self.mapstructName, 
+                                       comment="/** enum map */\n")
         self.findByValueHelper = CEnumFindByValueHelper(
             name=self.findByValueName, 
             mapstruct=self.mapstruct, 
@@ -107,17 +108,19 @@ class CEnumValidMacro(CMacroGenerator):
     def Init(self):
         self.name = self.enum.name + "_valid"; 
         self.args = [ '_e' ]
+        self.comment = "/** validator */\n"; 
 
     def Body(self):
         
+        s = ""
         if self.enum.IsLinear():
             # Linear enums can be checked with a macro expression
             lastMember = self.enum.members[-1][0]
-            s = ("    ( (0 <= (_e)) && ((_e) <= %s))" %
+            s += ("    ( (0 <= (_e)) && ((_e) <= %s))" %
                  (self.f.EnumEntry(lastMember, self.enum.name)))
         else:
             # Nonlinear enums must be checked by lookup:
-            s = ("    (%s)" %                 
+            s += ("    (%s)" %                 
                  (CEnumValidatorFunction(enum=self.enum).Call('(_e)')))
             
         return s
@@ -126,6 +129,7 @@ class CEnumValidMacro(CMacroGenerator):
 class CEnumValidatorFunction(CFunctionGenerator):
     
     def Init(self):
+        self.comments = "/** Enum validator. */\n"; 
         self.rv = 'int'
         self.name = self.f.FunctionName("%sValid" % (self.enum.name))
         self.args = [ [ self.enum.EnumType(), 'e' ] ]
@@ -144,6 +148,7 @@ class CEnumValidatorFunction(CFunctionGenerator):
 class CEnumNameFunction(CFunctionGenerator):
     
     def Init(self):
+        self.comments = "/** Enum names. */\n"
         self.rv = 'const char*'
         self.name = self.f.FunctionName("%sName" % (self.enum.name))
         self.args = [ [ self.enum.EnumType(), 'e' ] ]
@@ -169,6 +174,7 @@ class CEnumNameFunction(CFunctionGenerator):
 
 class CEnumValueFunction(CFunctionGenerator):
     def Init(self):
+        self.comments = "/** Enum values. */\n"
         self.rv = 'int'
         self.name = self.f.FunctionName("%sValue" % (self.enum.name))
         self.args = [ [ 'const char*', 'str' ], 
@@ -337,7 +343,7 @@ class CEnumGenerator(CObjectGenerator):
         # If you don't want a typedef, specify 'typedef:False'
         # in the enum specification
         # 
-        s = ""
+        s = "/** %s */\n" % (self.name)
         if self.IncludeTypedef():
             s += "typedef "
             
@@ -400,7 +406,8 @@ class CEnumGenerator(CObjectGenerator):
                             ' nonlinear enum %s' % (self.name))
 
 
-        s = "#define %s_STRINGS \\\n" % self.f.InMacro(self.name)
+        s = "/** Strings macro. */\n"
+        s += "#define %s_STRINGS \\\n" % self.f.InMacro(self.name)
         s += "{\\\n"
 
         for member in self.members:

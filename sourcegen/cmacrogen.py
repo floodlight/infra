@@ -58,7 +58,8 @@ class CMacroGenerator(CObjectGenerator):
     def Define(self):
         if self.args != None:
             # Functional Macro
-            s = "#define %s \\\n" % self.Call(self.args)
+            s = self.comment; 
+            s += "#define %s \\\n" % self.Call(self.args)
             s += self.Body()
             s += '\n'
         return s
