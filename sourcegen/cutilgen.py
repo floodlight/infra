@@ -70,6 +70,7 @@ class CUtilOcVPrintf(CFunctionGenerator):
 
 class CUtilArraySize(CMacroGenerator):
     def Init(self):
+        self.comment = ""
         self.name = "%s_ARRAYSIZE" % self.prefix.upper()
         self.args = [ '_array' ]
         self.body = """ (sizeof(_array)/sizeof(_array[0])) """
