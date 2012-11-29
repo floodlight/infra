@@ -76,8 +76,8 @@ class CStructIntMap(CStructGenerator):
         self.nameMember = "name"
 
     def Init(self):
-        self.members = [ ['int', self.valueMember ], 
-                         ['const char*', self.nameMember ], 
+        self.members = [ ['const char*', self.nameMember ], 
+                         ['int', self.valueMember ], 
                          ]
         
 

@@ -67,9 +67,9 @@ class CEnumUtilities(CObjectGenerator):
     objectType = 'enumutil'
 
     def Construct(self):
-        self.mapstructName = 'enum_map'
-        self.findByValueName = 'enum_find_by_value'
-        self.findByNameName = 'enum_find_by_name'
+        self.mapstructName = 'aim_map_si'
+        self.findByValueName = 'aim_map_si_i'
+        self.findByNameName = 'aim_map_si_s'
         
     def Init(self):
         self.mapstruct = CStructIntMap(name=self.mapstructName, 
@@ -137,10 +137,9 @@ class CEnumValidatorFunction(CFunctionGenerator):
         maptable = self.enum.MapTableName();
 
         self.body = """    return %s ? 1 : 0;""" % (
-            self.enum.util.findByValueHelper.Call('e',
-                                                  maptable, 
-                                                  "sizeof(%s)/sizeof(%s[0])" %
-                                                  (maptable, maptable)))
+            self.enum.util.findByValueHelper.Call('NULL', 
+                                                  'e',
+                                                  maptable, '0'))
 
 
 
@@ -155,19 +154,16 @@ class CEnumNameFunction(CFunctionGenerator):
         
         maptable = self.enum.MapTableName();
 
-        self.body = """    %s* entry = %s;
-    if(entry) {
-        /* Enum Found -- return name */
-        return entry->name;
+        self.body = """    const char* name; 
+    if(%s) { 
+        return name; 
     }
-    else {
+    else { 
         return "-invalid value for enum type '%s'";
     }""" % (
-            self.enum.util.mapstruct.TypedefName(),
-            self.enum.util.findByValueHelper.Call('e',
-                                                  maptable, 
-                                                  "sizeof(%s)/sizeof(%s[0])" %
-                                                  (maptable, maptable)),
+            self.enum.util.findByValueHelper.Call('&name',
+                                                  'e', 
+                                                  maptable, '0'), 
             self.enum.name)
 
 
@@ -184,21 +180,20 @@ class CEnumValueFunction(CFunctionGenerator):
         
         maptable = self.enum.MapTableName();
 
-        self.body = """    %s* entry = %s;
-    if(entry) {
-        /* Enum Found -- return name */
-        *e = entry->value;
+        self.body = """    int i; 
+    AIM_REFERENCE(substr);
+    if(%s) {
+        /* Enum Found */
+        *e = i; 
         return 0; 
     }
     else {
         return -1; 
     }""" % (
-            self.enum.util.mapstruct.TypedefName(),
-            self.enum.util.findByNameHelper.Call('str',
-                                                 maptable, 
-                                                 "sizeof(%s)/sizeof(%s[0])" %
-                                                 (maptable, maptable), 
-                                                 'substr'))
+            self.enum.util.findByNameHelper.Call('&i', 
+                                                 'str',
+                                                 maptable, '0'))
+
 
 
 import pprint
@@ -429,10 +424,10 @@ class CEnumGenerator(CObjectGenerator):
         s += "{\n"; 
 
         for member in self.members:
-            s += """    { %s, "%s" },\n""" % (
-            self.f.EnumEntry(member[0], self.name), 
-            member[0])
-        s += "    { 0, NULL }\n"    
+            s += """    { "%s", %s },\n""" % (
+                member[0], 
+                self.f.EnumEntry(member[0], self.name))
+        s += "    { NULL, 0 }\n"    
         s += "};\n"
         return s
 
