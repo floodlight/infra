@@ -163,7 +163,7 @@ class CConfigDefsGenerator(CObjectGenerator):
     def Header(self):
         s = ""
         if self.basename != "aim_config":
-            s += "#include <AIM/aim.h>\n" % self.basename
+            s += "#include <AIM/aim.h>\n"
         s += self.Define() + "\n"
         s += self.f.Comment("""All compile time options can be queried or displayed
 """)
