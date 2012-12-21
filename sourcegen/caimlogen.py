@@ -83,7 +83,7 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
 """
         for f in self.flags:
             s += """
-/*** %(NAME)s -> MOD_%(NAME)s */
+/** %(NAME)s -> MOD_%(NAME)s */
 #define AIM_LOG_%(NAME)s AIM_LOG_MOD_%(NAME)s
 #define AIM_LOG_RL_%(NAME)s AIM_LOG_MOD_RL_%(NAME)s
 """ % dict(NAME=f.upper(), name=f.lower())
@@ -92,6 +92,102 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
 #endif
 """
         return s; 
+
+
+
+
+class CAIMCustomLogMacroGenerator(CObjectGenerator):
+    objectType = 'aim_custom_log_macro'
+
+
+    def _dict(self, flag):
+        return dict(PREFIX=self.name.upper(), 
+                    NAME=flag.upper(), 
+                    name=flag.lower(), 
+                    FID=self.prefix+flag.upper())
+
+    ############################################################
+    #
+    # Generation Methods
+    #
+    ############################################################
+    def Header(self):
+        s = ""
+
+        s += """
+/******************************************************************************
+ * 
+ * Custom Module Log Macros
+ *
+ *****************************************************************************/
+"""
+        for f in self.flags:
+            s += """
+/** Log a module-level %(name)s */
+#define %(PREFIX)s_LOG_MOD_%(NAME)s(...) \\
+    AIM_LOG_MOD_CUSTOM(%(FID)s, "%(NAME)s", __VA_ARGS__)
+#define %(PREFIX)s_LOG_MOD_RL_%(NAME)s(_rl, _time, ...)           \\
+    AIM_LOG_MOD_RL_CUSTOM($(FID)s, "%(NAME)s", _rl, _time, __VA_ARGS__)
+""" % self._dict(f)
+
+        s += """
+/******************************************************************************
+ * 
+ * Custom Object Log Macros
+ *
+ *****************************************************************************/
+"""
+        for f in self.flags:
+            s += """
+/** Log an object-level %(name)s */
+#define %(PREFIX)s_LOG_OBJ_%(NAME)s(_obj, ...) \\
+    AIM_LOG_OBJ_CUSTOM(_obj, %(FID)s, "%(NAME)s", __VA_ARGS__)
+#define %(PREFIX)s_LOG_OBJ_RL_%(NAME)s(_obj, _rl, _time, ...) \\
+    AIM_LOG_OBJ_RL_CUSTOM(_obj, %(FID)s, "%(NAME)s", _rl, _time, __VA_ARGS__)
+""" % self._dict(f)
+
+        s += """
+/******************************************************************************
+ * 
+ * Default Macro Mappings 
+ *
+ *****************************************************************************/
+#ifdef AIM_LOG_OBJ_DEFAULT
+"""
+        for f in self.flags:
+            s += """
+/** %(NAME)s -> OBJ_%(NAME)s */
+#define %(PREFIX)s_LOG_%(NAME)s %(PREFIX)s_LOG_OBJ_%(NAME)s
+#define %(PREFIX)s_LOG_RL_%(NAME)s %(PREFIX)s_LOG_RL_OBJ_%(NAME)s
+
+""" % self._dict(f)
+
+        s += """
+#else
+"""
+        for f in self.flags:
+            s += """
+/** %(NAME)s -> MOD_%(NAME)s */
+#define %(PREFIX)s_LOG_%(NAME)s %(PREFIX)s_LOG_MOD_%(NAME)s
+#define %(PREFIX)s_LOG_RL_%(NAME)s %(PREFIX)s_LOG_MOD_RL_%(NAME)s
+""" % self._dict(f)
+
+        s += """
+#endif
+""" 
+
+
+
+
+        return s; 
+
+        
+
+
+
+
+
+
 
 ###############################################################################
 # 
