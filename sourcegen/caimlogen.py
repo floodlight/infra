@@ -127,7 +127,7 @@ class CAIMCustomLogMacroGenerator(CObjectGenerator):
 #define %(PREFIX)s_LOG_MOD_%(NAME)s(...) \\
     AIM_LOG_MOD_CUSTOM(%(FID)s, "%(NAME)s", __VA_ARGS__)
 #define %(PREFIX)s_LOG_MOD_RL_%(NAME)s(_rl, _time, ...)           \\
-    AIM_LOG_MOD_RL_CUSTOM($(FID)s, "%(NAME)s", _rl, _time, __VA_ARGS__)
+    AIM_LOG_MOD_RL_CUSTOM(%(FID)s, "%(NAME)s", _rl, _time, __VA_ARGS__)
 """ % self._dict(f)
 
         s += """
