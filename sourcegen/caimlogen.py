@@ -1,0 +1,111 @@
+#!/usr/bin/python
+## SourceObject ##
+###############################################################################
+#
+# CAIMLogGen.py
+#
+# Log Generator for AIM infrastructure. 
+#
+###############################################################################
+
+from cobjectgen import *
+import util
+from cfunctiongen import *
+from cenumgen import *
+from cmacrogen import *
+        
+class CAIMCommonLogMacroGenerator(CObjectGenerator):
+    objectType = 'aim_common_log_macro'
+
+
+    def Init(self):
+        pass
+
+    ############################################################
+    #
+    # Generation Methods
+    #
+    ############################################################
+    def Header(self):
+        
+        s = """
+/******************************************************************************
+ * 
+ * Common Module Log Macros
+ *
+ *****************************************************************************/
+"""
+        for f in self.flags:
+            s += """
+/** Log a module-level %(name)s */
+#define AIM_LOG_MOD_%(NAME)s(...) \\
+    AIM_LOG_MOD_COMMON(%(NAME)s, __VA_ARGS__)
+#define AIM_LOG_MOD_RL_%(NAME)s(_rl, _time, ...)           \\
+    AIM_LOG_MOD_RL_COMMON(%(NAME)s, _rl, _time, __VA_ARGS__)
+
+""" % dict(NAME=f.upper(), name=f.lower())
+
+        s += """
+/******************************************************************************
+ * 
+ * Common Object Log Macros
+ *
+ *****************************************************************************/
+"""
+        for f in self.flags:
+            s += """
+/** Log an object-level %(name)s */
+#define AIM_LOG_OBJ_%(NAME)s(_obj, ...) \\
+    AIM_LOG_OBJ_COMMON(_obj, %(NAME)s, __VA_ARGS__)
+#define AIM_LOG_OBJ_RL_%(NAME)s(_obj, _rl, _time, ...) \\
+    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, %(NAME)s, __VA_ARGS__)
+
+""" % dict(NAME=f.upper(), name=f.lower())
+
+        s += """
+/******************************************************************************
+ * 
+ * Default Macro Mappings 
+ *
+ *****************************************************************************/
+#ifdef AIM_LOG_OBJ_DEFAULT
+"""
+        for f in self.flags:
+            s += """
+/** %(NAME)s -> OBJ_%(NAME)s */
+#define AIM_LOG_%(NAME)s AIM_LOG_OBJ_%(NAME)s
+#define AIM_LOG_RL_%(NAME)s AIM_LOG_RL_OBJ_%(NAME)s
+
+""" % dict(NAME=f.upper(), name=f.lower())
+
+        s += """
+#else
+"""
+        for f in self.flags:
+            s += """
+/*** %(NAME)s -> MOD_%(NAME)s */
+#define AIM_LOG_%(NAME)s AIM_LOG_MOD_%(NAME)s
+#define AIM_LOG_RL_%(NAME)s AIM_LOG_MOD_RL_%(NAME)s
+""" % dict(NAME=f.upper(), name=f.lower())
+
+        s += """
+#endif
+"""
+        return s; 
+
+###############################################################################
+# 
+# Sanity Check
+#
+###############################################################################
+import cm
+
+if __name__ == "__main__":
+
+    m = CAIMCommonLogMacroGenerator(flags = ["WARN", "ERROR", "INFO"])
+    print m.Header(); 
+    #print m.Source(); 
+
+             
+           
+            
