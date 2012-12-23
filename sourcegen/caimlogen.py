@@ -40,6 +40,7 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
 /** Log a module-level %(name)s */
 #define AIM_LOG_MOD_%(NAME)s(...) \\
     AIM_LOG_MOD_COMMON(%(NAME)s, __VA_ARGS__)
+/** Log a module-level %(name)s with ratelimiting */
 #define AIM_LOG_MOD_RL_%(NAME)s(_rl, _time, ...)           \\
     AIM_LOG_MOD_RL_COMMON(%(NAME)s, _rl, _time, __VA_ARGS__)
 
@@ -57,6 +58,7 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
 /** Log an object-level %(name)s */
 #define AIM_LOG_OBJ_%(NAME)s(_obj, ...) \\
     AIM_LOG_OBJ_COMMON(_obj, %(NAME)s, __VA_ARGS__)
+/** Log an object-level %(name)s with ratelimiting */
 #define AIM_LOG_OBJ_RL_%(NAME)s(_obj, _rl, _time, ...) \\
     AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, %(NAME)s, __VA_ARGS__)
 
@@ -74,6 +76,7 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
             s += """
 /** %(NAME)s -> OBJ_%(NAME)s */
 #define AIM_LOG_%(NAME)s AIM_LOG_OBJ_%(NAME)s
+/** RL_%(NAME)s -> OBJ_RL_%(NAME)s */
 #define AIM_LOG_RL_%(NAME)s AIM_LOG_RL_OBJ_%(NAME)s
 
 """ % dict(NAME=f.upper(), name=f.lower())
@@ -85,6 +88,7 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
             s += """
 /** %(NAME)s -> MOD_%(NAME)s */
 #define AIM_LOG_%(NAME)s AIM_LOG_MOD_%(NAME)s
+/** RL_%(NAME)s -> MOD_RL_%(NAME)s */
 #define AIM_LOG_RL_%(NAME)s AIM_LOG_MOD_RL_%(NAME)s
 """ % dict(NAME=f.upper(), name=f.lower())
 
@@ -126,6 +130,7 @@ class CAIMCustomLogMacroGenerator(CObjectGenerator):
 /** Log a module-level %(name)s */
 #define %(PREFIX)s_LOG_MOD_%(NAME)s(...) \\
     AIM_LOG_MOD_CUSTOM(%(FID)s, "%(NAME)s", __VA_ARGS__)
+/** Log a module-level %(name)s with ratelimiting */
 #define %(PREFIX)s_LOG_MOD_RL_%(NAME)s(_rl, _time, ...)           \\
     AIM_LOG_MOD_RL_CUSTOM(%(FID)s, "%(NAME)s", _rl, _time, __VA_ARGS__)
 """ % self._dict(f)
@@ -142,6 +147,7 @@ class CAIMCustomLogMacroGenerator(CObjectGenerator):
 /** Log an object-level %(name)s */
 #define %(PREFIX)s_LOG_OBJ_%(NAME)s(_obj, ...) \\
     AIM_LOG_OBJ_CUSTOM(_obj, %(FID)s, "%(NAME)s", __VA_ARGS__)
+/** Log an object-level %(name)s with ratelimiting */
 #define %(PREFIX)s_LOG_OBJ_RL_%(NAME)s(_obj, _rl, _time, ...) \\
     AIM_LOG_OBJ_RL_CUSTOM(_obj, %(FID)s, "%(NAME)s", _rl, _time, __VA_ARGS__)
 """ % self._dict(f)
@@ -158,6 +164,7 @@ class CAIMCustomLogMacroGenerator(CObjectGenerator):
             s += """
 /** %(NAME)s -> OBJ_%(NAME)s */
 #define %(PREFIX)s_LOG_%(NAME)s %(PREFIX)s_LOG_OBJ_%(NAME)s
+/** RL_%(NAME)s -> OBJ_RL_%(NAME)s */
 #define %(PREFIX)s_LOG_RL_%(NAME)s %(PREFIX)s_LOG_RL_OBJ_%(NAME)s
 
 """ % self._dict(f)
@@ -169,6 +176,7 @@ class CAIMCustomLogMacroGenerator(CObjectGenerator):
             s += """
 /** %(NAME)s -> MOD_%(NAME)s */
 #define %(PREFIX)s_LOG_%(NAME)s %(PREFIX)s_LOG_MOD_%(NAME)s
+/** RL_%(NAME)s -> MOD_RL_%(NAME)s */
 #define %(PREFIX)s_LOG_RL_%(NAME)s %(PREFIX)s_LOG_MOD_RL_%(NAME)s
 """ % self._dict(f)
 
