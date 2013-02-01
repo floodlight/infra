@@ -31,11 +31,7 @@ class CMacroGenerator(CObjectGenerator):
         if len(args) == 1 and isinstance(args[0], list):
             args = args[0]
 
-        c = self.Name() + "("
-        for arg in args:
-            c += arg
-            c += util.commaspace(arg, args)
-        c += ")"
+        c = self.Name() + "(" + ",  ".join(args) + ")"
         return c
 
 

@@ -40,11 +40,7 @@ class CFunctionGenerator(CObjectGenerator):
 
     def Call(self, *args):
         """ Generates a call to this function with the given parameters """
-        c = self.Name() + "("
-        for arg in args:
-            c += arg
-            c += util.commaspace(arg, args)
-        c += ")"
+        c = self.Name() + "(" + ", ".join(args) + ")"
         return c
 
 
