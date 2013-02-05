@@ -51,7 +51,7 @@ class CStructGenerator(CObjectGenerator):
         return "typedef %s;\n" % self.TypedefName()
 
     def ExternTable(self, name):
-        s = ""
+        s =  "/** %s table. */\n" % name
         s += "extern %s %s[];\n" % (self.TypedefName(), name)
         return s
 
