@@ -236,6 +236,7 @@ class CEnumGenerator(CObjectGenerator):
     def Construct(self):
         self.util = CEnumUtilities()
         self.novalue = False; 
+        self.strings = True;
 
     def Init(self):
         self.validatorFunction = CEnumValidatorFunction(enum=self)
@@ -468,7 +469,10 @@ class CEnumGenerator(CObjectGenerator):
             raise Exception('Cannot generate a STRINGS macro for'
                             ' nonlinear enum %s' % (self.name))
 
-
+        if self.strings == False:
+            # No strings for this enum
+            return ""
+            
         s = "/** Strings macro. */\n"
         s += "#define %s_STRINGS \\\n" % self.f.InMacro(self.name)
         s += "{\\\n"
