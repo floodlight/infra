@@ -40,7 +40,7 @@ DEPENDMODULES := $(filter-out $(DEPENDMODULES_REMOVE),$(DEPENDMODULES))
 # This allows you to combine multiple repositories and module locations.
 #
 ifdef MODULE_DIRS
-MAKE_MODULE_DIRS_MANIFESTS := $(foreach dir,$(MODULE_DIRS),$(shell test -f $(dir)/Manifest.mk || cd $(dir) && $(BUILDER)/tools/manifesttool.py make))
+MAKE_MODULE_DIRS_MANIFESTS := $(foreach dir,$(MODULE_DIRS),$(shell test -f $(dir)/Manifest.mk || $(MAKE) -C $(dir) manifest))
 MODULEMANIFEST += $(foreach dir,$(MODULE_DIRS),$(dir)/Manifest.mk)
 endif
 
