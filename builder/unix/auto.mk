@@ -48,7 +48,7 @@ ifdef AUTOMODULE
 $(AUTOMODULE)_AUTO_FILELIST := $(foreach dir,$($(AUTOMODULE)_AUTO_DIRS),$(wildcard $(dir)/*))
 
 ifndef SOURCEGEN_DIR
-SOURCEGEN_DIR=$(THIS_SUBDIR)../../Modules/SourceGen
+SOURCEGEN_DIR=$(THIS_SUBDIR)../../sourcegen
 endif
 
 SOURCEGENTOOL := $(SOURCEGEN_DIR)/sg.py
