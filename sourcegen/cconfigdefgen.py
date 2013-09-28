@@ -54,7 +54,7 @@ class CConfigDefLookupFunction(CFunctionGenerator):
         ctn = self.cobj.ConfigTableName()
         self.comments = """/**
  * @brief Lookup a configuration setting.
- * @param setting The name of the configuration option to lookup. 
+ * @param setting The name of the configuration option to lookup.
  */
 """
         self.rv = "const char*"
@@ -76,7 +76,7 @@ class CConfigDefShowFunction(CFunctionGenerator):
     def Init(self):
         self.comments = """/**
  * @brief Show the compile-time configuration.
- * @param pvs The output stream. 
+ * @param pvs The output stream.
  */
 """
         self.rv = "int"

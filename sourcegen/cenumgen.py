@@ -161,11 +161,11 @@ class CEnumNameFunction(CFunctionGenerator):
         
         maptable = self.enum.MapTableName();
 
-        self.body = """    const char* name; 
-    if(%s) { 
-        return name; 
+        self.body = """    const char* name;
+    if(%s) {
+        return name;
     }
-    else { 
+    else {
         return "-invalid value for enum type '%s'";
     }""" % (
             self.enum.util.findByValueHelper.Call('&name',
@@ -184,11 +184,11 @@ class CEnumDescFunction(CFunctionGenerator):
         
         maptable = self.enum.DescMapTableName(); 
 
-        self.body = """    const char* name; 
-    if(%s) { 
-        return name; 
+        self.body = """    const char* name;
+    if(%s) {
+        return name;
     }
-    else { 
+    else {
         return "-invalid value for enum type '%s'";
     }""" % (
             self.enum.util.findByValueHelper.Call('&name',
@@ -209,15 +209,15 @@ class CEnumValueFunction(CFunctionGenerator):
         
         maptable = self.enum.MapTableName();
 
-        self.body = """    int i; 
+        self.body = """    int i;
     AIM_REFERENCE(substr);
     if(%s) {
         /* Enum Found */
-        *e = i; 
-        return 0; 
+        *e = i;
+        return 0;
     }
     else {
-        return -1; 
+        return -1;
     }""" % (
             self.enum.util.findByNameHelper.Call('&i', 
                                                  'str',

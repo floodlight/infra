@@ -270,7 +270,10 @@ class CKNFSourceFormatter(SourceFormatter):
         lines = str.splitlines(str.count('\n'))
         s = "/**\n"
         for line in lines:
-            s += " * %s" % (line)
+            if not line.isspace():
+                s += " * %s" % (line)
+            else:
+                s += " *\n"
         s += " */\n"
         return s
 
