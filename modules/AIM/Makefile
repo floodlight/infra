@@ -17,18 +17,11 @@
 #
 ################################################################
 
-###############################################################################
-#
-#  Makefile
-#
-#  AIM Makefile
-#
-###############################################################################
 MODULE :=  AIM
 AUTOMODULE :=  AIM
 
 ifndef BUILDER
-BUILDER := ../../Builder/unix
+BUILDER := ../../builder/unix
 endif
 
 include $(BUILDER)/definemodule.mk
