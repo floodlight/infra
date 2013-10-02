@@ -16,9 +16,26 @@
 # License.
 #
 ################################################################
-include ../../init.mk
 
-MODULE :=  AIM
-AUTOMODULE :=  AIM
+#
+# The root of of our repository is here:
+#
+ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
-include $(BUILDER)/definemodule.mk
+export BUILDER := $(ROOT)/builder/unix
+
+MODULE_DIRS := $(ROOT)/modules 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

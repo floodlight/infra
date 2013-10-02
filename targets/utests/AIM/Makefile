@@ -16,11 +16,7 @@
 # License.
 #
 ################################################################
-ifndef BUILDER
-BUILDER := ../../../builder/unix
-endif
-
-MODULE_DIRS := ../../../modules
+include ../../../init.mk
 
 MODULE := AIM_utest
 TEST_MODULE :=  AIM
