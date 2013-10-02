@@ -52,6 +52,11 @@
 
 
 /**
+ * Clear a structure. 
+ */
+#define AIM_ZERO(_struct) memset(&_struct, 0, sizeof(_struct))
+
+/**
  * Unused expression or variable.
  */
 #define AIM_REFERENCE(_expr) ( (void) (_expr) )
