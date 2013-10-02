@@ -49,7 +49,7 @@ include $(BUILDER)/dependmodules.mk
 include $(BUILDER)/targets.mk
 
 ifdef VALGRIND
-HARNESS:=valgrind --leak-check=full --show-reachable=yes --suppressions=$(BIGCODE)/Tools/valgrind.suppressions
+HARNESS:=valgrind --leak-check=full --show-reachable=yes $(VALGRIND_SUPPRESSIONS) 
 endif
 
 
