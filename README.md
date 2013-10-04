@@ -1,2 +1,2 @@
-stage-infra
-===========
+Common Infrastructure Repository
+================================
