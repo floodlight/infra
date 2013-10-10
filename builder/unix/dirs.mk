@@ -48,6 +48,10 @@ endif
 # the directories which follow explicitly.
 #
 ################################################################################
+ifndef BUILD_DIR_BASE
+BUILD_DIR_BASE := ./build
+endif
+
 ifndef BUILD_DIR
 # Check for module-specified BUILD_DIR
 ifdef $(MODULE)_BUILD_DIR
@@ -57,7 +61,7 @@ endif
 
 
 ifndef BUILD_DIR
-BUILD_DIR := ./build
+BUILD_DIR := $(BUILD_DIR_BASE)
 endif
 
 
