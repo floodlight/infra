@@ -78,9 +78,10 @@ class ManifestBase(object):
                         if m:
                             if root.startswith("./"):
                                 root = root.replace("./", "")
-                            s += self.module(m.group('modname'), root)
                             self.modules[m.group('modname')] = root
 
+        for modname, root in sorted(self.modules.items()):
+            s += self.module(modname, root)
 
         s += self.denitsection()
         s += "\n"
@@ -112,7 +113,7 @@ class MakeManifest(ManifestBase):
 
     def denitsection(self):
         return "\n\nALL_MODULES := $(ALL_MODULES) %s" % (
-            " ".join(self.modules.keys()))
+            " ".join(sorted(self.modules.keys())))
 
 class EnvManifest(ManifestBase):
     """Generates the Manifest.sh file containing environment location variables."""
