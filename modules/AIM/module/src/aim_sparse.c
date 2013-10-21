@@ -147,6 +147,4 @@ aim_avsparse_type(const char* arg, aim_pvs_t* epvs,
     return rv;
 }
 
-
-
-
+/* @} */
