@@ -33,12 +33,20 @@ ifndef GCC
 GCC := gcc
 endif
 
+CINFO="["
+
+ifdef CCACHE
+CINFO+="$(CCACHE) ,"
+endif
+
 ifdef DEBUG
 DEBUG_FLAGS = -g
-CINFO="[debug]"
+CINFO+="debug"
 else
-CINFO="[release]"
+CINFO+="release"
 endif
+
+CINFO += "]"
 
 ifdef COVERAGE
 COVERAGE_FLAGS := --coverage
@@ -99,7 +107,7 @@ endif
 # Note that we also generate dependencies automatically with -MD
 $(OBJECT_DIR)/$($(TARGET)_SUBDIR)/%.o: $($(TARGET)_SUBDIR)/%.c
 	@echo "    Compiling$(CINFO): $(TARGET)::$(notdir $<)"
-	$(VERBOSE)$(GCC) $(DEBUG_FLAGS) $(COVERAGE_FLAGS) $(ANALYZE_FLAGS) -I. $($(TARGET)_INCLUDES) $($(TARGET)_CFLAGS) $(GLOBAL_INCLUDES) $(GLOBAL_CFLAGS) $(GCC_PEDANTIC_FLAGS) $(GCC_FLAGS) $(GCC_WARNING_FLAGS) -MD -c $< -o $@
+	$(VERBOSE) $(CCACHE) $(GCC) $(DEBUG_FLAGS) $(COVERAGE_FLAGS) $(ANALYZE_FLAGS) -I. $($(TARGET)_INCLUDES) $($(TARGET)_CFLAGS) $(GLOBAL_INCLUDES) $(GLOBAL_CFLAGS) $(GCC_PEDANTIC_FLAGS) $(GCC_FLAGS) $(GCC_WARNING_FLAGS) -MD -c $< -o $@
 
 # Dependecies Files for these targets
 $(TARGET)_DEPS := $($(TARGET)_OBJS:%.o=%.d)
