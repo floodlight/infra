@@ -18,11 +18,11 @@
 #
 ################################################################
 
-###############################################################################
+################################################################
 #
 # Builder Module Generation.
 #
-###############################################################################
+################################################################
 import sys
 import os
 import re
@@ -273,11 +273,9 @@ class GModuleMake(ModuleMakefile):
     def finit(self):
         self.fname = "%(MODULE_BASE_DIR)s/Makefile"
         self.body=(
-"""MODULE := %(MODULE_NAME)s
+"""include ../../init.mk
+MODULE := %(MODULE_NAME)s
 AUTOMODULE := %(MODULE_NAME)s
-ifndef BUILDER
-$(error "$$BUILDER must be specified.")
-endif
 include $(BUILDER)/definemodule.mk
 """)
 
@@ -614,14 +612,10 @@ class ModuleUnitTestTargetMake(ModuleMakefile):
         self.fname = "%(MODULE_UNIT_TEST_DIR)s/Makefile"
         self.body=(
 """
-ifndef BUILDER
-$(error $$(BUILDER) is not defined.)
-endif
-
+include ../../../init.mk
 MODULE := %(MODULE_NAME)s_utest
 TEST_MODULE := %(MODULE_NAME)s
 DEPENDMODULES := AIM
-MODULE_DIRS := %(MODULE_DIRS)s
 GLOBAL_CFLAGS += -DAIM_CONFIG_INCLUDE_MODULES_INIT=1
 GLOBAL_CFLAGS += -DAIM_CONFIG_INCLUDE_MAIN=1
 include $(BUILDER)/build-unit-test.mk
