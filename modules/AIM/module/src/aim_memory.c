@@ -29,7 +29,7 @@
 #include "aim_int.h"
 
 void *
-aim_zmalloc(int size)
+aim_zmalloc(size_t size)
 {
     void *p = AIM_MALLOC(size);
     if (p) {
@@ -39,13 +39,13 @@ aim_zmalloc(int size)
 }
 
 void *
-aim_memdup(void *src, int size)
+aim_memdup(void *src, size_t size)
 {
     return aim_memndup(src, size, size);
 }
 
 void *
-aim_memndup(void *src, int src_size, int alloc_size)
+aim_memndup(void *src, size_t src_size, size_t alloc_size)
 {
     void *rv;
     if (alloc_size < src_size) {

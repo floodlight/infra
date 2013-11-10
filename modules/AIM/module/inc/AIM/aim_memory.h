@@ -37,7 +37,7 @@
  * @brief Zero'ed memory alloc.
  * @param size Size.
  */
-void *aim_zmalloc(int size);
+void *aim_zmalloc(size_t size);
 
 /**
  * Free memory allocated by aim_zmalloc()
@@ -51,7 +51,7 @@ void aim_free(void *data);
  * @param size Size.
  * @returns a new copy of the data.
  */
-void *aim_memdup(void *src, int size);
+void *aim_memdup(void *src, size_t size);
 
 /**
  * @brief Duplicate memory.
@@ -59,7 +59,7 @@ void *aim_memdup(void *src, int size);
  * @param src_size Size to copy.
  * @param alloc_size Size to allocate.
  */
-void *aim_memndup(void *src, int src_size, int alloc_size);
+void *aim_memndup(void *src, size_t src_size, size_t alloc_size);
 
 #endif /* __AIM_MEMORY_H__ */
 /*@}*/
