@@ -17,36 +17,49 @@
  *
  ****************************************************************/
 
-/**************************************************************************//**
+/******************************************************************************
  *
- *  /module/inc/AIM/aim.h
+ *  /module/src/aim_memory.c
  *
- * @file
- * @brief AIM Definitions.
- *
- * @addtogroup AIM
- * @{
+ *  AIM Memory Allocation
  *
  *****************************************************************************/
-#ifndef __AIM_H__
-#define __AIM_H__
-
 #include <AIM/aim_config.h>
-#include <AIM/aim_pvs.h>
-#include <AIM/aim_pvs_file.h>
-#include <AIM/aim_pvs_buffer.h>
-#include <AIM/aim_valist.h>
-#include <AIM/aim_utils.h>
-#include <AIM/aim_string.h>
-#include <AIM/aim_map.h>
-#include <AIM/aim_valgrind.h>
-#include <AIM/aim_datatypes.h>
-#include <AIM/aim_printf.h>
-#include <AIM/aim_sparse.h>
-#include <AIM/aim_error.h>
-#include <AIM/aim_bitmap.h>
-#include <AIM/aim_daemon.h>
-#include <AIM/aim_memory.h>
+#include <AIM/aim.h>
+#include "aim_int.h"
 
-#endif /* __AIM_H__ */
-/*@}*/
+void *
+aim_zmalloc(int size)
+{
+    void *p = AIM_MALLOC(size);
+    if (p) {
+        AIM_MEMSET(p, 0, size);
+    }
+    return p;
+}
+
+void *
+aim_memdup(void *src, int size)
+{
+    return aim_memndup(src, size, size);
+}
+
+void *
+aim_memndup(void *src, int src_size, int alloc_size)
+{
+    void *rv;
+    if (alloc_size < src_size) {
+        alloc_size = src_size;
+    }
+    rv = AIM_MALLOC(alloc_size);
+    AIM_MEMCPY(rv, src, src_size);
+    return rv;
+}
+
+void
+aim_free(void *data)
+{
+    if(data) {
+        AIM_FREE(data);
+    }
+}

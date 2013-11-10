@@ -17,49 +17,49 @@
  *
  ****************************************************************/
 
-/******************************************************************************
+/**************************************************************************//**
  *
- *  /module/src/aim_util.c
+ *  /module/inc/AIM/aim_memory.h
  *
- *  AIM Utilities
+ * @file
+ * @brief Memory allocation.
+ *
+ * @addtogroup aim-memory
+ * @{
  *
  *****************************************************************************/
+#ifndef __AIM_MEMORY_H__
+#define __AIM_MEMORY_H__
+
 #include <AIM/aim_config.h>
-#include <AIM/aim.h>
-#include "aim_int.h"
 
-void*
-aim_zmalloc(int size)
-{
-    void* p = AIM_MALLOC(size);
-    if(p) {
-        AIM_MEMSET(p, 0, size);
-    }
-    return p;
-}
+/**
+ * @brief Zero'ed memory alloc.
+ * @param size Size.
+ */
+void *aim_zmalloc(int size);
 
-void*
-aim_memdup(void* src, int size)
-{
-    return aim_memndup(src, size, size);
-}
+/**
+ * Free memory allocated by aim_zmalloc()
+ * @param data The memory to free.
+ */
+void aim_free(void *data);
 
-void*
-aim_memndup(void* src, int src_size, int alloc_size)
-{
-	void* rv;
-	if(alloc_size < src_size) {
-		alloc_size = src_size;
-	}
-    rv = AIM_MALLOC(alloc_size);
-    AIM_MEMCPY(rv, src, src_size);
-    return rv;
-}
+/**
+ * @brief Duplicate memory.
+ * @param src Source memory.
+ * @param size Size.
+ * @returns a new copy of the data.
+ */
+void *aim_memdup(void *src, int size);
 
-void
-aim_free(void* data)
-{
-    if(data) {
-        AIM_FREE(data);
-    }
-}
+/**
+ * @brief Duplicate memory.
+ * @param src Source memory;
+ * @param src_size Size to copy.
+ * @param alloc_size Size to allocate.
+ */
+void *aim_memndup(void *src, int src_size, int alloc_size);
+
+#endif /* __AIM_MEMORY_H__ */
+/*@}*/

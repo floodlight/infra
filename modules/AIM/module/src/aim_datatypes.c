@@ -32,6 +32,7 @@
 #include <AIM/aim_error.h>
 #include <AIM/aim_bitmap.h>
 #include <AIM/aim_pvs_buffer.h>
+#include <AIM/aim_memory.h>
 
 #if AIM_CONFIG_INCLUDE_POSIX == 1
 #include <string.h>
