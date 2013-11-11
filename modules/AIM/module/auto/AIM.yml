@@ -184,7 +184,6 @@ definitions:
   util:
     aim:
       objects:
-        - zmalloc
         - strlcpy
 
 

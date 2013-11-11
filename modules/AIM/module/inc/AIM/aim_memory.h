@@ -34,10 +34,33 @@
 #include <AIM/aim_config.h>
 
 /**
+ * @brief Allocate memory.
+ * @param size Size.
+ *
+ * The returned memory is uninitialized.
+ * Returns NULL if allocation failed.
+ */
+void *aim_malloc(size_t size);
+
+/**
  * @brief Zero'ed memory alloc.
  * @param size Size.
  */
 void *aim_zmalloc(size_t size);
+
+/**
+ * @brief Resize memory.
+ * @param ptr Allocated memory.
+ * @param size New size.
+ *
+ * Usual realloc semantics: if ptr is NULL then a new allocation is made, and
+ * is size is zero then the memory is freed. Otherwise the memory is resized
+ * and possibly moved.
+ *
+ * Returns NULL if allocation failed. The existing allocated memory will still
+ * be valid in this case.
+ */
+void *aim_realloc(void *ptr, size_t size);
 
 /**
  * Free memory allocated by aim_zmalloc()

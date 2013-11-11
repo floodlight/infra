@@ -28,6 +28,7 @@
 #include <AIM/aim_pvs_buffer.h>
 #include <AIM/aim_utils.h>
 #include <AIM/aim_string.h>
+#include <AIM/aim_memory.h>
 #include "aim_util.h"
 
 AIM_OBJECT_ID_DEFINE(aim_buffer_pvs_obj, "aim_buffer_pvs");

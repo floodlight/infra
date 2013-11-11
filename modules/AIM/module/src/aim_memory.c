@@ -29,6 +29,12 @@
 #include "aim_int.h"
 
 void *
+aim_malloc(size_t size)
+{
+    return AIM_MALLOC(size);
+}
+
+void *
 aim_zmalloc(size_t size)
 {
     void *p = AIM_MALLOC(size);
@@ -36,6 +42,12 @@ aim_zmalloc(size_t size)
         AIM_MEMSET(p, 0, size);
     }
     return p;
+}
+
+void *
+aim_realloc(void *ptr, size_t size)
+{
+    return realloc(ptr, size);
 }
 
 void *
