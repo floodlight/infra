@@ -698,6 +698,26 @@ aim_datatype_ts__vlan__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
     return AIM_STATUS_OK;
 }
 
+static int
+aim_datatype_ts__errno__(aim_datatype_context_t* dtc, aim_va_list_t* vargs, 
+                         const char** rv)
+{
+    int e = va_arg(vargs->val, int); 
+    *rv = aim_strdup(strerror(e)); 
+    AIM_REFERENCE(dtc); 
+    return AIM_STATUS_OK; 
+}
+
+static int
+aim_datatype_ts__signal__(aim_datatype_context_t* dtc, aim_va_list_t* vargs, 
+                          const char** rv)
+{
+    int e = va_arg(vargs->val, int); 
+    *rv = aim_strdup(strsignal(e)); 
+    AIM_REFERENCE(dtc); 
+    return AIM_STATUS_OK; 
+}
+
 int
 aim_datatypes_init()
 {
@@ -747,6 +767,16 @@ aim_datatypes_init()
                           aim_datatype_fs__vlan__,
                           aim_datatype_ts__vlan__,
                           NULL);
+
+    aim_datatype_register(0, "errno", "System error number.", 
+                          NULL, 
+                          aim_datatype_ts__errno__, 
+                          NULL); 
+    
+    aim_datatype_register(0, "signal", "System signal number.", 
+                          NULL, 
+                          aim_datatype_ts__signal__, 
+                          NULL); 
 
    return 0;
 }
