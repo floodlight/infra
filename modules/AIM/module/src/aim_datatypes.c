@@ -33,6 +33,10 @@
 #include <AIM/aim_bitmap.h>
 #include <AIM/aim_pvs_buffer.h>
 
+#if AIM_CONFIG_INCLUDE_POSIX == 1
+#include <string.h>
+#endif
+
 /* FIXME */
 #define AIM_STATUS_E_ARG -1
 #define AIM_STATUS_OK 0
@@ -713,7 +717,11 @@ aim_datatype_ts__signal__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
                           const char** rv)
 {
     int e = va_arg(vargs->val, int); 
+#if AIM_CONFIG_INCLUDE_POSIX == 1
     *rv = aim_strdup(strsignal(e)); 
+#else
+    *rv = aim_fstrdup("%d", e); 
+#endif
     AIM_REFERENCE(dtc); 
     return AIM_STATUS_OK; 
 }
