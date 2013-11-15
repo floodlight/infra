@@ -216,6 +216,27 @@ aim_bitmap_word_set32(aim_bitmap_hdr_t* hdr, int word, uint32_t value)
     hdr->words[word] = value;
 }
 
+/**
+ * @brief Get number of bits that are set in the bitmap. 
+ * @param hdr The bitmap header.
+ */
+static inline int 
+aim_bitmap_count(aim_bitmap_hdr_t* hdr)
+{
+    int idx = 0, bit_count = 0;
+    aim_bitmap_word_t word;
+
+    for ( ; idx < hdr->wordcount; idx++) {
+        word = hdr->words[idx];
+        while (word) {
+            word = word & (word-1);
+            bit_count++;
+        }
+    }
+
+    return bit_count;
+}
+
 /*
  * These macros can operate directly on any bitmap structure
  * containing the proper header.
@@ -236,6 +257,10 @@ aim_bitmap_word_set32(aim_bitmap_hdr_t* hdr, int word, uint32_t value)
 /** Get a bit */
 #define AIM_BITMAP_GET(_bmap, _bit)             \
     aim_bitmap_get(&((_bmap)->hdr), _bit)
+
+/** Get number of bits set */
+#define AIM_BITMAP_COUNT(_bmap)                 \
+    aim_bitmap_count(&((_bmap)->hdr))
 
 /** Set all bits */
 #define AIM_BITMAP_SET_ALL(_bmap)               \
