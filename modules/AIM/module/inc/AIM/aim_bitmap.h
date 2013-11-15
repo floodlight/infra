@@ -223,10 +223,16 @@ aim_bitmap_word_set32(aim_bitmap_hdr_t* hdr, int word, uint32_t value)
 static inline int 
 aim_bitmap_count(aim_bitmap_hdr_t* hdr)
 {
-    int bit = 0, bit_count = 0;
-    for( ; bit <= hdr->maxbit; bit++)
-        if (AIM_BITMAP_HDR_BIT_WORD(hdr,bit) & AIM_BITMAP_BIT_POS(bit))
+    int idx = 0, bit_count = 0;
+    aim_bitmap_word_t word;
+
+    for ( ; idx < hdr->wordcount; idx++) {
+        word = hdr->words[idx];
+        while (word) {
+            word = word & (word-1);
             bit_count++;
+        }
+    }
 
     return bit_count;
 }
