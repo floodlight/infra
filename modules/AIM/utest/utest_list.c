@@ -194,5 +194,74 @@ int utest_list(void)
         assert(i == 3);
     }
 
+    /* Test foreach_reverse */
+    {
+        struct list_head head;
+        struct list_links a, b, c, *cur;
+        int i = 0;
+        list_init(&head);
+        list_push(&head, &a);
+        list_push(&head, &b);
+        list_push(&head, &c);
+        assert(list_length(&head) == 3);
+
+        LIST_FOREACH_REVERSE(&head, cur) {
+            if (i == 0) assert(cur == &c);
+            else if (i == 1) assert(cur == &b);
+            else if (i == 2) assert(cur == &a);
+            else (assert(0));
+            i++;
+        }
+
+        assert(i == 3);
+    }
+
+    /* Test foreach_reverse_safe */
+    {
+        struct list_head head;
+        struct list_links a, b, c, *cur, *next;
+        int i = 0;
+        list_init(&head);
+        list_push(&head, &a);
+        list_push(&head, &b);
+        list_push(&head, &c);
+        assert(list_length(&head) == 3);
+
+        LIST_FOREACH_REVERSE_SAFE(&head, cur, next) {
+            if (i == 0) assert(cur == &c);
+            else if (i == 1) { assert(cur == &b); list_remove(cur); }
+            else if (i == 2) assert(cur == &a);
+            else (assert(0));
+            i++;
+        }
+
+        assert(i == 3);
+    }
+
+    /* Test list_first/list_last */
+    {
+        struct list_head head;
+        struct list_links a, b, c;
+        list_init(&head);
+
+        assert(list_first(&head) == NULL);
+        assert(list_last(&head) == NULL);
+
+        list_push(&head, &a);
+
+        assert(list_first(&head) == &a);
+        assert(list_last(&head) == &a);
+
+        list_push(&head, &b);
+
+        assert(list_first(&head) == &a);
+        assert(list_last(&head) == &b);
+
+        list_push(&head, &c);
+
+        assert(list_first(&head) == &a);
+        assert(list_last(&head) == &c);
+    }
+
     return 0;
 }
