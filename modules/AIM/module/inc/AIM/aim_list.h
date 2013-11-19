@@ -72,6 +72,20 @@ typedef struct list_head {
 #define LIST_FOREACH_SAFE(head, cur, next) \
     for (cur = (head)->links.next; next = cur->next, cur != &(head)->links; cur = next)
 
+/**
+ * cur should be a struct list_links * variable.
+ */
+#define LIST_FOREACH_REVERSE(head, cur) \
+    for (cur = (head)->links.prev; cur != &(head)->links; cur = cur->prev)
+
+/**
+ * This version of LIST_FOREACH_REVERSE saves the next pointer in a temporary
+ * variable so that the current links can be safely freed.
+ * cur and next should be struct list_links * variables.
+ */
+#define LIST_FOREACH_REVERSE_SAFE(head, cur, next) \
+    for (cur = (head)->links.prev; next = cur->prev, cur != &(head)->links; cur = next)
+
 /** Only used to initialize the list head, not the individual elements. */
 static inline void
 list_init(struct list_head *head)
