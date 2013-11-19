@@ -44,26 +44,6 @@
 #include <memory.h>
 #endif
 
-#ifndef AIM_MALLOC
-    #if defined(GLOBAL_MALLOC)
-        #define AIM_MALLOC GLOBAL_MALLOC
-    #elif AIM_CONFIG_PORTING_STDLIB == 1
-        #define AIM_MALLOC malloc
-    #else
-        #error The macro AIM_MALLOC is required but cannot be defined.
-    #endif
-#endif
-
-#ifndef AIM_FREE
-    #if defined(GLOBAL_FREE)
-        #define AIM_FREE GLOBAL_FREE
-    #elif AIM_CONFIG_PORTING_STDLIB == 1
-        #define AIM_FREE free
-    #else
-        #error The macro AIM_FREE is required but cannot be defined.
-    #endif
-#endif
-
 #ifndef AIM_MEMSET
     #if defined(GLOBAL_MEMSET)
         #define AIM_MEMSET GLOBAL_MEMSET

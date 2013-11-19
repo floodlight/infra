@@ -192,8 +192,8 @@ aim_pvs_buffer_reset(aim_pvs_t* _pvs)
 
     while(pvs->list) {
         aim_pvs_buffer_entry_t* next = pvs->list->next;
-        AIM_FREE((void*)pvs->list->data);
-        AIM_FREE(pvs->list);
+        aim_free((void*)pvs->list->data);
+        aim_free(pvs->list);
         pvs->list = next;
     }
 }

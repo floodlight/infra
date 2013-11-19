@@ -164,8 +164,6 @@ definitions:
   portingmacro:
     AIM:
       macros:
-        - malloc
-        - free
         - memset
         - memcpy
         - memcmp

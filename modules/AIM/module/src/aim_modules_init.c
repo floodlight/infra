@@ -149,9 +149,9 @@ env_args_replace__(const char* env_argv,
     LIST_FOREACH_SAFE(&args, cur, next) {
         arg_t* a = container_of(cur, links, arg_t);
         argv[i++] = a->arg;
-        AIM_FREE(a);
+        aim_free(a);
     }
-    AIM_FREE(s);
+    aim_free(s);
 
     *rv_argc = count+1;
     *rv_argv = argv;
@@ -163,9 +163,9 @@ env_args_free__(char** argv)
     char** p;
     /* We don't free arg[0], since this came from the original argv array */
     for(p = argv+1; *p; p++) {
-        AIM_FREE(*p);
+        aim_free(*p);
     }
-    AIM_FREE(argv);
+    aim_free(argv);
 }
 
 #endif /* AIM_CONFIG_INCLUDE_ENV_ARGV */

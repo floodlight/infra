@@ -31,17 +31,13 @@
 void *
 aim_malloc(size_t size)
 {
-    return AIM_MALLOC(size);
+    return malloc(size);
 }
 
 void *
 aim_zmalloc(size_t size)
 {
-    void *p = AIM_MALLOC(size);
-    if (p) {
-        AIM_MEMSET(p, 0, size);
-    }
-    return p;
+    return calloc(1, size);
 }
 
 void *
@@ -63,7 +59,7 @@ aim_memndup(void *src, size_t src_size, size_t alloc_size)
     if (alloc_size < src_size) {
         alloc_size = src_size;
     }
-    rv = AIM_MALLOC(alloc_size);
+    rv = aim_malloc(alloc_size);
     AIM_MEMCPY(rv, src, src_size);
     return rv;
 }
@@ -71,7 +67,5 @@ aim_memndup(void *src, size_t src_size, size_t alloc_size)
 void
 aim_free(void *data)
 {
-    if(data) {
-        AIM_FREE(data);
-    }
+    free(data);
 }

@@ -141,7 +141,7 @@ aim_datatype_unregister(char c, const char* type)
         dt = DT_ENTRY(ll);
         if(aim_datatype_equals__(dt, c, type)) {
             list_remove(&((__aim_datatype_t*)dt)->links);
-            AIM_FREE(dt);
+            aim_free(dt);
             break;
         }
     }
@@ -352,7 +352,7 @@ aim_datatype_fs__idata__(aim_datatype_context_t* dtc, const char* arg,
     }
     AIM_MEMCPY(data, _data, _size);
     *size = _size;
-    AIM_FREE(_data);
+    aim_free(_data);
     return AIM_STATUS_OK;
 }
 
