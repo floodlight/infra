@@ -105,6 +105,27 @@ list_empty(struct list_head *head)
 {
     return head->links.next == &head->links;
 }
+
+static inline struct list_links *
+list_first(struct list_head *head)
+{
+    if (list_empty(head)) {
+        return NULL;
+    } else {
+        return head->links.next;
+    }
+}
+
+static inline struct list_links *
+list_last(struct list_head *head)
+{
+    if (list_empty(head)) {
+        return NULL;
+    } else {
+        return head->links.prev;
+    }
+}
+
 /** List insert before */
 static inline void
 list_insert_before(struct list_links *target, struct list_links *el)

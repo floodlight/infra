@@ -238,5 +238,30 @@ int utest_list(void)
         assert(i == 3);
     }
 
+    /* Test list_first/list_last */
+    {
+        struct list_head head;
+        struct list_links a, b, c;
+        list_init(&head);
+
+        assert(list_first(&head) == NULL);
+        assert(list_last(&head) == NULL);
+
+        list_push(&head, &a);
+
+        assert(list_first(&head) == &a);
+        assert(list_last(&head) == &a);
+
+        list_push(&head, &b);
+
+        assert(list_first(&head) == &a);
+        assert(list_last(&head) == &b);
+
+        list_push(&head, &c);
+
+        assert(list_first(&head) == &a);
+        assert(list_last(&head) == &c);
+    }
+
     return 0;
 }
