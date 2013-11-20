@@ -1,20 +1,20 @@
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # CDefaultSourceFormatter.py
@@ -22,7 +22,7 @@
 # Base Formatter Class for the C Language
 #
 # This base class provides all basic C language formatting
-# used by the CSourceObjectGenerator and CSourceGenerator classes. 
+# used by the CSourceObjectGenerator and CSourceGenerator classes.
 #
 # Derive from this class to specify different formatting behavior
 #
@@ -73,7 +73,7 @@ class CKNFSourceFormatter(SourceFormatter):
 
     def LocalVariable(self, name):
         """ Format for local variable names """
-        return self.Identifier(name); 
+        return self.Identifier(name);
 
     ############################################################
     #
@@ -103,8 +103,8 @@ class CKNFSourceFormatter(SourceFormatter):
     def TypedefEnumName(self, ident):
         """ The typedef'ed type name for an enum """
         # Default is to prepend "_t" to all basenames
-        return ident + "_t"        
-    
+        return ident + "_t"
+
 
     def EnumEntry(self, entry, ident):
         """ What should an enumeration entry look like """
@@ -132,7 +132,7 @@ class CKNFSourceFormatter(SourceFormatter):
         """ What is the name of the ENUM_MAP structure. This
         structure is needed for enum management and description
         tables. You can define this structure separately in your code
-        or ask the EnumObject generator to declare it for you. 
+        or ask the EnumObject generator to declare it for you.
         Either way, return what you call it here"""
 
         # Default
@@ -140,7 +140,7 @@ class CKNFSourceFormatter(SourceFormatter):
 
     def EnumStringsMacroName(self, ident):
         """ What should the STRINGS macro name look like """
-        
+
         # Default is "IDENT_STRINGS"
         return self.MacroName("%s_STRINGS" % (ident))
 
@@ -162,7 +162,7 @@ class CKNFSourceFormatter(SourceFormatter):
 
     def EnumFindByValueHelper(self, enum):
         """ What name should be used for the value lookup function """
-        # Default is not specific to the enum. 
+        # Default is not specific to the enum.
         return "enum_find_by_value"
 
 
@@ -176,20 +176,20 @@ class CKNFSourceFormatter(SourceFormatter):
         """ What an identifier should look like when referenced
         inside a macro"""
 
-        # 
+        #
         # Default:
         # spamAndEggs -> SPAM_AND_EGGS
         # spam_and_eggs -> SPAM_AND_EGGS
         #
-        # If there are no lowercase letters in the identifier, 
-        # just return it. 
+        # If there are no lowercase letters in the identifier,
+        # just return it.
         if re.search("[a-z]", ident):
             s = re.sub("([A-Z])", "_\\1", ident)
             return s.upper()
         else:
             return ident
 
-    
+
 
     def MacroName(self, name):
         """ Transform a macro name based on local nameing conventions """
@@ -226,7 +226,7 @@ class CKNFSourceFormatter(SourceFormatter):
                 s += util.commaspace(arg, argList)
         s += ")"
         return s
-        
+
     def FunctionSignature(self, rv, name, argList, proto):
         """ Convenience function for function signature generation """
         if proto == True:
@@ -238,22 +238,22 @@ class CKNFSourceFormatter(SourceFormatter):
         s = self.MacroName(name)
         if len(args):
             # Functional signature
-            s = "%s("; 
+            s = "%s(";
             for arg in args:
                 s += "%s%s" % (arg, util.comma(arg, args))
             s += ")"
-        return s    
+        return s
 
 
     def FunctionPrototype(self, rv, name, argList):
         """ Format a function prototype """
         # Default is:
         #
-        # <returns> 
+        # <returns>
         # functionName(arguments)
         #
-        return "%s %s%s" % (rv, 
-                                  self.FunctionName(name), 
+        return "%s %s%s" % (rv,
+                                  self.FunctionName(name),
                                   self.FunctionPList(argList))
 
     def FunctionDeclaration(self, rv, name, argList):
@@ -262,8 +262,8 @@ class CKNFSourceFormatter(SourceFormatter):
         #
         # <returns> functionName(arguments)
         #
-        return "%s\n%s%s" % (rv, 
-                                 self.FunctionName(name), 
+        return "%s\n%s%s" % (rv,
+                                 self.FunctionName(name),
                                  self.FunctionPList(argList))
 
 
@@ -281,7 +281,7 @@ class CKNFSourceFormatter(SourceFormatter):
     def SingleLineComment(self, str):
         """ Format a single-line comment """
         return "/** %s */" % (str)
-    
+
     def MultiLineComment(self, str):
         """ Format a multiple-line comment """
         lines = str.splitlines(str.count('\n'))
@@ -305,6 +305,6 @@ class CKNFSourceFormatter(SourceFormatter):
 
 
 
-    
+
 
 

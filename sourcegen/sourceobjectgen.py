@@ -1,21 +1,21 @@
 #!/usr/bin/python
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # SourceObjectGenerator.py
@@ -63,14 +63,14 @@ class SourceObjectGenerator:
         if kwargs.get('init', True):
             self.Init()
 
-        
+
 
     def Update(self, d):
         if 'initargs' in d:
             ia = d.pop('initargs')
             self.__dict__.update(ia)
         self.__dict__.update(d)
-        
+
     def Construct(self):
         return True
 
@@ -86,16 +86,16 @@ class SourceObjectGenerator:
 
     def InitFromConfig(self, name, cm):
         """Initialize ourselves from the config manager data"""
-        
+
 
         if name != None and name != '':
             if cm != None and self.objectType != None:
-                # We have a name, a type, and config manager. 
+                # We have a name, a type, and config manager.
                 # Try to lookup our data
                 data = cm.FindTypedEntry(self.objectType, self.name)
 
                 if data != None:
-                    # We found data in the config manager for this object. 
+                    # We found data in the config manager for this object.
                     # Allow it to be normalized as per the object's requirements
                     data = self.NormalizeData(data)
                     # Update the object with the new data
@@ -112,12 +112,12 @@ class SourceObjectGenerator:
         object-cannonical format. Allows the user to specify a variety
         of syntax or shorthand, but produce a unified representation for
         processing in the object. This method should just return the
-        new representation, not adjust any class member data. 
+        new representation, not adjust any class member data.
         This method is optional. """
         return data
 
 
-            
+
 import cm
 import sys
 import imp
@@ -131,17 +131,17 @@ class SourceObjectFactory:
     def __init__(self, configManager=None, LoadLocal=True):
         self.objectReList = [
             # class(name)
-            re.compile(r'(?P<cls>.*)\((?P<name>.*)'), 
+            re.compile(r'(?P<cls>.*)\((?P<name>.*)'),
             # class.name
             re.compile(r'(?P<cls>.*?)\.(?P<name>.*)')
             ]
         self.methodReList = [
             # class(name).method
-            re.compile(r'(?P<cls>.*)\((?P<name>.*)\).(?P<method>.*)'), 
+            re.compile(r'(?P<cls>.*)\((?P<name>.*)\).(?P<method>.*)'),
             # class.name.method
-            re.compile(r'(?P<cls>.*)\.(?P<name>.*)\.(?P<method>.*)'), 
+            re.compile(r'(?P<cls>.*)\.(?P<name>.*)\.(?P<method>.*)'),
             ]
-                       
+
         self.modules = []
         self.classes = {}
         self.objectTypes = {}
@@ -161,7 +161,7 @@ class SourceObjectFactory:
             return base
         if ext == ".py":
             # check for SourceObject tag
-            
+
             try:
                 for line in open("%s/%s" % (dir_, fName)):
                     if re.match("## SourceObject ##", line):
@@ -174,7 +174,7 @@ class SourceObjectFactory:
     def ImportModules(self, dir_):
         """Import all modules in a given directory """
         sys.path.append(dir_)
-        for f in os.listdir(os.path.abspath(dir_)):       
+        for f in os.listdir(os.path.abspath(dir_)):
             m = self.__isSourceObjectModule(dir_, f)
             if m:
                 self.ImportModule(m)
@@ -211,19 +211,19 @@ class SourceObjectFactory:
             objectClass = cls
         if cls in self.objectTypes:
             objectClass = self.objectTypes[cls]
-            
+
         if objectClass != None:
-            
+
             if name != None and name != '':
                 # Get the list of specific object names to which
                 # the requested name may refer:
                 nameList = self.cm.ObjectNameList(
-                    self.classes[objectClass].objectType, 
+                    self.classes[objectClass].objectType,
                     name)
-                                              
+
                 # if nameList is empty, we couldn't resolve the symbol
                 if len(nameList) == 0:
-                    raise Exception('No entry found for %s::%s' % 
+                    raise Exception('No entry found for %s::%s' %
                                     (cls, name))
 
                 # Create all named objects
@@ -237,7 +237,7 @@ class SourceObjectFactory:
                 obj = self.classes[objectClass](name=None)
                 obj.objectFactory = self
                 objectList.append(obj)
-            
+
             return objectList
 
         raise Exception("Could not create object type '%s'" % cls)
@@ -254,7 +254,7 @@ class SourceObjectFactory:
                 return getattr(obj, name)()
 
         if raise_:
-            raise Exception("object %s (type %s) has no method '%s'." % 
+            raise Exception("object %s (type %s) has no method '%s'." %
                             (obj.__class__, obj.objectType, method))
 
         return None
@@ -266,11 +266,11 @@ class SourceObjectFactory:
             x = r.match(expr)
             if x:
                 # Method invocation. Get the matching objects
-                objList = self.CreateObjectList(x.group('cls'), 
-                                                x.group('name')) 
+                objList = self.CreateObjectList(x.group('cls'),
+                                                x.group('name'))
                 resultList = []
                 for obj in objList:
-                    resultList.append(self.__callObjectMethod(obj, 
+                    resultList.append(self.__callObjectMethod(obj,
                                                               x.group('method'),
                                                               True))
                 return resultList
@@ -284,12 +284,12 @@ class SourceObjectFactory:
 
     def Eval(self, expr):
         return "\n".join(self.EvalList(expr))
-    
-                          
-                 
+
+
+
 if __name__ == "__main__":
     sof = SourceObjectFactory()
 
 
-                                   
-        
+
+

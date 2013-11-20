@@ -1,13 +1,13 @@
 /****************************************************************
  *
- *        Copyright 2013, Big Switch Networks, Inc. 
- * 
+ *        Copyright 2013, Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
@@ -217,10 +217,10 @@ aim_bitmap_word_set32(aim_bitmap_hdr_t* hdr, int word, uint32_t value)
 }
 
 /**
- * @brief Get number of bits that are set in the bitmap. 
+ * @brief Get number of bits that are set in the bitmap.
  * @param hdr The bitmap header.
  */
-static inline int 
+static inline int
 aim_bitmap_count(aim_bitmap_hdr_t* hdr)
 {
     int idx = 0, bit_count = 0;

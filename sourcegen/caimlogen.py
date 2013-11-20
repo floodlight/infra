@@ -1,27 +1,27 @@
 #!/usr/bin/python
 ## SourceObject ##
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # CAIMLogGen.py
 #
-# Log Generator for AIM infrastructure. 
+# Log Generator for AIM infrastructure.
 #
 #################################################################
 
@@ -30,7 +30,7 @@ import util
 from cfunctiongen import *
 from cenumgen import *
 from cmacrogen import *
-        
+
 class CAIMCommonLogMacroGenerator(CObjectGenerator):
     objectType = 'aim_common_log_macro'
 
@@ -44,7 +44,7 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
     #
     ############################################################
     def Header(self):
-        
+
         s = """
 /******************************************************************************
  *
@@ -112,7 +112,7 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
         s += """
 #endif
 """
-        return s; 
+        return s;
 
 
 
@@ -122,9 +122,9 @@ class CAIMCustomLogMacroGenerator(CObjectGenerator):
 
 
     def _dict(self, flag):
-        return dict(PREFIX=self.name.upper(), 
-                    NAME=flag.upper(), 
-                    name=flag.lower(), 
+        return dict(PREFIX=self.name.upper(),
+                    NAME=flag.upper(),
+                    name=flag.lower(),
                     FID=self.prefix+flag.upper())
 
     ############################################################
@@ -172,7 +172,7 @@ class CAIMCustomLogMacroGenerator(CObjectGenerator):
         s += """
 /******************************************************************************
  *
- * Default Macro Mappings 
+ * Default Macro Mappings
  *
  *****************************************************************************/
 #ifdef AIM_LOG_OBJ_DEFAULT
@@ -199,14 +199,14 @@ class CAIMCustomLogMacroGenerator(CObjectGenerator):
 
         s += """
 #endif
-""" 
+"""
 
 
 
 
-        return s; 
+        return s;
 
-        
+
 
 
 
@@ -215,7 +215,7 @@ class CAIMCustomLogMacroGenerator(CObjectGenerator):
 
 
 ###############################################################################
-# 
+#
 # Sanity Check
 #
 ###############################################################################
@@ -224,9 +224,9 @@ import cm
 if __name__ == "__main__":
 
     m = CAIMCommonLogMacroGenerator(flags = ["WARN", "ERROR", "INFO"])
-    print m.Header(); 
-    #print m.Source(); 
+    print m.Header();
+    #print m.Source();
 
-             
-           
-            
+
+
+

@@ -1,22 +1,22 @@
 #!/usr/bin/python
 ## SourceObject ##
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # CConfigDefGenerator
@@ -46,8 +46,8 @@ class CConfigDefGenerator(CObjectGenerator):
             docString += "\n\n" + self.doc
 
         s = self.f.Comment(docString)
-        s += "\n#ifndef %s\n#define %s %s\n#endif\n" % (self.name, 
-                                                      self.name, 
+        s += "\n#ifndef %s\n#define %s %s\n#endif\n" % (self.name,
+                                                      self.name,
                                                       self.default)
         return s
 
@@ -55,7 +55,7 @@ class CConfigDefGenerator(CObjectGenerator):
         s  = ""
         s += "#ifdef %s\n" % self.name
         s += " " * indent
-        s += "{ %s(%s), %s(%s) },\n" % (macroName, self.name, 
+        s += "{ %s(%s), %s(%s) },\n" % (macroName, self.name,
                                         macroVal, self.name)
         s += "#else\n"
         s += "{ %s(%s), \"__undefined__\" },\n" % (self.name, macroName)
@@ -84,9 +84,9 @@ class CConfigDefLookupFunction(CFunctionGenerator):
         }
     }
     return NULL;""" % (ctn, self.f.GlobalStringCompare(), ctn, ctn)
-                       
-    
-    
+
+
+
 
 class CConfigDefShowFunction(CFunctionGenerator):
 
@@ -98,29 +98,29 @@ class CConfigDefShowFunction(CFunctionGenerator):
 """
         self.rv = "int"
         self.name = self.cobj.basename + "Show"
-        self.args = [ 
+        self.args = [
             [ "struct aim_pvs_s*", "pvs" ]
             ]
         self.body = """    int i;
     for(i = 0; %s[i].name; i++) {
         aim_printf(pvs, "%%s = %%s\\n", %s[i].name, %s[i].value);
     }
-    return i;""" % (self.cobj.ConfigTableName(), 
-                    self.cobj.ConfigTableName(), 
+    return i;""" % (self.cobj.ConfigTableName(),
+                    self.cobj.ConfigTableName(),
                     self.cobj.ConfigTableName())
 
 
-        
+
 class CConfigDefsGenerator(CObjectGenerator):
     objectType = 'cdefs'
 
     def Init(self):
-        self.struct = CStructStringMap(name=self.basename + "_settings", 
+        self.struct = CStructStringMap(name=self.basename + "_settings",
                                        comment="""/** Configuration settings structure. */\n""")
 
     def ConfigTableName(self):
         return "%s_settings" % self.basename
-    
+
     def CDefConstruct(self, d):
         k = d.keys()[0]
         return CConfigDefGenerator(name=k, initargs=d[k])
@@ -139,7 +139,7 @@ class CConfigDefsGenerator(CObjectGenerator):
         s += "\n"
         return s
 
-    
+
     def DefineStruct(self):
         return self.struct.Define()
 
@@ -195,11 +195,11 @@ class CConfigDefsGenerator(CObjectGenerator):
         s += self.DefineTable() + "\n"
         s += self.DefineLookup() + "\n"
         s += self.DefineShow() + "\n"
-        
+
         return s
 
 ###############################################################################
-# 
+#
 # Sanity Check
 #
 ###############################################################################
@@ -208,23 +208,23 @@ import cm
 if __name__ == "__main__":
 
     print "/* ConfigDefGenerator Test */"
-    m = CConfigDefGenerator(name="CONFIG_FOOBAR", 
-                            default=0x42, 
+    m = CConfigDefGenerator(name="CONFIG_FOOBAR",
+                            default=0x42,
                             doc ="""
 This is the helpstring for CONFIG_FOOBAR
 You should always understand CONFIG_FOOBAR settings
 """)
 
     print m.Define()
-    
-    data = [ { 'CONFIG1' : { 'default':0x42, 'doc': "C1" } }, 
-             { 'CONFIG2' : { 'default':0x41, 'doc': "C2" } }, 
-             { 'CONFIG3' : { 'default':0x10, 'doc': "C3" } } 
+
+    data = [ { 'CONFIG1' : { 'default':0x42, 'doc': "C1" } },
+             { 'CONFIG2' : { 'default':0x41, 'doc': "C2" } },
+             { 'CONFIG3' : { 'default':0x10, 'doc': "C3" } }
              ]
 
     print "/* ConfigDefsGenerator Test */"
     m = CConfigDefsGenerator(basename="CDEFTEST", defs=data)
-                          
+
     print m.Define()
-    
+
 

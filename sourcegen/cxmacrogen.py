@@ -1,22 +1,22 @@
 #!/usr/bin/python
 ## SourceObject ##
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # CXMacroGenerator.py
@@ -37,7 +37,7 @@ class CXMacroGenerator(CObjectGenerator):
     def Name(self):
         return self.f.MacroName(self.name)
 
-        
+
     ############################################################
     #
     # Generation Methods
@@ -49,20 +49,20 @@ class CXMacroGenerator(CObjectGenerator):
             s += util.fcall(self.name, args) + "\n"
         return s
 
-            
+
     def DefineSubmacros(self):
 
         s = ""
         members = util.listifyElements(self.members)
 
         for entry in members:
-            s += "#ifndef %s\n#define %s %s\n#endif\n\n" % (entry[0], 
-                                                            entry[0], 
+            s += "#ifndef %s\n#define %s %s\n#endif\n\n" % (entry[0],
+                                                            entry[0],
                                                             self.name)
         for entry in members:
             subgen = CXMacroGenerator(name=entry[0], initargs=entry[1])
             s += subgen.XMacroEntries()
-        
+
         s += "\n"
         for entry in members:
             s += "#undef %s\n" % entry[0]
@@ -84,7 +84,7 @@ class CXMacroGenerator(CObjectGenerator):
 
 
 ###############################################################################
-# 
+#
 # Sanity Check
 #
 ###############################################################################
@@ -92,17 +92,17 @@ import cm
 
 if __name__ == "__main__":
 
-    data = { 'members': [ 'ENTRY1', 
-                          'ENTRY2', 
-                          'ENTRY3', 
+    data = { 'members': [ 'ENTRY1',
+                          'ENTRY2',
+                          'ENTRY3',
                           'ENTRY4', ] }
-    
-    m = CXMacroGenerator(name='MY_XMACRO', initargs=data); 
+
+    m = CXMacroGenerator(name='MY_XMACRO', initargs=data);
     print m.Define()
 
 
-    data = { 'members' : [ [ 'E01', 'E02', 'E03' ], 
-                           [ 'E11', 'E12', 'E13' ], 
+    data = { 'members' : [ [ 'E01', 'E02', 'E03' ],
+                           [ 'E11', 'E12', 'E13' ],
                            [ 'E21', 'E22', 'E23' ] ] }
     m = CXMacroGenerator(name='MY_XMACRO2', initargs=data)
     print m.Define()

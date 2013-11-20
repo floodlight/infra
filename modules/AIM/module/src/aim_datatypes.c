@@ -1,13 +1,13 @@
 /****************************************************************
  *
- *        Copyright 2013, Big Switch Networks, Inc. 
- * 
+ *        Copyright 2013, Big Switch Networks, Inc.
+ *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- * 
+ *
  *        http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
@@ -703,27 +703,27 @@ aim_datatype_ts__vlan__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
 }
 
 static int
-aim_datatype_ts__errno__(aim_datatype_context_t* dtc, aim_va_list_t* vargs, 
+aim_datatype_ts__errno__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
                          const char** rv)
 {
-    int e = va_arg(vargs->val, int); 
-    *rv = aim_strdup(strerror(e)); 
-    AIM_REFERENCE(dtc); 
-    return AIM_STATUS_OK; 
+    int e = va_arg(vargs->val, int);
+    *rv = aim_strdup(strerror(e));
+    AIM_REFERENCE(dtc);
+    return AIM_STATUS_OK;
 }
 
 static int
-aim_datatype_ts__signal__(aim_datatype_context_t* dtc, aim_va_list_t* vargs, 
+aim_datatype_ts__signal__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
                           const char** rv)
 {
-    int e = va_arg(vargs->val, int); 
+    int e = va_arg(vargs->val, int);
 #if AIM_CONFIG_INCLUDE_POSIX == 1
-    *rv = aim_strdup(strsignal(e)); 
+    *rv = aim_strdup(strsignal(e));
 #else
-    *rv = aim_fstrdup("%d", e); 
+    *rv = aim_fstrdup("%d", e);
 #endif
-    AIM_REFERENCE(dtc); 
-    return AIM_STATUS_OK; 
+    AIM_REFERENCE(dtc);
+    return AIM_STATUS_OK;
 }
 
 int
@@ -776,15 +776,15 @@ aim_datatypes_init()
                           aim_datatype_ts__vlan__,
                           NULL);
 
-    aim_datatype_register(0, "errno", "System error number.", 
-                          NULL, 
-                          aim_datatype_ts__errno__, 
-                          NULL); 
-    
-    aim_datatype_register(0, "signal", "System signal number.", 
-                          NULL, 
-                          aim_datatype_ts__signal__, 
-                          NULL); 
+    aim_datatype_register(0, "errno", "System error number.",
+                          NULL,
+                          aim_datatype_ts__errno__,
+                          NULL);
+
+    aim_datatype_register(0, "signal", "System signal number.",
+                          NULL,
+                          aim_datatype_ts__signal__,
+                          NULL);
 
    return 0;
 }

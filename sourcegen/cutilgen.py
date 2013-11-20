@@ -1,27 +1,27 @@
 #!/usr/bin/python
 ## SourceObject ##
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # CUtilGen.py
 #
-# Generic Code Utilities generator. 
+# Generic Code Utilities generator.
 #
 #################################################################
 
@@ -40,9 +40,9 @@ class CUtilZMalloc(CFunctionGenerator):
         self.args = [[ 'int', 'size' ]]
         self.name = "%s_zmalloc" % self.prefix
         self.body = """    void* p;
-    p = %s_MALLOC(size); 
-    if(p) { 
-        %s_MEMSET(p, 0, size); 
+    p = %s_MALLOC(size);
+    if(p) {
+        %s_MEMSET(p, 0, size);
     }
     return p; """ % (self.prefix.upper(), self.prefix.upper())
 
@@ -50,7 +50,7 @@ class CUtilZMalloc(CFunctionGenerator):
 class CUtilStrlcpy(CFunctionGenerator):
     def Init(self):
         self.rv = "int"
-        self.args = [ "char* dst", "const char* src", "int size" ]; 
+        self.args = [ "char* dst", "const char* src", "int size" ];
         self.name = "%s_strlcpy" % self.prefix
         self.body = """    %s_STRNCPY(dst, src, size);
     if (size > 0)
@@ -62,18 +62,18 @@ class CUtilOcPrintf(CFunctionGenerator):
         self.rv = "int"
         self.args = [ "void* oc", "const char* fmt", "..." ];
         self.name = "%s_oc_printf" % self.prefix
-        self.body = """    va_list vargs; 
-    int rv; 
-    va_start(vargs, fmt); 
-    if(oc == NULL && fmt == NULL) { 
-        int (**voutp)(void*,const char*,va_list) = va_arg(vargs, 
-            int (**)(void*,const char*, va_list)); 
-        *voutp = %s_oc_vprintf; 
-        rv = 0; 
-    } else { 
-        rv = %s_VPRINTF(fmt, vargs); 
+        self.body = """    va_list vargs;
+    int rv;
+    va_start(vargs, fmt);
+    if(oc == NULL && fmt == NULL) {
+        int (**voutp)(void*,const char*,va_list) = va_arg(vargs,
+            int (**)(void*,const char*, va_list));
+        *voutp = %s_oc_vprintf;
+        rv = 0;
+    } else {
+        rv = %s_VPRINTF(fmt, vargs);
     }
-    va_end(vargs); 
+    va_end(vargs);
     return rv; """ % (self.prefix, self.prefix.upper())
 
 class CUtilOcVPrintf(CFunctionGenerator):
@@ -81,9 +81,9 @@ class CUtilOcVPrintf(CFunctionGenerator):
         self.rv = "int"
         self.args = [ "void* oc", "const char* fmt", "va_list vargs" ];
         self.name = "%s_oc_vprintf" % self.prefix
-        self.body = """    return %s_VPRINTF(fmt, vargs); 
+        self.body = """    return %s_VPRINTF(fmt, vargs);
 """ % (self.prefix.upper())
-    
+
 
 class CUtilArraySize(CMacroGenerator):
     def Init(self):
@@ -94,7 +94,7 @@ class CUtilArraySize(CMacroGenerator):
 
     # Fixme - to avoid multiple definitions (in header and source file)
     def Header(self):
-        return CMacroGenerator.Define(self); 
+        return CMacroGenerator.Define(self);
 
     def Define(self):
         return ""
@@ -122,23 +122,23 @@ class CUtilGenerator(CObjectGenerator):
         s = ""
         for u in self.objects:
             if u in self.pobjects:
-                s += self.pobjects[u].Header(); 
+                s += self.pobjects[u].Header();
             else:
                 # Requested something we don't have.
                 s += "/* Utility '%s' does not exist */\n" % u
-        return s; 
-            
+        return s;
+
     def Define(self):
         s = ""
         for u in self.objects:
             if u in self.pobjects:
-                s += self.pobjects[u].Define(); 
+                s += self.pobjects[u].Define();
             else:
                 s += "/* Utility '%s' does not exist */\n" % u
-        return s; 
+        return s;
 
 ###############################################################################
-# 
+#
 # Sanity Check
 #
 ###############################################################################
@@ -146,10 +146,10 @@ import cm
 
 if __name__ == "__main__":
     data = { 'objects': [ 'zmalloc', 'pingGod' ] }
-    m = CUtilGenerator(name="module", initargs=data); 
-    print m.Header(); 
-    print m.Define(); 
+    m = CUtilGenerator(name="module", initargs=data);
+    print m.Header();
+    print m.Define();
 
-             
-           
-            
+
+
+

@@ -1,22 +1,22 @@
 #!/usr/bin/python
 ## SourceObject ##
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # CPortingMacroGenerator.py
@@ -48,7 +48,7 @@ class CPortingMacroGenerator(CObjectGenerator):
         s += "#include <stdarg.h>\n"
         s += "#include <memory.h>\n"
         s += "#endif\n\n"
-        
+
         for m in self.macros:
             name = m.upper()
             # Breaks macro formatting customization...
@@ -63,27 +63,27 @@ class CPortingMacroGenerator(CObjectGenerator):
             s += "    #endif\n"
             s += "#endif\n"
             s += "\n"
-        
-        return s; 
+
+        return s;
 
 ###############################################################################
-# 
+#
 # Sanity Check
 #
 ###############################################################################
 import cm
 
 if __name__ == "__main__":
-    data = { 'macros': [ 'strcpy', 
-                         'strncpy', 
-                         'malloc', 
-                         'memset', 
-                         'memcpy', 
+    data = { 'macros': [ 'strcpy',
+                         'strncpy',
+                         'malloc',
+                         'memset',
+                         'memcpy',
                          'memcmp' ]
              }
-    m = CPortingMacroGenerator(name="module", initargs=data); 
-    print m.Define(); 
+    m = CPortingMacroGenerator(name="module", initargs=data);
+    print m.Define();
 
-             
-           
-            
+
+
+

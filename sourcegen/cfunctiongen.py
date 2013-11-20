@@ -1,22 +1,22 @@
 #!/usr/bin/python
 ## SourceObject ##
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # CFunctionGenerator.py
@@ -45,10 +45,10 @@ class CFunctionGenerator(CObjectGenerator):
         s = ""
         if self.static:
             s = "static "
-        return s + self.f.FunctionSignature(self.rv, 
-                                            self.name, 
-                                            self.args, 
-                                            proto=proto); 
+        return s + self.f.FunctionSignature(self.rv,
+                                            self.name,
+                                            self.args,
+                                            proto=proto);
 
     def Name(self):
         """ Returns the name of this function in the generated code """
@@ -68,7 +68,7 @@ class CFunctionGenerator(CObjectGenerator):
     ############################################################
 
     def Header(self):
-        return self.Prototype(); 
+        return self.Prototype();
 
     def Prototype(self):
         """ Generates our function prototype """
@@ -82,14 +82,14 @@ class CFunctionGenerator(CObjectGenerator):
 
     def Body(self):
         """ Generate our function body. """
-        # If you don't override the Body() method, you must specify the 
+        # If you don't override the Body() method, you must specify the
         # body of the function as a string in 'self.body'
         if self.body == None:
             raise Exception("No function body defined in Body()")
-        
+
         return self.body
 
-        
+
     def Define(self):
         """ Generate our entire function definition """
         s = ""
@@ -99,7 +99,7 @@ class CFunctionGenerator(CObjectGenerator):
 
 
 ###############################################################################
-# 
+#
 # Sanity Check
 #
 ###############################################################################
@@ -111,16 +111,16 @@ if __name__ == "__main__":
         def Init(self):
             self.rv = 'int';
             self.name = 'testFunction'
-            self.args = [ [ 'int', 'arg1' ], 
+            self.args = [ [ 'int', 'arg1' ],
                           [ 'long', 'arg2' ] ]
 
             self.body = """    return arg1+arg2;"""
 
 
-    
+
     f = CTestFunction()
     print f.Prototype();
-    print 
+    print
     print f.Define()
     print
     print f.Call('a', 'b') + ';'
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
             self.body = """    /* Nothing */"""
 
-    
+
     f = CTestVoidFunction()
     print f.Prototype()
     print
@@ -142,6 +142,6 @@ if __name__ == "__main__":
     print
     print f.Call()
 
-        
+
 
 

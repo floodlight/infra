@@ -1,22 +1,22 @@
 #!/usr/bin/python
 ## SourceObject ##
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # CStructGen
@@ -92,13 +92,13 @@ class CStructIntMap(CStructGenerator):
         self.nameMember = "name"
 
     def Init(self):
-        self.members = [ ['const char*', self.nameMember ], 
-                         ['int', self.valueMember ], 
+        self.members = [ ['const char*', self.nameMember ],
+                         ['int', self.valueMember ],
                          ]
-        
 
 
-   
+
+
 class CStructStringMap(CStructGenerator):
 
     def Construct(self):
@@ -109,13 +109,13 @@ class CStructStringMap(CStructGenerator):
 
     def Init(self):
         self.members = [ [ "const char*", self.nameMember ],
-                         [ "const char*", self.valueMember], 
+                         [ "const char*", self.valueMember],
                          ]
 
-   
+
 if __name__ == "__main__":
-    
-    o = CStructGenerator(name='testStruct', 
+
+    o = CStructGenerator(name='testStruct',
                          members= [ "int x", ['__self__', 'next'], "char* y"])
     print o.Define() + "\n"
     print o.TypedefName() + "\n"
