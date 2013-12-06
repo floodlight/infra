@@ -168,6 +168,7 @@ definitions:
         - free
         - memset
         - memcpy
+        - memcmp
         - strncpy
         - strstr
         - vsnprintf
