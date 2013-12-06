@@ -31,6 +31,8 @@
 #define __AIM_BITMAP_H__
 
 #include <AIM/aim_config.h>
+#include <AIM/aim_map.h>
+#include <AIM/aim_error.h>
 
 /** atomic bitmap storage type. */
 typedef uint32_t aim_bitmap_word_t;
@@ -120,6 +122,11 @@ void aim_bitmap_free(aim_bitmap_t* bmap);
 /** Get the bit's position in its target word */
 #define AIM_BITMAP_BIT_POS(_bit)                        \
     ( (1L << (_bit % AIM_BITMAP_BITS_PER_WORD)) )
+
+/** Check if two bitmaps are of same size */ 
+#define AIM_BITMAP_SIZE_EQ(_hdr_a, _hdr_b)              \
+    ( ((_hdr_a)->wordcount == (_hdr_b)->wordcount) &&   \
+      ((_hdr_a)->maxbit == (_hdr_b)->maxbit) )
 
 
 /*
@@ -245,10 +252,12 @@ aim_bitmap_count(aim_bitmap_hdr_t* hdr)
 static inline int 
 aim_bitmap_is_eq(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 {
-    if ( (hdr_a->wordcount == hdr_b->wordcount) &&
-         (hdr_a->maxbit == hdr_b->maxbit) &&
-         (AIM_MEMCMP(hdr_a->words, hdr_b->words,
-                     hdr_a->wordcount*sizeof(aim_bitmap_word_t)) == 0)) {
+    if (!AIM_BITMAP_SIZE_EQ(hdr_a, hdr_b)) {
+        AIM_DIE("Comparision of different size bitmaps");
+    }
+
+    if (AIM_MEMCMP(hdr_a->words, hdr_b->words,
+                   hdr_a->wordcount*sizeof(aim_bitmap_word_t)) == 0) {
         return 1;
     }
 
@@ -263,6 +272,10 @@ aim_bitmap_is_eq(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 static inline void
 aim_bitmap_assign(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 {
+    if (!AIM_BITMAP_SIZE_EQ(hdr_a, hdr_b)) {
+        AIM_DIE("Assignment of different size bitmaps");
+    }
+
     AIM_MEMCPY(hdr_a->words, hdr_b->words,
                hdr_a->wordcount*sizeof(aim_bitmap_word_t));
 }
@@ -276,6 +289,10 @@ static inline void
 aim_bitmap_or(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 {
     int idx = 0;
+
+    if (!AIM_BITMAP_SIZE_EQ(hdr_a, hdr_b)) {
+        AIM_DIE("Binary OR on different size bitmaps");
+    }
 
     for ( ; idx < hdr_a->wordcount; idx++) {
         hdr_a->words[idx] |= hdr_b->words[idx];
@@ -291,6 +308,10 @@ static inline void
 aim_bitmap_and(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 {
     int idx = 0;
+
+    if (!AIM_BITMAP_SIZE_EQ(hdr_a, hdr_b)) {
+        AIM_DIE("Binary AND on different size bitmaps");
+    }
 
     for ( ; idx < hdr_a->wordcount; idx++) {
         hdr_a->words[idx] &= hdr_b->words[idx];
