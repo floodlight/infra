@@ -84,6 +84,16 @@
     #endif
 #endif
 
+#ifndef AIM_MEMCMP
+    #if defined(GLOBAL_MEMCMP)
+        #define AIM_MEMCMP GLOBAL_MEMCMP
+    #elif AIM_CONFIG_PORTING_STDLIB == 1
+        #define AIM_MEMCMP memcmp
+    #else
+        #error The macro AIM_MEMCMP is required but cannot be defined.
+    #endif
+#endif
+
 #ifndef AIM_STRNCPY
     #if defined(GLOBAL_STRNCPY)
         #define AIM_STRNCPY GLOBAL_STRNCPY
