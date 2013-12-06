@@ -245,15 +245,14 @@ aim_bitmap_count(aim_bitmap_hdr_t* hdr)
 static inline int 
 aim_bitmap_is_eq(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 {
-    int idx = 0;
-
-    for ( ; idx < hdr_a->wordcount; idx++) {
-        if (hdr_a->words[idx] != hdr_b->words[idx]) {
-            return 0;
-        }
+    if ( (hdr_a->wordcount == hdr_b->wordcount) &&
+         (hdr_a->maxbit == hdr_b->maxbit) &&
+         (AIM_MEMCMP(hdr_a->words, hdr_b->words,
+                     hdr_a->wordcount*sizeof(aim_bitmap_word_t)) == 0)) {
+        return 1;
     }
 
-    return 1;
+    return 0;
 }
 
 /**
@@ -264,11 +263,8 @@ aim_bitmap_is_eq(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 static inline void
 aim_bitmap_assign(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 {
-    int idx = 0;
-
-    for ( ; idx < hdr_a->wordcount; idx++) {
-        hdr_a->words[idx] = hdr_b->words[idx];
-    }
+    AIM_MEMCPY(hdr_a->words, hdr_b->words,
+               hdr_a->wordcount*sizeof(aim_bitmap_word_t));
 }
 
 /**
