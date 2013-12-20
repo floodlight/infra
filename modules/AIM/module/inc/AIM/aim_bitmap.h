@@ -81,6 +81,8 @@ AIM_STATIC_BITMAP_DEFINE(96);
 AIM_STATIC_BITMAP_DEFINE(128);
 /** 256 bit bitmap */
 AIM_STATIC_BITMAP_DEFINE(256);
+/** 4096 bit bitmap */
+AIM_STATIC_BITMAP_DEFINE(4096);
 
 /** The number of bits in a given bitmap array */
 #define AIM_BITMAP_ARRAY_BITCOUNT(_a)                   \
