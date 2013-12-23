@@ -86,6 +86,7 @@ aim_pvs_syslog_open(const char* ident, int option, int facility)
                     aim_pvs_syslog_destroy__);
     rv->pvs.enabled = 1;
     rv->pvs.vprintf = aim_pvs_syslog_vprintf__;
+    rv->pvs.description=aim_strdup("{syslog}");
     ++refcount__;
     return (aim_pvs_t*)rv;
 }
@@ -107,6 +108,7 @@ aim_pvs_syslog_destroy__(aim_object_t* obj)
         refcount__ = 0;
         ident__ = NULL;
     }
+    aim_free(((aim_pvs_t*) obj)-> description);
     AIM_FREE(obj);
 }
 

@@ -107,6 +107,7 @@ aim_pvs_buffer_create(void)
     AIM_OBJECT_INIT(rv, aim_buffer_pvs_obj, 0, NULL, aim_pvs_buffer_destroy__);
     rv->pvs.enabled = 1;
     rv->pvs.vprintf = aim_pvs_buffer_vprintf__;
+    rv->pvs.description = "{buffer}";
     return (aim_pvs_t*)rv;
 }
 
@@ -199,8 +200,9 @@ aim_pvs_buffer_reset(aim_pvs_t* _pvs)
 void
 aim_pvs_buffer_destroy__(aim_object_t* obj)
 {
-    aim_pvs_buffer_reset((aim_pvs_t*)obj);
-    AIM_FREE(obj);
+    aim_pvs_t* pvs = (aim_pvs_t*)obj;
+    aim_pvs_buffer_reset(pvs);
+    aim_free(obj);
 }
 
 

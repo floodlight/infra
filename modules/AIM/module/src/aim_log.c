@@ -164,6 +164,7 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
     aim_map_si_t* map;
 
     aim_printf(pvs, "name: %s\n", lobj->name);
+    aim_printf(pvs, "dest: %s\n", aim_pvs_desc_get(lobj->pvs));
 
     count = 0;
     aim_printf(pvs, "enabled options: ");

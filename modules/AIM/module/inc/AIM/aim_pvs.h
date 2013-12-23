@@ -55,6 +55,9 @@ struct aim_pvs_s {
     /** AIM object. */
     aim_object_t object;
 
+    /** Description */
+    char* description;
+
     /**
      * This is the vector that will eventually receive the output for
      * this stream.
@@ -145,6 +148,13 @@ void aim_pvs_destroy(aim_pvs_t* pvs);
  * @returns -1 If unknown.
  */
 int aim_pvs_isatty(aim_pvs_t* pvs);
+
+/**
+ * @brief Get a string description of the given pvs.
+ * @param pvs The object to query.
+ * @returns A string describing the pvs. Do not modify or free.
+ */
+const char* aim_pvs_desc_get(aim_pvs_t* pvs);
 
 #endif /* __AIM_PVS_H__ */
 /*@}*/

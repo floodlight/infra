@@ -26,7 +26,7 @@
 #include <AIM/aim_config.h>
 #include <AIM/aim_pvs.h>
 #include <AIM/aim_printf.h>
-#include "aim_util.h"
+#include <AIM/aim_utils.h>
 #include <stdio.h>
 
 int
@@ -97,3 +97,8 @@ aim_pvs_isatty(aim_pvs_t* pvs)
     }
 }
 
+const char*
+aim_pvs_desc_get(aim_pvs_t* pvs)
+{
+    return (pvs) ? (pvs->description) : "NULL";
+}

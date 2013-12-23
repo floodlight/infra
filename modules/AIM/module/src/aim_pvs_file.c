@@ -25,6 +25,8 @@
  *****************************************************************************/
 #include <AIM/aim_config.h>
 #include <AIM/aim_pvs_file.h>
+#include <AIM/aim_string.h>
+#include <AIM/aim_utils.h>
 #include "aim_util.h"
 
 #if AIM_CONFIG_PVS_INCLUDE_TTY == 1
@@ -40,6 +42,16 @@ static void aim_pvs_file_destroy__(aim_object_t* object);
 
 
 /**
+ * Object subtypes
+ */
+typedef enum aim_pvs_file_subtypes_e {
+    AIM_PVS_FILE_SUBTYPE_NONE = 0,
+    AIM_PVS_FILE_SUBTYPE_STDOUT = 1,
+    AIM_PVS_FILE_SUBTYPE_STDERR = 2,
+    AIM_PVS_FILE_SUBTYPE_FOPEN = 3
+} aim_pvs_file_subtype_t;
+
+/**
  * Output to FILE*
  */
 static int
@@ -51,10 +63,10 @@ aim_vprint_fp__(aim_pvs_t* pvs, const char* fmt, va_list vargs)
      * Special checks for stdout/stderr
      */
     if(pvs->object.cookie == NULL) {
-        if(pvs->object.subtype == 1) {
+        if(pvs->object.subtype == AIM_PVS_FILE_SUBTYPE_STDOUT) {
             pvs->object.cookie = stdout;
         }
-        if(pvs->object.subtype == 2) {
+        if(pvs->object.subtype == AIM_PVS_FILE_SUBTYPE_STDERR) {
             pvs->object.cookie = stderr;
         }
     }
@@ -80,10 +92,11 @@ aim_pvs_fopen(const char* path, const char* mode)
 
     if(fp) {
         rv = (aim_pvs_t*) aim_object_create(sizeof(*rv),
-                                            aim_pvs_file_oid, -1,
+                                            aim_pvs_file_oid, AIM_PVS_FILE_SUBTYPE_FOPEN,
                                             fp, aim_pvs_file_destroy__);
         rv->vprintf = aim_vprint_fp__;
         rv->enabled = 1;
+        rv->description = aim_fstrdup("file:%s", path);
     }
     return rv;
 }
@@ -94,11 +107,22 @@ aim_pvs_fopen(const char* path, const char* mode)
 static void
 aim_pvs_file_destroy__(aim_object_t* object)
 {
-    if(object->cookie) {
-        FILE* fp = (FILE*)object->cookie;
-        fclose(fp);
+    aim_pvs_t* pvs = (aim_pvs_t*)object;
+
+    /*
+     * We should only destroy subtype FOPEN.
+     * The others are static and permanent.
+     */
+    if(object->subtype == AIM_PVS_FILE_SUBTYPE_FOPEN) {
+        if(object->cookie) {
+            FILE* fp = (FILE*)object->cookie;
+            fclose(fp);
+        }
+        if(pvs->description) {
+            aim_free(pvs->description);
+        }
+        aim_free(object);
     }
-    AIM_FREE(object);
 }
 
 
@@ -106,10 +130,10 @@ static int
 isatty__(aim_pvs_t* pvs)
 {
 #if AIM_CONFIG_PVS_INCLUDE_TTY == 1
-    if(pvs->object.subtype == 1) {
+    if(pvs->object.subtype == AIM_PVS_FILE_SUBTYPE_STDOUT) {
         return isatty(1);
     }
-    if(pvs->object.subtype == 2) {
+    if(pvs->object.subtype == AIM_PVS_FILE_SUBTYPE_STDERR) {
         return isatty(2);
     }
 #endif
@@ -120,7 +144,9 @@ isatty__(aim_pvs_t* pvs)
  * Standard builtin types are based on the FILE pvs.
  */
 aim_pvs_t aim_pvs_stdout = {
-    AIM_STATIC_OBJECT_INIT(aim_pvs_file_oid, 1, NULL, NULL),
+    AIM_STATIC_OBJECT_INIT(aim_pvs_file_oid, AIM_PVS_FILE_SUBTYPE_STDOUT,
+                           NULL, NULL),
+    "{stdout}",
     aim_vprint_fp__,
     1,
     0,
@@ -128,7 +154,9 @@ aim_pvs_t aim_pvs_stdout = {
 };
 
 aim_pvs_t aim_pvs_stderr = {
-    AIM_STATIC_OBJECT_INIT(aim_pvs_file_oid, 2, NULL, NULL),
+    AIM_STATIC_OBJECT_INIT(aim_pvs_file_oid, AIM_PVS_FILE_SUBTYPE_STDERR,
+                           NULL, NULL),
+    "{stderr}",
     aim_vprint_fp__,
     1,
     0,
@@ -136,7 +164,9 @@ aim_pvs_t aim_pvs_stderr = {
 };
 
 aim_pvs_t aim_pvs_none = {
-    AIM_STATIC_OBJECT_INIT(aim_pvs_file_oid, -1, NULL, NULL),
+    AIM_STATIC_OBJECT_INIT(aim_pvs_file_oid, AIM_PVS_FILE_SUBTYPE_NONE,
+                           NULL, NULL),
+    "{none}",
     aim_vprint_fp__,
     1,
     0
