@@ -31,7 +31,7 @@
 void *
 aim_malloc(size_t size)
 {
-    void *ptr = malloc(size);
+    void *ptr = AIM_MALLOC(size);
     if (ptr == NULL) {
         AIM_DIE("memory allocation failed");
     }
@@ -41,7 +41,7 @@ aim_malloc(size_t size)
 void *
 aim_zmalloc(size_t size)
 {
-    void *ptr = calloc(1, size);
+    void *ptr = AIM_CALLOC(1, size);
     if (ptr == NULL) {
         AIM_DIE("memory allocation failed");
     }
@@ -51,7 +51,7 @@ aim_zmalloc(size_t size)
 void *
 aim_realloc(void *ptr, size_t size)
 {
-    ptr = realloc(ptr, size);
+    ptr = AIM_REALLOC(ptr, size);
     if (ptr == NULL) {
         AIM_DIE("memory allocation failed");
     }
@@ -79,5 +79,5 @@ aim_memndup(void *src, size_t src_size, size_t alloc_size)
 void
 aim_free(void *data)
 {
-    free(data);
+    AIM_FREE(data);
 }
