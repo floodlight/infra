@@ -27,6 +27,7 @@
 #include <AIM/aim_pvs_file.h>
 #include <AIM/aim_string.h>
 #include <AIM/aim_utils.h>
+#include <AIM/aim_memory.h>
 #include "aim_util.h"
 
 #if AIM_CONFIG_PVS_INCLUDE_TTY == 1

@@ -109,7 +109,7 @@ aim_pvs_syslog_destroy__(aim_object_t* obj)
         ident__ = NULL;
     }
     aim_free(((aim_pvs_t*) obj)-> description);
-    AIM_FREE(obj);
+    aim_free(obj);
 }
 
 #else
