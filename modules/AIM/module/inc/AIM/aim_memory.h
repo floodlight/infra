@@ -33,6 +33,13 @@
 
 #include <AIM/aim_config.h>
 
+/* Promise GCC that the returned pointer will not alias any other pointer */
+#ifdef __GNUC__
+#define MALLOC_ATTR __attribute__((__malloc__))
+#else
+#define MALLOC_ATTR
+#endif
+
 /**
  * @brief Allocate memory.
  * @param size Size.
@@ -40,7 +47,7 @@
  * The returned memory is uninitialized.
  * Aborts if allocation fails.
  */
-void *aim_malloc(size_t size);
+void *aim_malloc(size_t size) MALLOC_ATTR;
 
 /**
  * @brief Zero'ed memory alloc.
@@ -48,7 +55,7 @@ void *aim_malloc(size_t size);
  *
  * Aborts if allocation fails.
  */
-void *aim_zmalloc(size_t size);
+void *aim_zmalloc(size_t size) MALLOC_ATTR;
 
 /**
  * @brief Resize memory.
@@ -77,7 +84,7 @@ void aim_free(void *data);
  *
  * Aborts if allocation fails.
  */
-void *aim_memdup(void *src, size_t size);
+void *aim_memdup(void *src, size_t size) MALLOC_ATTR;
 
 /**
  * @brief Duplicate memory.
@@ -87,7 +94,9 @@ void *aim_memdup(void *src, size_t size);
  *
  * Aborts if allocation fails.
  */
-void *aim_memndup(void *src, size_t src_size, size_t alloc_size);
+void *aim_memndup(void *src, size_t src_size, size_t alloc_size) MALLOC_ATTR;
+
+#undef MALLOC_ATTR
 
 #endif /* __AIM_MEMORY_H__ */
 /*@}*/
