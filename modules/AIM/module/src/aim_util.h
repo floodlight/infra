@@ -32,7 +32,6 @@
 
 
 /* <auto.start.util(ALL).header> */
-void* aim_zmalloc(int size);
 int aim_strlcpy(char* dst, const char* src, int size);
 /* <auto.end.util(ALL).header> */
 

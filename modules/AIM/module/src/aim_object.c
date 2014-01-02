@@ -25,6 +25,7 @@
  *****************************************************************************/
 #include <AIM/aim_config.h>
 #include <AIM/aim_object.h>
+#include <AIM/aim_memory.h>
 #include "aim_util.h"
 
 aim_object_t*

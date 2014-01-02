@@ -533,7 +533,7 @@ aim_log_output__(aim_log_t* l, const char* fname, const char* file,
     aim_printf(msg, "\n");
     pmsg = aim_pvs_buffer_get(msg);
     aim_printf(l->pvs, "%s", pmsg);
-    AIM_FREE(pmsg);
+    aim_free(pmsg);
     aim_pvs_destroy(msg);
 }
 

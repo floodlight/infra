@@ -194,7 +194,7 @@ aim_bytes_to_string(uint8_t* data, int size, int columns)
         char* rv;
         char* s;
         /* All on one line */
-        rv = AIM_MALLOC(10 + /* size */
+        rv = aim_malloc(10 + /* size */
                         1 + /* : */
                         size*2 + /* bytes */
                         1 /* NULL */);
@@ -313,13 +313,13 @@ aim_strsplit(const char* string, const char* delim)
 void
 aim_tokens_free(aim_tokens_t* tokens)
 {
-    AIM_FREE(tokens->_string);
+    aim_free(tokens->_string);
 
     /*
      * The tokens array contains pointers into tokens->_string, so
      * we shouldn't free them, just the array containing them.
      */
-    AIM_FREE(tokens->tokens);
+    aim_free(tokens->tokens);
 
-    AIM_FREE(tokens);
+    aim_free(tokens);
 }

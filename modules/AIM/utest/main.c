@@ -49,7 +49,7 @@ int aim_main(int argc, char* argv[])
         if(strcmp(join, "This is a complete sentence.")) {
             printf("fail: join='%s'\n", join);
         }
-        AIM_FREE(join);
+        aim_free(join);
     }
 
     for(i = 0; i < argc; i++) {
