@@ -38,13 +38,15 @@
  * @param size Size.
  *
  * The returned memory is uninitialized.
- * Returns NULL if allocation failed.
+ * Aborts if allocation fails.
  */
 void *aim_malloc(size_t size);
 
 /**
  * @brief Zero'ed memory alloc.
  * @param size Size.
+ *
+ * Aborts if allocation fails.
  */
 void *aim_zmalloc(size_t size);
 
@@ -57,8 +59,7 @@ void *aim_zmalloc(size_t size);
  * is size is zero then the memory is freed. Otherwise the memory is resized
  * and possibly moved.
  *
- * Returns NULL if allocation failed. The existing allocated memory will still
- * be valid in this case.
+ * Aborts if allocation fails.
  */
 void *aim_realloc(void *ptr, size_t size);
 
@@ -73,6 +74,8 @@ void aim_free(void *data);
  * @param src Source memory.
  * @param size Size.
  * @returns a new copy of the data.
+ *
+ * Aborts if allocation fails.
  */
 void *aim_memdup(void *src, size_t size);
 
@@ -81,6 +84,8 @@ void *aim_memdup(void *src, size_t size);
  * @param src Source memory;
  * @param src_size Size to copy.
  * @param alloc_size Size to allocate.
+ *
+ * Aborts if allocation fails.
  */
 void *aim_memndup(void *src, size_t src_size, size_t alloc_size);
 

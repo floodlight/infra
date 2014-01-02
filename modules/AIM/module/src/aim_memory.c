@@ -31,19 +31,31 @@
 void *
 aim_malloc(size_t size)
 {
-    return malloc(size);
+    void *ptr = malloc(size);
+    if (ptr == NULL) {
+        AIM_DIE("memory allocation failed");
+    }
+    return ptr;
 }
 
 void *
 aim_zmalloc(size_t size)
 {
-    return calloc(1, size);
+    void *ptr = calloc(1, size);
+    if (ptr == NULL) {
+        AIM_DIE("memory allocation failed");
+    }
+    return ptr;
 }
 
 void *
 aim_realloc(void *ptr, size_t size)
 {
-    return realloc(ptr, size);
+    ptr = realloc(ptr, size);
+    if (ptr == NULL) {
+        AIM_DIE("memory allocation failed");
+    }
+    return ptr;
 }
 
 void *
