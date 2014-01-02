@@ -495,7 +495,7 @@ class CEnumGenerator(CObjectGenerator):
         s += "{\\\n"
 
         for member in self.members:
-            s += "    \"%s\", \\\n" % member.name
+            s += "    \"%s\", \\\n" % member.strname if member.strname else member.name
 
         s += "}\n"
         return s
@@ -514,7 +514,7 @@ class CEnumGenerator(CObjectGenerator):
 
         for member in self.members:
             s += """    { "%s", %s },\n""" % (
-                member.name,
+                member.strname if member.strname else member.name,
                 self.f.EnumEntry(member.name, self.name))
         s += "    { NULL, 0 }\n"
         s += "};\n"
