@@ -47,9 +47,9 @@ void
 aim_bitmap_free(aim_bitmap_t* bmap)
 {
     if(bmap) {
-        AIM_FREE(bmap->hdr.words);
+        aim_free(bmap->hdr.words);
         if(bmap->hdr.allocated) {
-            AIM_FREE(bmap);
+            aim_free(bmap);
         }
     }
 }

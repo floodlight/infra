@@ -19,47 +19,65 @@
 
 /******************************************************************************
  *
- *  /module/src/aim_util.c
+ *  /module/src/aim_memory.c
  *
- *  AIM Utilities
+ *  AIM Memory Allocation
  *
  *****************************************************************************/
 #include <AIM/aim_config.h>
 #include <AIM/aim.h>
 #include "aim_int.h"
 
-void*
-aim_zmalloc(int size)
+void *
+aim_malloc(size_t size)
 {
-    void* p = AIM_MALLOC(size);
-    if(p) {
-        AIM_MEMSET(p, 0, size);
+    void *ptr = AIM_MALLOC(size);
+    if (ptr == NULL) {
+        AIM_DIE("memory allocation failed");
     }
-    return p;
+    return ptr;
 }
 
-void*
-aim_memdup(void* src, int size)
+void *
+aim_zmalloc(size_t size)
+{
+    void *ptr = AIM_CALLOC(1, size);
+    if (ptr == NULL) {
+        AIM_DIE("memory allocation failed");
+    }
+    return ptr;
+}
+
+void *
+aim_realloc(void *ptr, size_t size)
+{
+    ptr = AIM_REALLOC(ptr, size);
+    if (ptr == NULL) {
+        AIM_DIE("memory allocation failed");
+    }
+    return ptr;
+}
+
+void *
+aim_memdup(void *src, size_t size)
 {
     return aim_memndup(src, size, size);
 }
 
-void*
-aim_memndup(void* src, int src_size, int alloc_size)
+void *
+aim_memndup(void *src, size_t src_size, size_t alloc_size)
 {
-	void* rv;
-	if(alloc_size < src_size) {
-		alloc_size = src_size;
-	}
-    rv = AIM_MALLOC(alloc_size);
+    void *rv;
+    if (alloc_size < src_size) {
+        alloc_size = src_size;
+    }
+    rv = aim_malloc(alloc_size);
     AIM_MEMCPY(rv, src, src_size);
     return rv;
 }
 
 void
-aim_free(void* data)
+aim_free(void *data)
 {
-    if(data) {
-        AIM_FREE(data);
-    }
+    AIM_FREE(data);
 }

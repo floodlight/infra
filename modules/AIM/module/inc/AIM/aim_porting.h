@@ -54,6 +54,26 @@
     #endif
 #endif
 
+#ifndef AIM_CALLOC
+    #if defined(GLOBAL_CALLOC)
+        #define AIM_CALLOC GLOBAL_CALLOC
+    #elif AIM_CONFIG_PORTING_STDLIB == 1
+        #define AIM_CALLOC calloc
+    #else
+        #error The macro AIM_CALLOC is required but cannot be defined.
+    #endif
+#endif
+
+#ifndef AIM_REALLOC
+    #if defined(GLOBAL_REALLOC)
+        #define AIM_REALLOC GLOBAL_REALLOC
+    #elif AIM_CONFIG_PORTING_STDLIB == 1
+        #define AIM_REALLOC realloc
+    #else
+        #error The macro AIM_REALLOC is required but cannot be defined.
+    #endif
+#endif
+
 #ifndef AIM_FREE
     #if defined(GLOBAL_FREE)
         #define AIM_FREE GLOBAL_FREE

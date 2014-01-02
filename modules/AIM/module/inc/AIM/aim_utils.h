@@ -173,35 +173,6 @@ extern int aim_modules_init(void);
  */
 #define AIM_STRING_EMPTY_IF_NULL(_str) ( (_str) ? (_str) : "")
 
-/**
- * @brief Zero'ed memory alloc.
- * @param size Size.
- */
-void* aim_zmalloc(int size);
-
-/**
- * Free memory allocated by aim_zmalloc()
- * @param data The memory to free.
- */
-void aim_free(void* data);
-
-
-/**
- * @brief Duplicate memory.
- * @param src Source memory.
- * @param size Size.
- * @returns a new copy of the data.
- */
-void* aim_memdup(void* src, int size);
-
-/**
- * @brief Duplicate memory.
- * @param src Source memory;
- * @param src_size Size to copy.
- * @param alloc_size Size to allocate.
- */
-void* aim_memndup(void* src, int src_size, int alloc_size);
-
 
 /**
  * Expression log and assert.

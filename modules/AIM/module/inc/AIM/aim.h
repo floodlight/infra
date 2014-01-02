@@ -46,6 +46,7 @@
 #include <AIM/aim_error.h>
 #include <AIM/aim_bitmap.h>
 #include <AIM/aim_daemon.h>
+#include <AIM/aim_memory.h>
 
 #endif /* __AIM_H__ */
 /*@}*/
