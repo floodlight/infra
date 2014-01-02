@@ -1,22 +1,22 @@
 #!/usr/bin/python
 ## SourceObject ##
 #################################################################
-# 
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific
 # language governing permissions and limitations under the
 # License.
-# 
+#
 #################################################################
 #
 # CEnumGenerator.py
@@ -36,8 +36,8 @@ class CEnumFindByValueHelper(CFunctionGenerator):
 
     def Init(self):
         self.rv = self.mapstruct.TypedefName() + '*'
-        self.args = [ [ 'int', 'e' ], 
-                      [ self.rv, 'map' ], 
+        self.args = [ [ 'int', 'e' ],
+                      [ self.rv, 'map' ],
                       [ 'int', 'size' ] ]
 
         self.body = """    int i;
@@ -49,15 +49,15 @@ class CEnumFindByValueHelper(CFunctionGenerator):
     return NULL;""" % self.mapstruct.valueMember
 
 class CEnumFindByNameHelper(CFunctionGenerator):
-    
+
     def Init(self):
         self.rv = self.mapstruct.TypedefName() + '*'
-        self.args = [ [ 'const char*', 'str' ], 
-                      [ self.rv, 'map' ], 
-                      [ 'int', 'size' ], 
+        self.args = [ [ 'const char*', 'str' ],
+                      [ self.rv, 'map' ],
+                      [ 'int', 'size' ],
                       [ 'int', 'subsearch']
                       ]
-        
+
         self.body = """    int i;
     for(i = 0; i < size-1; i++) {
         if(!%s(str, map[i].%s)) {
@@ -73,11 +73,11 @@ class CEnumFindByNameHelper(CFunctionGenerator):
             }
         }
     }
-    return NULL;""" % (self.f.GlobalStringCompare(), 
-                       self.mapstruct.nameMember, 
-                       self.f.GlobalSubstring(), 
+    return NULL;""" % (self.f.GlobalStringCompare(),
+                       self.mapstruct.nameMember,
+                       self.f.GlobalSubstring(),
                        self.mapstruct.nameMember)
-                       
+
 
 
 class CEnumUtilities(CObjectGenerator):
@@ -88,20 +88,20 @@ class CEnumUtilities(CObjectGenerator):
         self.findByValueName = 'aim_map_si_i'
         self.findByNameName = 'aim_map_si_s'
         self.descByValueName = 'aim_map_si_i'
-        
+
     def Init(self):
-        self.mapstruct = CStructIntMap(name=self.mapstructName, 
+        self.mapstruct = CStructIntMap(name=self.mapstructName,
                                        comment="/** enum map */\n")
         self.findByValueHelper = CEnumFindByValueHelper(
-            name=self.findByValueName, 
-            mapstruct=self.mapstruct, 
+            name=self.findByValueName,
+            mapstruct=self.mapstruct,
             static=True)
         self.findByNameHelper = CEnumFindByNameHelper(
-            name=self.findByNameName, 
-            mapstruct=self.mapstruct, 
+            name=self.findByNameName,
+            mapstruct=self.mapstruct,
             static=True)
         self.descByValueHelper = CEnumFindByValueHelper(
-            name=self.descByValueName, 
+            name=self.descByValueName,
             mapstruct=self.mapstruct,
             static=True)
 
@@ -130,12 +130,12 @@ class CEnumUtilities(CObjectGenerator):
 class CEnumValidMacro(CMacroGenerator):
 
     def Init(self):
-        self.name = self.enum.name + "_valid"; 
+        self.name = self.enum.name + "_valid";
         self.args = [ '_e' ]
-        self.comment = "/** validator */\n"; 
+        self.comment = "/** validator */\n";
 
     def Body(self):
-        
+
         s = ""
         if self.enum.IsLinear():
             # Linear enums can be checked with a macro expression
@@ -144,24 +144,24 @@ class CEnumValidMacro(CMacroGenerator):
                  (self.f.EnumEntry(lastMember, self.enum.name)))
         else:
             # Nonlinear enums must be checked by lookup:
-            s += ("    (%s)" %                 
+            s += ("    (%s)" %
                  (CEnumValidatorFunction(enum=self.enum).Call('(_e)')))
-            
+
         return s
 
 
 class CEnumValidatorFunction(CFunctionGenerator):
-    
+
     def Init(self):
-        self.comments = "/** Enum validator. */\n"; 
+        self.comments = "/** Enum validator. */\n";
         self.rv = 'int'
         self.name = self.f.FunctionName("%sValid" % (self.enum.name))
         self.args = [ [ self.enum.EnumType(), 'e' ] ]
-        
+
         maptable = self.enum.MapTableName();
 
         self.body = """    return %s ? 1 : 0;""" % (
-            self.enum.util.findByValueHelper.Call('NULL', 
+            self.enum.util.findByValueHelper.Call('NULL',
                                                   'e',
                                                   maptable, '0'))
 
@@ -169,13 +169,13 @@ class CEnumValidatorFunction(CFunctionGenerator):
 
 
 class CEnumNameFunction(CFunctionGenerator):
-    
+
     def Init(self):
         self.comments = "/** Enum names. */\n"
         self.rv = 'const char*'
         self.name = self.f.FunctionName("%sName" % (self.enum.name))
         self.args = [ [ self.enum.EnumType(), 'e' ] ]
-        
+
         maptable = self.enum.MapTableName();
 
         self.body = """    const char* name;
@@ -186,8 +186,8 @@ class CEnumNameFunction(CFunctionGenerator):
         return "-invalid value for enum type '%s'";
     }""" % (
             self.enum.util.findByValueHelper.Call('&name',
-                                                  'e', 
-                                                  maptable, '0'), 
+                                                  'e',
+                                                  maptable, '0'),
             self.enum.name)
 
 
@@ -198,8 +198,8 @@ class CEnumDescFunction(CFunctionGenerator):
         self.rv = 'const char*'
         self.name = self.f.FunctionName("%sDesc" % (self.enum.name))
         self.args = [ [ self.enum.EnumType(), 'e' ] ]
-        
-        maptable = self.enum.DescMapTableName(); 
+
+        maptable = self.enum.DescMapTableName();
 
         self.body = """    const char* name;
     if(%s) {
@@ -209,8 +209,8 @@ class CEnumDescFunction(CFunctionGenerator):
         return "-invalid value for enum type '%s'";
     }""" % (
             self.enum.util.findByValueHelper.Call('&name',
-                                                  'e', 
-                                                  maptable, '0'), 
+                                                  'e',
+                                                  maptable, '0'),
             self.enum.name)
 
 
@@ -219,11 +219,11 @@ class CEnumValueFunction(CFunctionGenerator):
         self.comments = "/** Enum values. */\n"
         self.rv = 'int'
         self.name = self.f.FunctionName("%sValue" % (self.enum.name))
-        self.args = [ [ 'const char*', 'str' ], 
-                      '%s* e' % self.enum.EnumType(), 
-                      'int substr', 
+        self.args = [ [ 'const char*', 'str' ],
+                      '%s* e' % self.enum.EnumType(),
+                      'int substr',
                       ]
-        
+
         maptable = self.enum.MapTableName();
 
         self.body = """    int i;
@@ -236,7 +236,7 @@ class CEnumValueFunction(CFunctionGenerator):
     else {
         return -1;
     }""" % (
-            self.enum.util.findByNameHelper.Call('&i', 
+            self.enum.util.findByNameHelper.Call('&i',
                                                  'str',
                                                  maptable, '0'))
 
@@ -252,7 +252,7 @@ class CEnumGenerator(CObjectGenerator):
 
     def Construct(self):
         self.util = CEnumUtilities()
-        self.novalue = False; 
+        self.novalue = False;
         self.strings = True;
 
     def Init(self):
@@ -271,34 +271,34 @@ class CEnumGenerator(CObjectGenerator):
         #     name:
         #     value:
         #     desc:
-        
+
 
         cmembers = []
         members = data['members']
 
         if type(members) != list:
             raise Exception("Enumeration members must be lists.")
-            
+
         for m in members:
             if type(m) == util.DotDict:
                 # We've already normalized this data
                 return data
-            
+
             nmember = util.DotDict(dict(name=None,value=None,desc=None))
             if 'memberfilter' in data:
                 nmember.update(eval(data['memberfilter']))
             elif type(m) == str:
-                # Just the name. No description, values are linearly assigned. 
+                # Just the name. No description, values are linearly assigned.
                 nmember.name = m
             elif type(m) == list:
                 # Don't support this anymore
-                raise Exception("List formats for enum keys no longer supported.") 
+                raise Exception("List formats for enum keys no longer supported.")
             elif type(m) == dict:
                 if len(m.keys()) != 1:
                     raise Exception("Malformed dict for enum member: m")
                 for (k,v) in m.iteritems():
                     if type(v) is dict:
-                        # Assumed this is just the member data. 
+                        # Assumed this is just the member data.
                         nmember.name = k
                         nmember.update(v)
                     elif type(v) is str:
@@ -313,10 +313,10 @@ class CEnumGenerator(CObjectGenerator):
                         raise Exception("Bad dict case in enum member.")
             else:
                 raise Exception("Input data for member %s is not understood." % (m))
-                              
+
             cmembers.append(nmember)
-                
-        data['members'] = cmembers; 
+
+        data['members'] = cmembers;
         return data
 
 
@@ -326,7 +326,7 @@ class CEnumGenerator(CObjectGenerator):
     # Internal helper methods
     #
     ############################################################
-    
+
     def IsLinear(self):
         """ Determine whether or not we are a linear enum """
 
@@ -336,7 +336,7 @@ class CEnumGenerator(CObjectGenerator):
 
         #
         # If specific values are specified in the enum
-        # definition then the mapping is nonlinear. 
+        # definition then the mapping is nonlinear.
         #
         for member in self.members:
             if member.value:
@@ -350,7 +350,7 @@ class CEnumGenerator(CObjectGenerator):
         """ Determines whether the Last entry is included in this enum"""
         # Last makes no sense for nonlinear enums
         if self.IsLinear() == False:
-            Last = False; 
+            Last = False;
         elif hasattr(self, 'Last'):
             Last = self.Last
         else:
@@ -368,7 +368,7 @@ class CEnumGenerator(CObjectGenerator):
             Count = self.Count
         else:
             Count = True
-        
+
         return Count
 
 
@@ -421,14 +421,14 @@ class CEnumGenerator(CObjectGenerator):
         """ Generate an Enum Definition """
 
         #
-        # The default behavior is to typedef all enums. 
+        # The default behavior is to typedef all enums.
         # If you don't want a typedef, specify 'typedef:False'
         # in the enum specification
-        # 
+        #
         s = "/** %s */\n" % (self.name)
         if self.IncludeTypedef():
             s += "typedef "
-            
+
         s += "enum %s {\n" % self.f.EnumName(self.name)
         for member in self.members:
             s += "    %s" % self.f.EnumEntry(member.name, self.name)
@@ -443,13 +443,13 @@ class CEnumGenerator(CObjectGenerator):
 
         #
         # The default generation includes an automatically generated
-        # Invalid, Last, and Count entry for all Linear enums. 
-        # 
+        # Invalid, Last, and Count entry for all Linear enums.
+        #
         # If you don't want any of these, you can specify:
         # 'Invalid':False, 'Count':False, 'Last':False
-        # 
+        #
         # The default value for Invalid is -1. You can specify
-        # 'Invalid': <value> if you want to change it. 
+        # 'Invalid': <value> if you want to change it.
         #
 
         # Note that 'member' currently contains the last entry
@@ -457,20 +457,20 @@ class CEnumGenerator(CObjectGenerator):
 
         if self.IncludeLast() != False:
             s += "    %s = %s,\n" % (
-                self.f.EnumLast(self.name), 
+                self.f.EnumLast(self.name),
                 self.f.EnumEntry(lastMember, self.name))
-        
+
         if self.IncludeCount() != False:
             s += "    %s,\n" % self.f.EnumCount(self.name)
-        
+
         if self.IncludeInvalid() != False:
             value = self.IncludeInvalid()
             if value is True:
-                value = -1; 
+                value = -1;
             s += "    %s = %s,\n" % (self.f.EnumInvalid(self.name), value)
 
         s += "}"
-        
+
         if self.IncludeTypedef():
             s += " %s" % self.f.TypedefEnumName(self.name)
 
@@ -489,7 +489,7 @@ class CEnumGenerator(CObjectGenerator):
         if self.strings == False:
             # No strings for this enum
             return ""
-            
+
         s = "/** Strings macro. */\n"
         s += "#define %s_STRINGS \\\n" % self.f.InMacro(self.name)
         s += "{\\\n"
@@ -501,7 +501,7 @@ class CEnumGenerator(CObjectGenerator):
         return s
 
 
-        
+
 
     def MapTable(self, static=False):
         """ Output the enum map table """
@@ -510,13 +510,13 @@ class CEnumGenerator(CObjectGenerator):
             s += self.f.Static() + " "
 
         s += self.util.mapstruct.DefineTable(self.MapTableName())
-        s += "{\n"; 
+        s += "{\n";
 
         for member in self.members:
             s += """    { "%s", %s },\n""" % (
-                member.name, 
+                member.name,
                 self.f.EnumEntry(member.name, self.name))
-        s += "    { NULL, 0 }\n"    
+        s += "    { NULL, 0 }\n"
         s += "};\n"
         return s
 
@@ -527,13 +527,13 @@ class CEnumGenerator(CObjectGenerator):
             s += self.f.Static() + " "
 
         s += self.util.mapstruct.DefineTable(self.DescMapTableName())
-        s += "{\n"; 
+        s += "{\n";
 
         for member in self.members:
             s += """    { "%s", %s },\n""" % (
-                member.desc, 
+                member.desc,
                 self.f.EnumEntry(member.name, self.name))
-        s += "    { NULL, 0 }\n"    
+        s += "    { NULL, 0 }\n"
         s += "};\n"
         return s
 
@@ -560,7 +560,7 @@ class CEnumGenerator(CObjectGenerator):
         s += self.util.mapstruct.ExternTable(self.MapTableName())
         s += self.util.mapstruct.ExternTable(self.DescMapTableName())
 
-        return s; 
+        return s;
 
     def Source(self):
         s = ""
@@ -571,7 +571,7 @@ class CEnumGenerator(CObjectGenerator):
         s += self.enumDescFunction.Define() + "\n"
         if not self.IsLinear():
             s += self.validatorFunction.Define() + "\n"
-            
+
         return s
 
         for member in self.members:
@@ -583,7 +583,7 @@ class CEnumGenerator(CObjectGenerator):
                 return self.f.EnumEntry(m[0], self.name)
         raise Exception("No enum entry named %s" % item)
 
-        
+
 ###############################################################################
 #
 # Enum Unit testing
@@ -591,11 +591,11 @@ class CEnumGenerator(CObjectGenerator):
 ###############################################################################
 if __name__ == "__main__":
 
-    e = CEnumGenerator(name="testEnum", members=[ ['member1'], ['member2'], 
+    e = CEnumGenerator(name="testEnum", members=[ ['member1'], ['member2'],
                                                   ['member3']])
 
     print e.Define()
 
-    
-    
+
+
 
