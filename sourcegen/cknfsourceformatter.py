@@ -109,7 +109,8 @@ class CKNFSourceFormatter(SourceFormatter):
     def EnumEntry(self, entry, ident):
         """ What should an enumeration entry look like """
         # Default is <ident><entry>
-        return ident.upper() + "_" + entry.upper()
+        return ident.upper() + "_" + \
+               entry.upper().replace(".", "_").replace("-", "_")
 
 
     def EnumCount(self, ident):
