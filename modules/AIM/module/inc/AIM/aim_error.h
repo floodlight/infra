@@ -29,6 +29,12 @@
 #include <AIM/aim_config.h>
 #include <AIM/aim_valist.h>
 
+#ifdef __GNUC__
+#define NORETURN_ATTR __attribute__((__noreturn__))
+#else
+#define NORETURN_ATTR
+#endif
+
 /* <auto.start.enum(aim_error).header> */
 /** aim_error */
 typedef enum aim_error_e {
@@ -70,10 +76,12 @@ extern aim_map_si_t aim_error_desc_map[];
 void aim_die(const char* function,
              const char* file,
              int line,
-             const char* fmt, ...);
+             const char* fmt, ...) NORETURN_ATTR;
 
 /** This macro should usually be used */
 #define AIM_DIE(...)                                            \
     aim_die(__func__, __FILE__, __LINE__,  __VA_ARGS__ );
+
+#undef NORETURN_ATTR
 
 #endif /* __AIM_ERROR_H__ */
