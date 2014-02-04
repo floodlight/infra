@@ -142,5 +142,44 @@ int aim_main(int argc, char* argv[])
         AIM_LOG_MSG("%{aim_error}", AIM_ERROR_PARAM);
     }
 
+    /* Test integer power of 2 utilities */
+    {
+       assert(!aim_is_pow2_u32(0));
+       assert(aim_log2_u32(0) == 0);
+
+       assert(aim_is_pow2_u32(1));
+       assert(aim_log2_u32(1) == 0);
+
+       assert(aim_is_pow2_u32(2));
+       assert(aim_log2_u32(2) == 1);
+
+       assert(!aim_is_pow2_u32(3));
+       assert(aim_log2_u32(3) == 1);
+
+       assert(aim_is_pow2_u32(4));
+       assert(aim_log2_u32(4) == 2);
+
+       assert(!aim_is_pow2_u32(5));
+       assert(aim_log2_u32(5) == 2);
+
+       assert(!aim_is_pow2_u32(6));
+       assert(aim_log2_u32(6) == 2);
+
+       assert(!aim_is_pow2_u32(7));
+       assert(aim_log2_u32(7) == 2);
+
+       assert(aim_is_pow2_u32(8));
+       assert(aim_log2_u32(8) == 3);
+
+       assert(!aim_is_pow2_u32(2147483647));
+       assert(aim_log2_u32(2147483647) == 30);
+
+       assert(aim_is_pow2_u32(2147483648));
+       assert(aim_log2_u32(2147483648) == 31);
+
+       assert(!aim_is_pow2_u32(4294967295));
+       assert(aim_log2_u32(4294967295) == 31);
+    }
+
     return 0;
 }
