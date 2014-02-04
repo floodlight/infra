@@ -32,6 +32,8 @@
 #define __AIM_UTILS_H__
 
 #include <AIM/aim_config.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 /**
  * Number of elements in an array.
@@ -207,6 +209,61 @@ static inline int aim_imax(int a, int b) {
 }
 static inline int aim_imin(int a, int b) {
     return a > b ? b : a;
+}
+
+/**
+ * Check whether an integer is a power of 2
+ */
+static inline bool
+aim_is_pow2_u32(uint32_t x)
+{
+    return x > 0 && (x & (x - 1)) == 0;
+}
+
+/**
+ * Return the truncated log(2) of x
+ *
+ * If x is not a power of 2 then the result will be rounded down.
+ *
+ * x == 0 will return 0.
+ *
+ * Fallback taken from http://graphics.stanford.edu/~seander/bithacks.html
+ */
+static inline unsigned int
+aim_log2_u32(uint32_t x)
+{
+#if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
+    return x ? (31 - __builtin_clz(x)) : 0;
+#else
+    unsigned int r = 0;
+
+    if (x & 0xFFFF0000) {
+        x >>= 16;
+        r |= 16;
+    }
+
+    if (x & 0xFF00) {
+        x >>= 8;
+        r |= 8;
+    }
+
+    if (x & 0xF0) {
+        x >>= 4;
+        r |= 4;
+    }
+
+    if (x & 0xC) {
+        x >>= 2;
+        r |= 2;
+    }
+
+    if (x & 0x2) {
+        x >>= 1;
+        r |= 1;
+    }
+
+    return r;
+#endif
 }
 
 #endif /* __AIM_UTILS_H__ */
