@@ -32,7 +32,7 @@ void *
 aim_malloc(size_t size)
 {
     void *ptr = AIM_MALLOC(size);
-    if (ptr == NULL) {
+    if (size > 0 && ptr == NULL) {
         AIM_DIE("memory allocation failed");
     }
     return ptr;
@@ -42,7 +42,7 @@ void *
 aim_zmalloc(size_t size)
 {
     void *ptr = AIM_CALLOC(1, size);
-    if (ptr == NULL) {
+    if (size > 0 && ptr == NULL) {
         AIM_DIE("memory allocation failed");
     }
     return ptr;
@@ -52,7 +52,7 @@ void *
 aim_realloc(void *ptr, size_t size)
 {
     ptr = AIM_REALLOC(ptr, size);
-    if (ptr == NULL) {
+    if (size > 0 && ptr == NULL) {
         AIM_DIE("memory allocation failed");
     }
     return ptr;
