@@ -232,8 +232,7 @@ aim_bytes_to_string(uint8_t* data, int size, int columns)
             sp += c, len -= c;
         }
         if((size > columns) && (size % columns != 0)) {
-            c = AIM_SNPRINTF(sp, len, "\n");
-            sp += c, len -= c;
+            AIM_SNPRINTF(sp, len, "\n");
         }
         return s;
     }
