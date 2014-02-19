@@ -89,12 +89,10 @@ typedef void (*aim_object_dtor)(aim_object_t*);
 #define AIM_OBJECT_INIT(_object, _id, _subtype, _cookie, _dtor) \
     do {                                                        \
         aim_object_t* _op_ = (aim_object_t*)(_object);          \
-        if(_op_) {                                              \
-            _op_->id = _id;                                     \
-            _op_->subtype = _subtype;                           \
-            _op_->cookie = _cookie;                             \
-            _op_->destructor = _dtor;                           \
-        }                                                       \
+        _op_->id = _id;                                         \
+        _op_->subtype = _subtype;                               \
+        _op_->cookie = _cookie;                                 \
+        _op_->destructor = _dtor;                               \
     } while(0)
 
 
