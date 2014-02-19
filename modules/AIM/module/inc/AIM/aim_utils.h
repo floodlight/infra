@@ -200,6 +200,22 @@ extern int aim_modules_init(void);
         }                                                               \
     } while(0)
 
+/**
+ * Expression true log and assert.
+ *
+ * Only enabled on debug builds.
+ */
+#ifndef NDEBUG
+#define AIM_ASSERT(_expr, ...)                                             \
+    do {                                                                   \
+        if (!(_expr)) {                                                    \
+            AIM_DIE("debug assertion failed: '" #_expr "': " __VA_ARGS__); \
+        }                                                                  \
+    } while(0)
+#else
+#define AIM_ASSERT(_expr, ...)
+#endif
+
 
 /**
  * Min/Max
