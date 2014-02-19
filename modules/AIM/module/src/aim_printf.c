@@ -187,7 +187,6 @@ aim_vprintf(aim_pvs_t* pvs, const char* fmt, va_list _vargs)
     int count = 0;
     aim_va_list_t vargs;
 
-    dst = fmt_;
     va_copy(vargs.val, _vargs);
 
 #define NEXT_TOKEN()                            \
