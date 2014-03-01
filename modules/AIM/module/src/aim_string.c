@@ -120,6 +120,28 @@ aim_vfstrdup(const char* fmt, va_list vargs)
     return aim_strdup(b);
 }
 
+char*
+aim_vdfstrdup(const char* fmt, va_list vargs)
+{
+    char* rv;
+    aim_pvs_t* dstpvs = aim_pvs_buffer_create();
+    aim_vprintf(dstpvs, fmt, vargs);
+    rv = aim_pvs_buffer_get(dstpvs);
+    aim_pvs_destroy(dstpvs);
+    return rv;
+}
+
+char*
+aim_dfstrdup(const char* fmt, ...)
+{
+    char* rv;
+    va_list vargs;
+    va_start(vargs, fmt);
+    rv = aim_vdfstrdup(fmt, vargs);
+    va_end(vargs);
+    return rv;
+}
+
 int
 aim_strlcpy(char* dst, const char* src, int size)
 {
