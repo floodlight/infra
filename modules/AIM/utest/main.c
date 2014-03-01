@@ -181,5 +181,11 @@ int aim_main(int argc, char* argv[])
        assert(aim_log2_u32(4294967295) == 31);
     }
 
+    /* Test aim_dfstrdup() */
+    {
+        char* rv = aim_dfstrdup("%d %{bool} %{bool} %d", 1, 1, 0, 0);
+        assert(!strcmp(rv, "1 True False 0"));
+        aim_free(rv);
+    }
     return 0;
 }

@@ -90,6 +90,19 @@ char* aim_fstrdup(const char* fmt, ...);
 char* aim_vfstrdup(const char* fmt, va_list vargs);
 
 /**
+ * @brief Duplicate a string with AIM datatype formatting.
+ * @param fmt The format
+ */
+char* aim_dfstrdup(const char* fmt, ...);
+
+/**
+ * @brief Duplicate a string with AIM datatype formatting.
+ * @param fmt The format.
+ * @param vargs The args.
+ */
+char* aim_vdfstrdup(const char* fmt, va_list vargs);
+
+/**
  * @brief Portable strlcpy
  * @param dst Destination
  * @param src Source
