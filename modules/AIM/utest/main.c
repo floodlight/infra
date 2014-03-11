@@ -105,6 +105,9 @@ int aim_main(int argc, char* argv[])
             s = aim_pvs_buffer_get(pvs);
             aim_printf(&aim_pvs_stdout, "second: %s", s);
             free(s);
+            aim_pvs_buffer_reset(pvs);
+            s = aim_pvs_buffer_get(pvs);
+            free(s);
             aim_pvs_destroy(pvs);
         }
         {
