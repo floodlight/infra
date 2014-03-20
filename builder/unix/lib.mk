@@ -1,13 +1,13 @@
 ################################################################
 #
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
@@ -50,7 +50,17 @@ $($(TARGET)_SUBDIR)/$(LIBRARY).a: $(LIBRARY_DIR)/$(LIBRARY).a
 # Add this to the global list of library targets:
 ifndef $(LIBRARY)_STANDALONE
 LIBRARY_TARGETS := $(LIBRARY_TARGETS) $(LIBRARY).a
+
+ifdef $(LIBRARY)_LAST
+# Libraries that indicate the LAST attribute will always be kept at the end of the global LIBRARY_TARGETS list.
+# The ordering between LAST libraries is arbitrary.
+LIBRARY_TARGETS_LAST := $(LIBRARY_TARGETS_LAST) $(LIBRARY).a
+LIBRARY_TARGETS := $(filter-out $(LIBRARY_TARGETS_LAST),$(LIBRARY_TARGETS))
+LIBRARY_TARGETS := $(LIBRARY_TARGETS) $(LIBRARY_TARGETS_LAST)
 endif
+
+endif
+
 
 CLEAN_TARGETS := $(CLEAN_TARGETS) $(LIBRARY_DIR)/$(LIBRARY).a
 
