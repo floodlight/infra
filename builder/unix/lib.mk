@@ -53,11 +53,10 @@ LIBRARY_TARGETS := $(LIBRARY_TARGETS) $(LIBRARY).a
 
 ifdef $(LIBRARY)_LAST
 # Libraries that indicate the LAST attribute will always be kept at the end of the global LIBRARY_TARGETS list.
-# The ordering between LAST libraries is arbitrary.
 LIBRARY_TARGETS_LAST := $(LIBRARY_TARGETS_LAST) $(LIBRARY).a
+endif
 LIBRARY_TARGETS := $(filter-out $(LIBRARY_TARGETS_LAST),$(LIBRARY_TARGETS))
 LIBRARY_TARGETS := $(LIBRARY_TARGETS) $(LIBRARY_TARGETS_LAST)
-endif
 
 endif
 
