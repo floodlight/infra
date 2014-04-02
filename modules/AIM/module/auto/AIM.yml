@@ -1,13 +1,13 @@
 ################################################################
 #
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
@@ -58,6 +58,9 @@ cdefs: &cdefs
     default: 0
 - AIM_CONFIG_INCLUDE_MAIN:
     doc: "Define main() in the AIM library. This function will call modules_init(), aim_main(), and modules_denit()."
+    default: 0
+- AIM_CONFIG_INCLUDE_CTOR_DTOR:
+    doc: "Define the AIM shared library constructors and destructors. These functions will call modules_init() and modules_denit() at load and unload time."
     default: 0
 - AIM_CONFIG_INCLUDE_ENV_ARGV:
     doc: "Support retrieval of program arguments from the environment. Requires AIM_CONFIG_INCLUDE_MAIN."

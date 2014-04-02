@@ -223,6 +223,31 @@ main(int argc, char* argv[])
 #endif /* AIM_CONFIG_INCLUDE_MAIN */
 
 
+#if AIM_CONFIG_INCLUDE_CTOR_DTOR == 1
+
+__attribute__((constructor)) void
+__aim_ctor__(void)
+{
+    __aim_module_init__();
+
+#if AIM_CONFIG_INCLUDE_MODULES_INIT == 1
+    aim_modules_init();
+#endif
+}
+
+__attribute__((destructor)) void
+__aim_dtor__(void)
+{
+
+#if AIM_CONFIG_INCLUDE_MODULES_DENIT == 1
+    aim_modules_denit();
+#endif
+
+    __aim_module_denit__();
+}
+
+#endif /* AIM_CONFIG_INCLUDE_CTOR_DTOR */
+
 
 
 
