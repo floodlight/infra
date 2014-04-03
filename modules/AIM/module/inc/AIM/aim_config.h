@@ -153,6 +153,16 @@ struct aim_pvs_s;
 #endif
 
 /**
+ * AIM_CONFIG_AIM_MAIN_FUNCTION
+ *
+ * The default application main function is 'aim_main'. You can redefine it explicitly using this config define. */
+
+
+#ifndef AIM_CONFIG_AIM_MAIN_FUNCTION
+#define AIM_CONFIG_AIM_MAIN_FUNCTION aim_main
+#endif
+
+/**
  * AIM_CONFIG_INCLUDE_CTOR_DTOR
  *
  * Define the AIM shared library constructors and destructors. These functions will call modules_init() and modules_denit() at load and unload time. */
