@@ -92,6 +92,11 @@ aim_config_settings_t aim_config_settings[] =
 #else
 { AIM_CONFIG_INCLUDE_MAIN(__aim_config_STRINGIFY_NAME), "__undefined__" },
 #endif
+#ifdef AIM_CONFIG_AIM_MAIN_FUNCTION
+    { __aim_config_STRINGIFY_NAME(AIM_CONFIG_AIM_MAIN_FUNCTION), __aim_config_STRINGIFY_VALUE(AIM_CONFIG_AIM_MAIN_FUNCTION) },
+#else
+{ AIM_CONFIG_AIM_MAIN_FUNCTION(__aim_config_STRINGIFY_NAME), "__undefined__" },
+#endif
 #ifdef AIM_CONFIG_INCLUDE_CTOR_DTOR
     { __aim_config_STRINGIFY_NAME(AIM_CONFIG_INCLUDE_CTOR_DTOR), __aim_config_STRINGIFY_VALUE(AIM_CONFIG_INCLUDE_CTOR_DTOR) },
 #else
