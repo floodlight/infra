@@ -59,6 +59,9 @@ cdefs: &cdefs
 - AIM_CONFIG_INCLUDE_MAIN:
     doc: "Define main() in the AIM library. This function will call modules_init(), aim_main(), and modules_denit()."
     default: 0
+- AIM_CONFIG_AIM_MAIN_FUNCTION:
+    doc: "The default application main function is 'aim_main'. You can redefine it explicitly using this config define."
+    default: aim_main
 - AIM_CONFIG_INCLUDE_CTOR_DTOR:
     doc: "Define the AIM shared library constructors and destructors. These functions will call modules_init() and modules_denit() at load and unload time."
     default: 0

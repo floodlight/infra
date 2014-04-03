@@ -178,7 +178,7 @@ main(int argc, char* argv[])
 {
     int rv = 0;
     char* env_argv = NULL;
-    extern int aim_main(int argc, char* argv[]);
+    extern int AIM_CONFIG_AIM_MAIN_FUNCTION (int argc, char* argv[]);
 
     /*
      * The AIM module itself must be initialized first.
@@ -201,7 +201,7 @@ main(int argc, char* argv[])
     aim_modules_init();
 #endif
 
-    rv = aim_main(argc, argv);
+    rv = AIM_CONFIG_AIM_MAIN_FUNCTION (argc, argv);
 
 #if AIM_CONFIG_INCLUDE_MODULES_DENIT == 1
     aim_modules_denit();
