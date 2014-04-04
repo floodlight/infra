@@ -579,6 +579,16 @@ extern aim_log_t AIM_LOG_STRUCT;
     aim_log_enabled(AIM_LOG_STRUCT_POINTER, AIM_LOG_FLAG_##_flag)
 
 /**
+ * Quickly determine whether a log setting might be enabled.
+ */
+#if AIM_CONFIG_LOG_INCLUDE_ENV_VARIABLES == 0
+#define AIM_LOG_ENABLED_FAST(_flag) \
+    AIM_BIT_GET(AIM_LOG_STRUCT_POINTER->common_flags, AIM_LOG_FLAG_##_flag)
+#else
+#define AIM_LOG_ENABLED_FAST(_flag) 1
+#endif
+
+/**
  * Determine whether a custom log setting is enabled.
  */
 #define AIM_LOG_CUSTOM_ENABLED(_fid)                    \
@@ -598,12 +608,17 @@ extern aim_log_t AIM_LOG_STRUCT;
 /**
  * Issue a common log message with rate-limiting.
  */
-#define AIM_LOG_MOD_RL_COMMON(_flag, _rl, _time, ...)                   \
-    aim_log_common(AIM_LOG_STRUCT_POINTER, AIM_LOG_FLAG_##_flag,        \
-                   _rl, _time,                                          \
-                   __func__, __FILE__, __LINE__,                        \
-                   AIM_LOG_MODULE_NAME_STR AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 \
-                   ": " #_flag ": " AIM_VA_ARGS_FIRST(__VA_ARGS__) AIM_VA_ARGS_REST(__VA_ARGS__))
+#define AIM_LOG_MOD_RL_COMMON(_flag, _rl, _time, ...)                       \
+    do {                                                                    \
+        if (AIM_LOG_ENABLED_FAST(_flag)) {                                  \
+            aim_log_common(AIM_LOG_STRUCT_POINTER, AIM_LOG_FLAG_##_flag,    \
+                           _rl, _time,                                      \
+                           __func__, __FILE__, __LINE__,                    \
+                           AIM_LOG_MODULE_NAME_STR AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 \
+                           ": " #_flag ": " AIM_VA_ARGS_FIRST(__VA_ARGS__) AIM_VA_ARGS_REST(__VA_ARGS__)); \
+        }                                                                   \
+    } while (0)
+
 
 /**
  * Issue a common log message, no rate limiting.
