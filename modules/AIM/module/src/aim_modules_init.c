@@ -31,8 +31,19 @@
 
 #if AIM_CONFIG_INCLUDE_MODULES_INIT == 1
 
-int
-aim_modules_init(void)
+/*
+ * These must be static. 
+ *
+ * When AIM is linked into multiple binaries that may be loaded together at runtime
+ * (such as multiple shared libraries) the aim_modules_init() global symbol will
+ * only be available from one of them. This static version makes sure we get 
+ * access to the modulelist specific to this library's build, rather than
+ * someone else's that has already been loaded. 
+ *
+ * The shared-library constructors must call the static versions. 
+ */
+static int
+aim_modules_init__(void)
 {
     /*
      * Call the module-init function for all modules.
@@ -51,6 +62,12 @@ aim_modules_init(void)
     return count;
 }
 
+int
+aim_modules_init(void)
+{
+    return aim_modules_init__();
+}
+
 #endif /* AIM_CONFIG_INCLUDE_MODULES_INIT */
 
 
@@ -58,8 +75,8 @@ aim_modules_init(void)
 
 #if AIM_CONFIG_INCLUDE_MODULES_DENIT == 1
 
-void
-aim_modules_denit(void)
+static void
+aim_modules_denit__(void)
 {
     /*
      * Call the module-denit function for all modules.
@@ -71,6 +88,12 @@ aim_modules_denit(void)
     }
 
 #include <dependmodules.x>
+}
+
+void
+aim_modules_denit(void)
+{
+    return aim_modules_denit__();
 }
 
 #endif /* AIM_CONFIG_INCLUDE_MODULES_DENIT */
@@ -231,7 +254,8 @@ __aim_ctor__(void)
     __aim_module_init__();
 
 #if AIM_CONFIG_INCLUDE_MODULES_INIT == 1
-    aim_modules_init();
+    /* The static version must be used here. */
+    aim_modules_init__();
 #endif
 }
 
@@ -240,7 +264,8 @@ __aim_dtor__(void)
 {
 
 #if AIM_CONFIG_INCLUDE_MODULES_DENIT == 1
-    aim_modules_denit();
+    /* The static version must be used here. */
+    aim_modules_denit__();
 #endif
 
     __aim_module_denit__();
