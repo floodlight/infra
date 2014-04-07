@@ -501,8 +501,8 @@ aim_log_time__(aim_pvs_t* pvs)
 
     gettimeofday(&timeval, NULL);
     loctime = localtime(&timeval.tv_sec);
-    strftime(lt, sizeof(lt), "%b %d %T", loctime);
-    aim_printf(pvs, "%s.%.03d ", lt, (int)timeval.tv_usec/1000);
+    strftime(lt, sizeof(lt), "%m-%d %T", loctime);
+    aim_printf(pvs, "%s.%.06d ", lt, (int)timeval.tv_usec);
 #else
     AIM_REFERENCE(pvs);
     AIM_REFERENCE(size);
