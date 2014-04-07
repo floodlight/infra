@@ -121,9 +121,8 @@ aim_datatype_register_struct(aim_datatype_t* dt)
         return -1;
     }
 
-    if(aim_datatype_find(dt->c, dt->type) != NULL) {
-        return -1;
-    }
+    /* Last registrant wins */
+    aim_datatype_unregister(dt->c, dt->type);
 
     ndt = aim_zmalloc(sizeof(*ndt));
     ndt->dt = *dt;
