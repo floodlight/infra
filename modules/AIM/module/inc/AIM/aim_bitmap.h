@@ -320,6 +320,30 @@ aim_bitmap_and(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
     }
 }
 
+/**
+ * @brief Checks if there are any intersecting bits in bitmaps.
+ * @param hdr_a The bitmap header.
+ * @param hdr_b The bitmap header.
+ * @returns 1 if intersecting bits found, else returns 0.
+ */
+static inline int
+aim_bitmap_is_intersecting(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
+{
+    int idx = 0;
+
+    if (!AIM_BITMAP_SIZE_EQ(hdr_a, hdr_b)) {
+        AIM_DIE("Intersection check on different size bitmaps");
+    }
+
+    for ( ; idx < hdr_a->wordcount; idx++) {
+        if (hdr_a->words[idx] & hdr_b->words[idx]) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 /*
  * These macros can operate directly on any bitmap structure
  * containing the proper header.
@@ -385,6 +409,9 @@ aim_bitmap_and(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 #define AIM_BITMAP_AND(_bmap_a, _bmap_b)     \
     aim_bitmap_and(&((_bmap_a)->hdr), &((_bmap_b)->hdr))
 
+/** Check if any bits in bitmap_a are intersecting with _bmap_b */
+#define AIM_BITMAP_IS_INTERSECTING(_bmap_a, _bmap_b)     \
+    aim_bitmap_is_intersecting(&((_bmap_a)->hdr), &((_bmap_b)->hdr))
 
 
 
