@@ -15,14 +15,11 @@
  * language governing permissions and limitations under the
  * License.
  *
- ****************************************************************/
-
-/**************************************************************************//**
+ ****************************************************************
  *
  * aim_datatypes.c
  *
- *
- *****************************************************************************/
+ ***************************************************************/
 #include <AIM/aim_config.h>
 #include <AIM/aim_datatypes.h>
 #include <AIM/aim_utils.h>
@@ -208,6 +205,55 @@ aim_datatype_ts__rmap__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
     return 0;
 }
 
+static int
+aim_datatype_ts__rfmap__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
+                        const char** rv)
+{
+    uint32_t flags;
+    aim_datatype_map_t* map = (aim_datatype_map_t*) dtc->dt->cookie;
+    aim_datatype_map_t* p;
+    int len = 0;
+    char* str;
+
+    /*
+     * Determine the maximum string size we'll need.
+     * Format is:
+     * 0x%.8x [val,val,val...]
+     *
+     * Start with static sizes (hex output and brackets)
+     */
+    len = 10 + 4;
+    /* Add maximum length of all flags */
+    for(p = map; p->s; p++) {
+        len += AIM_STRLEN(p->s);
+        len += 2;
+    }
+    str = aim_zmalloc(len);
+
+    /* The input flags */
+    flags = va_arg(vargs->val, uint32_t);
+
+    AIM_SNPRINTF(str, len, "0x%.8x", flags);
+    if(flags) {
+        AIM_STRCAT(str, " [ ");
+        for(p = map; p->s; p++) {
+            if(flags & p->i) {
+                /* The given flag is set */
+                AIM_STRCAT(str, p->s);
+                AIM_STRCAT(str, ",");
+            }
+        }
+        /*
+         * Remove trailing comma/space before appending closing bracket.
+         * This works even if there were no valid flags added.
+         */
+        str[AIM_STRLEN(str)-1] = 0;
+        AIM_STRCAT(str, " ]");
+    }
+    *rv = str;
+    return 0;
+}
+
 int
 aim_datatype_register_map(char c, const char* type, const char* desc,
                            aim_datatype_map_t* map)
@@ -215,6 +261,16 @@ aim_datatype_register_map(char c, const char* type, const char* desc,
     return aim_datatype_register(c, type, desc,
                                  aim_datatype_fs__rmap__,
                                  aim_datatype_ts__rmap__,
+                                 map);
+}
+
+int
+aim_datatype_register_fmap(char c, const char* type, const char* desc,
+                           aim_datatype_map_t* map)
+{
+    return aim_datatype_register(c, type, desc,
+                                 NULL,
+                                 aim_datatype_ts__rfmap__,
                                  map);
 }
 

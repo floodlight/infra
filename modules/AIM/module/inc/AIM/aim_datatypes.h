@@ -117,6 +117,20 @@ typedef aim_map_si_t aim_datatype_map_t;
 int aim_datatype_register_map(char c, const char* type, const char* desc,
                                aim_datatype_map_t* map);
 
+
+/**
+ * @brief Register a flag mapping datatype.
+ * @param c The optional single character that refers to this datatype.
+ * @param type The full name for this datatype.
+ * @param desc The description of this datatype.
+ * @param map The map table defining the allowable values for this datatype.
+ *
+ * This assumes the input is a uint32_t representing flags defined
+ * in the map table.
+ */
+int aim_datatype_register_fmap(char c, const char* type, const char* desc,
+                               aim_datatype_map_t* map);
+
 /**
  * You can use this macro to register a pre-existing enumeration or map.
  * _name -- Name of the type to register
@@ -124,16 +138,30 @@ int aim_datatype_register_map(char c, const char* type, const char* desc,
  * _desc -- type description
  * _elog -- log macro to call if registration fails
  */
-#define AIM_DATATYPE_MAP_REGISTER(_name, _table, _desc, _elog)         \
+#define AIM_DATATYPE_MAP_REGISTER(_name, _table, _desc, _elog)          \
     do {                                                                \
         int _rv;                                                        \
-        extern aim_datatype_map_t _table [];                           \
-        _rv = aim_datatype_register_map(0, #_name, _desc, _table);     \
+        extern aim_datatype_map_t _table [];                            \
+        _rv = aim_datatype_register_map(0, #_name, _desc, _table);      \
         if(_rv < 0) {                                                   \
-            _elog ("aim_datatype_register_map(" #_name ") failed.");   \
+            _elog ("aim_datatype_register_map(" #_name ") failed.");    \
         }                                                               \
     } while(0)                                                          \
 
+
+/**
+ * You can use this macro to register a pre-existing enumeration or map
+ * as a flag vector.
+ */
+#define AIM_DATATYPE_FMAP_REGISTER(_name, _table, _desc, _elog)         \
+    do {                                                                \
+        int _rv;                                                        \
+        extern aim_datatype_map_t _table [];                            \
+        _rv = aim_datatype_register_fmap(0, #_name, _desc, _table);     \
+        if(_rv < 0) {                                                   \
+            _elog ("aim_datatype_register_fmap(" #_name ") failed.");   \
+        }                                                               \
+    } while(0)
 
 
 /**************************************************************************//**
