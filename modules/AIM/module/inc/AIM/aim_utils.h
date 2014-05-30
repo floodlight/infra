@@ -213,7 +213,7 @@ extern int aim_modules_init(void);
         }                                                                  \
     } while(0)
 #else
-#define AIM_ASSERT(_expr, ...)
+#define AIM_ASSERT(_expr, ...) AIM_REFERENCE(sizeof(_expr))
 #endif
 
 
