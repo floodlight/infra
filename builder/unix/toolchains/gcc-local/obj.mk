@@ -30,7 +30,10 @@ MAKE_DIR=$(OBJECT_DIR)/$($(TARGET)_SUBDIR)
 include $(BUILDER)/makedir.mk
 
 ifndef GCC
-GCC := gcc
+ifndef CC
+CC := gcc
+endif
+GCC := $(CC)
 endif
 
 CINFO="["
