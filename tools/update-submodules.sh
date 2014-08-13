@@ -28,14 +28,18 @@
 # will only commit the submodule update with the generated commit message.
 
 pull=1
+branch=master
 
-while getopts ":nh" opt; do
+while getopts ":nb:h" opt; do
     case $opt in
         n)
             pull=0
             ;;
+        b)
+            branch=$OPTARG
+            ;;
         h)
-            echo "usage: $0 [-n] [PATH...]"
+            echo "usage: $0 [-nb] [PATH...]"
             exit 0
             ;;
         \?)
@@ -58,7 +62,7 @@ for S in $paths; do
     if [ $pull -eq 1 ]; then
         echo "Updating $S"
         git -C $S checkout --quiet master
-        git -C $S pull --quiet origin master
+        git -C $S pull --quiet origin $branch
     fi
     if ! git diff --quiet $S; then
         (echo "update $(basename $S)"; echo; git submodule summary $S) | git commit -F- $S
