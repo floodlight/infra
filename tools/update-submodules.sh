@@ -19,14 +19,47 @@
 ################################################################
 
 # Updates each submodule to origin/master and writes a nice commit message
-# that shows the new merged pull requests. Must be run from the root of a
-# repository.
+# that shows the new merged pull requests.
+#
+# Must be run from the root of a repository, unless you specify the submodule
+# paths on the command line.
+#
+# If the -n option is given the script will not pull new commits itself, but
+# will only commit the submodule update with the generated commit message.
 
-for S in submodules/*; do
+pull=1
+
+while getopts ":nh" opt; do
+    case $opt in
+        n)
+            pull=0
+            ;;
+        h)
+            echo "usage: $0 [-n] [PATH...]"
+            exit 0
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG"
+            exit 1
+            ;;
+    esac
+done
+
+shift $(($OPTIND-1))
+
+if [[ $@ ]]; then
+    paths="$@"
+else
+    paths=$(echo submodules/*)
+fi
+
+for S in $paths; do
     [ -d $S ] || continue
-    echo "Updating $S"
-    git -C $S checkout --quiet master
-    git -C $S pull --quiet origin master
+    if [ $pull -eq 1 ]; then
+        echo "Updating $S"
+        git -C $S checkout --quiet master
+        git -C $S pull --quiet origin master
+    fi
     if ! git diff --quiet $S; then
         (echo "update $(basename $S)"; echo; git submodule summary $S) | git commit -F- $S
     fi
