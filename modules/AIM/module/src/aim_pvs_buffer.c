@@ -65,12 +65,14 @@ static void aim_pvs_buffer_destroy__(aim_object_t*);
  * Output buffer function.
  */
 static int
-aim_pvs_buffer_vprintf__(aim_pvs_t* _pvs, const char* fmt, va_list vargs)
+aim_pvs_buffer_vprintf__(aim_pvs_t* _pvs, aim_log_flag_t flag,
+                         const char* fmt, va_list vargs)
 {
     aim_pvs_buffer_t* pvs = (aim_pvs_buffer_t*)_pvs;
     int count;
     char* p;
     va_list vacopy;
+    AIM_REFERENCE(flag);
 
     va_copy(vacopy, vargs);
     count = aim_vsnprintf(NULL, 0, fmt, vacopy);

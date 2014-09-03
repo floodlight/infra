@@ -513,7 +513,8 @@ aim_log_time__(aim_pvs_t* pvs)
  * Basic output function for all log messages.
  */
 static void
-aim_log_output__(aim_log_t* l, const char* fname, const char* file,
+aim_log_output__(aim_log_t* l, aim_log_flag_t flag, 
+                 const char* fname, const char* file,
                  int line, const char* fmt, va_list vargs)
 {
     aim_pvs_t* msg;
@@ -532,7 +533,7 @@ aim_log_output__(aim_log_t* l, const char* fname, const char* file,
     }
     aim_printf(msg, "\n");
     pmsg = aim_pvs_buffer_get(msg);
-    aim_printf(l->pvs, "%s", pmsg);
+    aim_pvs_printf(l->pvs, flag, "%s", pmsg);
     aim_free(pmsg);
     aim_pvs_destroy(msg);
 }
@@ -637,7 +638,7 @@ aim_log_vcommon(aim_log_t* l, aim_log_flag_t flag,
                 }
             }
 
-            aim_log_output__(l, fname, file, line, fmt, vargs);
+            aim_log_output__(l, flag, fname, file, line, fmt, vargs);
 
             if(color) {
                 aim_printf(l->pvs, color_reset__);
@@ -667,7 +668,8 @@ aim_log_vcustom(aim_log_t* l, int fid,
 {
     if(aim_log_custom_enabled(l, fid)) {
         if(rl == NULL || aim_ratelimiter_limit(rl, time) == 0) {
-            aim_log_output__(l, fname, file, line, fmt, vargs);
+            aim_log_output__(l, AIM_LOG_FLAG_INFO,
+                             fname, file, line, fmt, vargs);
         }
     }
 }

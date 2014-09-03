@@ -181,12 +181,13 @@ aim_datatype_fs__rmap__(aim_datatype_context_t* dtc, const char* arg,
     }
 
     /* fixme */
-    aim_pvs_printf(dtc->epvs,
+    aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG,
                    "%s is not a valid %s. Choices are: ", arg, dtc->dt->desc);
     for(p = map; p->s; p++) {
-        aim_pvs_printf(dtc->epvs, "%s%s ", p->s, (p+1)->s ? "," : "");
+        aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG,
+                       "%s%s ", p->s, (p+1)->s ? "," : "");
     }
-    aim_pvs_printf(dtc->epvs, "\n");
+    aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG, "\n");
     return -1;
 }
 
@@ -364,11 +365,13 @@ aim_datatype_fs__rint__(aim_datatype_context_t* dtc, const char* arg,
     char* desc = va_arg(vargs->val, char*);
 
     if(aim_datatype_fs_int(arg, rv) != 0) {
-        aim_pvs_printf(dtc->epvs, "%s is not an integer.\n", arg);
+        aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG,
+                       "%s is not an integer.\n", arg);
         return AIM_STATUS_E_ARG;
     }
     if(*rv < low || *rv > high) {
-        aim_pvs_printf(dtc->epvs, "value %d [for argument %s] must be between %d and %d.\n",
+        aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG,
+                       "value %d [for argument %s] must be between %d and %d.\n",
                        *rv, desc, low, high);
         return AIM_STATUS_E_ARG;
     }
@@ -403,7 +406,7 @@ aim_datatype_fs__idata__(aim_datatype_context_t* dtc, const char* arg,
     int      _size;
     _data = aim_bytes_from_string(arg, &_size);
     if(_size > *size) {
-        aim_pvs_printf(dtc->epvs, "too much data.\n");
+        aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG, "too much data.\n");
     }
     AIM_MEMCPY(data, _data, _size);
     *size = _size;
@@ -450,11 +453,13 @@ aim_datatype_fs__map__(aim_datatype_context_t* dtc, const char* arg,
             return AIM_STATUS_OK;
         }
     }
-    aim_pvs_printf(dtc->epvs, "%s is not a valid %s. Choices are: ", arg, desc);
+    aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG,
+                   "%s is not a valid %s. Choices are: ", arg, desc);
     for(p = map; p->s; p++) {
-        aim_pvs_printf(dtc->epvs, "%s%s ", p->s, (p+1)->s ? "," : "");
+        aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG,
+                       "%s%s ", p->s, (p+1)->s ? "," : "");
     }
-    aim_pvs_printf(dtc->epvs, "\n");
+    aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG, "\n");
     return AIM_STATUS_E_ARG;
 }
 
@@ -488,11 +493,13 @@ aim_datatype_fs__choice__(aim_datatype_context_t* dtc, const char* arg,
         }
     }
     if(*rv == -1) {
-        aim_pvs_printf(dtc->epvs, "%s is not a valid %s. Choices are: ", arg, desc);
+        aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG,
+                       "%s is not a valid %s. Choices are: ", arg, desc);
         for(i = 0; i < count; i++) {
-            aim_pvs_printf(dtc->epvs, "%s%s ", choices[i], i != (count-1) ? "," : "");
+            aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG,
+                           "%s%s ", choices[i], i != (count-1) ? "," : "");
         }
-        aim_pvs_printf(dtc->epvs, "\n");
+        aim_pvs_printf(dtc->epvs, AIM_LOG_FLAG_MSG, "\n");
         aim_free(choices);
         return AIM_STATUS_E_ARG;
     }
@@ -683,7 +690,7 @@ aim_datatype_ts__aim_bitmap__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
         int bit;
 
         AIM_BITMAP_ITER(bmap, bit) {
-            aim_pvs_printf(pvsb, "%d ", bit);
+            aim_pvs_printf(pvsb, AIM_LOG_FLAG_MSG, "%d ", bit);
         }
 
         *rv = aim_pvs_buffer_get(pvsb);

@@ -216,7 +216,8 @@ aim_vprintf(aim_pvs_t* pvs, const char* fmt, va_list _vargs)
                 }
                 if(*src == 0) {
                     /* Malformed */
-                    count += aim_pvs_printf(pvs, fmt_, "%BADFORMAT");
+                    count += aim_pvs_printf(pvs, AIM_LOG_FLAG_MSG,
+                                            fmt_, "%BADFORMAT");
                     aim_free(fmt_);
                     return count;
                 }
@@ -224,7 +225,8 @@ aim_vprintf(aim_pvs_t* pvs, const char* fmt, va_list _vargs)
                     aim_datatype_t* dt = aim_datatype_find(0, type);
                     if(dt == NULL) {
                         /* bad or missing type */
-                        count += aim_pvs_printf(pvs, "{error:unknown type %s}", type);
+                        count += aim_pvs_printf(pvs, AIM_LOG_FLAG_MSG,
+                                                "{error:unknown type %s}", type);
                         /*
                          * Its hard to continue from here. We don't know
                          * the number and type of arguments that were passed
@@ -241,7 +243,8 @@ aim_vprintf(aim_pvs_t* pvs, const char* fmt, va_list _vargs)
                         dtc.dt = dt;
                         dtc.epvs = pvs;
                         dt->to_str(&dtc, &vargs, &rv);
-                        count += aim_pvs_printf(pvs, fmt_, rv);
+                        count += aim_pvs_printf(pvs, AIM_LOG_FLAG_MSG,
+                                                fmt_, rv);
                         aim_free((char*)rv);
                     }
                 }
@@ -257,7 +260,7 @@ aim_vprintf(aim_pvs_t* pvs, const char* fmt, va_list _vargs)
                 *dst=0;
 
                 va_copy(vac, vargs.val);
-                count += aim_pvs_vprintf(pvs, fmt_, vac);
+                count += aim_pvs_vprintf(pvs, AIM_LOG_FLAG_MSG, fmt_, vac);
                 va_end(vac);
                 pull_format_argument__(fmt_, &vargs);
             }
@@ -266,7 +269,7 @@ aim_vprintf(aim_pvs_t* pvs, const char* fmt, va_list _vargs)
         src++;
     }
     if(dst != fmt_) {
-        count += aim_pvs_vprintf(pvs, fmt_, vargs.val);
+        count += aim_pvs_vprintf(pvs, AIM_LOG_FLAG_MSG, fmt_, vargs.val);
     }
     aim_free(fmt_);
     return count;

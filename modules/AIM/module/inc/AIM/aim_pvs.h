@@ -35,6 +35,7 @@
 #include <AIM/aim_config.h>
 #include <AIM/aim_valist.h>
 #include <AIM/aim_object.h>
+#include <AIM/aim_log_flag.h>
 #include <stdarg.h>
 
 /** aim_pvs_t */
@@ -43,7 +44,8 @@ typedef struct aim_pvs_s aim_pvs_t;
 /**
  * All fundamental output vectors share this signature.
  */
-typedef int (*aim_vprint_f)(aim_pvs_t* pvs, const char* fmt, va_list vargs);
+typedef int (*aim_vprint_f)(aim_pvs_t* pvs, aim_log_flag_t flag,
+                            const char* fmt, va_list vargs);
 
 
 /**
@@ -98,31 +100,36 @@ extern aim_pvs_t aim_pvs_none;
 /**
  * @brief printf-style output to any PVS.
  * @param pvs The PVS output stream.
+ * @param flag The associated AIM log flag.
  * @param fmt The format string.
  * @note This does not include custom datatype processing.
  * @note Most clients should call aim_printf() instead.
  */
-int aim_pvs_printf(aim_pvs_t* pvs, const char* fmt, ...);
+int aim_pvs_printf(aim_pvs_t* pvs, aim_log_flag_t flag, const char* fmt, ...);
 
 /**
  * @brief vprintf-style output to any PVS.
  * @param pvs The PVS output stream.
+ * @param flag The associated AIM log flag.
  * @param fmt The format string.
  * @param vargs The format arguments.
  * @note This does not include custom datatype processing.
  * @note Most clients should call aim_vprintf() instead.
  */
-int aim_pvs_vprintf(aim_pvs_t* pvs, const char* fmt, va_list vargs);
+int aim_pvs_vprintf(aim_pvs_t* pvs, aim_log_flag_t flag,
+                    const char* fmt, va_list vargs);
 
 /**
  * @brief vprintf-style output to any PVS.
  * @param pvs The PVS output stream.
+ * @param flag The associated AIM log flag.
  * @param fmt The format string.
  * @param vargs The AIM variable argument structure.
  * @note This does not include custom datatype processing.
  * @note Most clients should call aim_avprintf() instead.
  */
-int aim_pvs_avprintf(aim_pvs_t* pvs, const char* fmt, aim_va_list_t* vargs);
+int aim_pvs_avprintf(aim_pvs_t* pvs, aim_log_flag_t flag,
+                     const char* fmt, aim_va_list_t* vargs);
 
 /**
  * @brief Enable or disable output on the given PVS.
