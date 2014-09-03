@@ -44,42 +44,7 @@
  *
  *****************************************************************************/
 
-/* <auto.start.enum(aim_log_flag).header> */
-/** aim_log_flag */
-typedef enum aim_log_flag_e {
-    AIM_LOG_FLAG_MSG,
-    AIM_LOG_FLAG_FATAL,
-    AIM_LOG_FLAG_ERROR,
-    AIM_LOG_FLAG_WARN,
-    AIM_LOG_FLAG_INFO,
-    AIM_LOG_FLAG_VERBOSE,
-    AIM_LOG_FLAG_TRACE,
-    AIM_LOG_FLAG_INTERNAL,
-    AIM_LOG_FLAG_BUG,
-    AIM_LOG_FLAG_FTRACE,
-} aim_log_flag_t;
-
-/** Enum names. */
-const char* aim_log_flag_name(aim_log_flag_t e);
-
-/** Enum values. */
-int aim_log_flag_value(const char* str, aim_log_flag_t* e, int substr);
-
-/** Enum descriptions. */
-const char* aim_log_flag_desc(aim_log_flag_t e);
-
-/** Enum validator. */
-int aim_log_flag_valid(aim_log_flag_t e);
-
-/** validator */
-#define AIM_LOG_FLAG_VALID(_e) \
-    (aim_log_flag_valid((_e)))
-
-/** aim_log_flag_map table. */
-extern aim_map_si_t aim_log_flag_map[];
-/** aim_log_flag_desc_map table. */
-extern aim_map_si_t aim_log_flag_desc_map[];
-/* <auto.end.enum(aim_log_flag).header> */
+#include <AIM/aim_log_flag.h>
 
 /* <auto.start.enum(aim_log_bit).header> */
 /** aim_log_bit */

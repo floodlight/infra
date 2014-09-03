@@ -43,8 +43,8 @@ void aim_die(const char* function,
                     function, file, line,
                     fmt, va);
 
-    aim_pvs_vprintf(&aim_pvs_stderr, fmt, vb);
-    aim_pvs_printf(&aim_pvs_stderr, "\n");
+    aim_pvs_vprintf(&aim_pvs_stderr, AIM_LOG_FLAG_FATAL, fmt, vb);
+    aim_pvs_printf(&aim_pvs_stderr, AIM_LOG_FLAG_FATAL, "\n");
     /* Fixme/Todo */
     abort();
 }

@@ -56,9 +56,11 @@ typedef enum aim_pvs_file_subtypes_e {
  * Output to FILE*
  */
 static int
-aim_vprint_fp__(aim_pvs_t* pvs, const char* fmt, va_list vargs)
+aim_vprint_fp__(aim_pvs_t* pvs, aim_log_flag_t flag,
+                const char* fmt, va_list vargs)
 {
     int rv = 0;
+    AIM_REFERENCE(flag);
 
     /**
      * Special checks for stdout/stderr

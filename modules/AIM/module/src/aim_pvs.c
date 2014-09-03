@@ -30,7 +30,8 @@
 #include <stdio.h>
 
 int
-aim_pvs_avprintf(aim_pvs_t* pvs, const char* fmt, aim_va_list_t* vargs)
+aim_pvs_avprintf(aim_pvs_t* pvs, aim_log_flag_t flag,
+                 const char* fmt, aim_va_list_t* vargs)
 {
     if(pvs == NULL) {
         return 0;
@@ -39,11 +40,13 @@ aim_pvs_avprintf(aim_pvs_t* pvs, const char* fmt, aim_va_list_t* vargs)
     if(pvs->enabled == 0) {
         return 0;
     }
-    return pvs->vprintf(pvs, fmt, vargs->val);
+
+    return pvs->vprintf(pvs, flag, fmt, vargs->val);
 }
 
 int
-aim_pvs_vprintf(aim_pvs_t* pvs, const char* fmt, va_list vargs)
+aim_pvs_vprintf(aim_pvs_t* pvs, aim_log_flag_t flag,
+                const char* fmt, va_list vargs)
 {
     if(pvs == NULL) {
         return 0;
@@ -52,16 +55,17 @@ aim_pvs_vprintf(aim_pvs_t* pvs, const char* fmt, va_list vargs)
     if(pvs->enabled == 0) {
         return 0;
     }
-    return pvs->vprintf(pvs, fmt, vargs);
+
+    return pvs->vprintf(pvs, flag, fmt, vargs);
 }
 
 int
-aim_pvs_printf(aim_pvs_t* pvs, const char* fmt, ...)
+aim_pvs_printf(aim_pvs_t* pvs, aim_log_flag_t flag, const char* fmt, ...)
 {
     int rv;
     va_list vargs;
     va_start(vargs, fmt);
-    rv = aim_pvs_vprintf(pvs, fmt, vargs);
+    rv = aim_pvs_vprintf(pvs, flag, fmt, vargs);
     va_end(vargs);
     return rv;
 }
