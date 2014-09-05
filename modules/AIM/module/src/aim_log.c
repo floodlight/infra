@@ -162,9 +162,10 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
     int i;
     int count;
     aim_map_si_t* map;
+    aim_pvs_t* log_pvs = (aim_pvs_t*) lobj->log_cookie;
 
     aim_printf(pvs, "name: %s\n", lobj->name);
-    aim_printf(pvs, "dest: %s\n", aim_pvs_desc_get(lobj->pvs));
+    aim_printf(pvs, "dest: %s\n", aim_pvs_desc_get(log_pvs));
 
     count = 0;
     aim_printf(pvs, "enabled options: ");
@@ -235,24 +236,25 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
 }
 
 /**
- * Get the PVS
+ * Get the PVS; the cookie is the PVS, and each PVS supports a log function.
  */
 aim_pvs_t*
 aim_log_pvs_get(aim_log_t* lobj)
 {
-    return (lobj) ? lobj->pvs : NULL;
+    return (lobj) ? (aim_pvs_t*) lobj->log_cookie : NULL;
 }
 
 /**
- * Set the PVS
+ * Set the PVS; the cookie is the PVS, and each PVS supports a log function.
  */
 aim_pvs_t*
 aim_log_pvs_set(aim_log_t* lobj, aim_pvs_t* pvs)
 {
     aim_pvs_t* rv = NULL;
     if(lobj) {
-        rv = lobj->pvs;
-        lobj->pvs = pvs;
+        rv = (aim_pvs_t*) lobj->log_cookie;
+        lobj->logf = pvs->logf;
+        lobj->log_cookie = pvs;
     }
     return rv;
 }
@@ -262,6 +264,39 @@ aim_log_pvs_set_all(aim_pvs_t* pvs)
     aim_log_t* lobj;
     AIM_LOG_FOREACH(lobj) {
         aim_log_pvs_set(lobj, pvs);
+    }
+}
+
+
+/**
+ * Get the log function and cookie
+ */
+void 
+aim_logf_get(aim_log_t* lobj, aim_log_f* logf, void** cookie)
+{
+    if(lobj) {
+        *logf = lobj->logf;
+        *cookie = lobj->log_cookie;
+    }
+}
+
+/**
+ * Set the PVS
+ */
+void
+aim_logf_set(aim_log_t* lobj, aim_log_f logf, void* cookie)
+{
+    if(lobj) {
+        lobj->logf = logf;
+        lobj->log_cookie = cookie;
+    }
+}
+void
+aim_logf_set_all(aim_log_f logf, void* cookie)
+{
+    aim_log_t* lobj;
+    AIM_LOG_FOREACH(lobj) {
+        aim_logf_set(lobj, logf, cookie);
     }
 }
 
@@ -513,11 +548,16 @@ aim_log_time__(aim_pvs_t* pvs)
  * Basic output function for all log messages.
  */
 static void
-aim_log_output__(aim_log_t* l, const char* fname, const char* file,
+aim_log_output__(aim_log_t* l, aim_log_flag_t flag,
+                 const char* fname, const char* file,
                  int line, const char* fmt, va_list vargs)
 {
     aim_pvs_t* msg;
     char* pmsg;
+
+    if (!l->logf) {
+        return;
+    }
 
     msg = aim_pvs_buffer_create();
     if(AIM_BIT_GET(l->options, AIM_LOG_OPTION_TIMESTAMP)) {
@@ -532,7 +572,7 @@ aim_log_output__(aim_log_t* l, const char* fname, const char* file,
     }
     aim_printf(msg, "\n");
     pmsg = aim_pvs_buffer_get(msg);
-    aim_printf(l->pvs, "%s", pmsg);
+    l->logf(l->log_cookie, flag, pmsg);
     aim_free(pmsg);
     aim_pvs_destroy(msg);
 }
@@ -592,7 +632,7 @@ aim_log_enabled(aim_log_t* l, aim_log_flag_t flag)
         aim_log_env_init__(l);
     }
 #endif
-    return (l && l->pvs && AIM_BIT_GET(l->common_flags, flag));
+    return (l && l->logf && AIM_BIT_GET(l->common_flags, flag));
 }
 
 int
@@ -603,7 +643,7 @@ aim_log_custom_enabled(aim_log_t* l, int fid)
         aim_log_env_init__(l);
     }
 #endif
-    return (l && l->pvs && AIM_BIT_GET(l->custom_flags, fid));
+    return (l && l->logf && AIM_BIT_GET(l->custom_flags, fid));
 }
 
 
@@ -626,21 +666,22 @@ aim_log_vcommon(aim_log_t* l, aim_log_flag_t flag,
                 const char* fmt, va_list vargs)
 {
     const char* color = NULL;
+    aim_pvs_t* pvs = (aim_pvs_t*) l->log_cookie;
 
     if(flag == AIM_LOG_FLAG_MSG || flag == AIM_LOG_FLAG_FATAL ||
        aim_log_enabled(l, flag)) {
         if(rl == NULL || aim_ratelimiter_limit(rl, time) == 0) {
 
-            if(aim_pvs_isatty(l->pvs) == 1) {
+            if(pvs && aim_pvs_isatty(pvs) == 1) {
                 if((color = aim_log_flag_color__(flag))) {
-                    aim_printf(l->pvs, color);
+                    aim_printf(pvs, color);
                 }
             }
 
-            aim_log_output__(l, fname, file, line, fmt, vargs);
+            aim_log_output__(l, flag, fname, file, line, fmt, vargs);
 
             if(color) {
-                aim_printf(l->pvs, color_reset__);
+                aim_printf(pvs, color_reset__);
             }
         }
     }
@@ -667,7 +708,8 @@ aim_log_vcustom(aim_log_t* l, int fid,
 {
     if(aim_log_custom_enabled(l, fid)) {
         if(rl == NULL || aim_ratelimiter_limit(rl, time) == 0) {
-            aim_log_output__(l, fname, file, line, fmt, vargs);
+            aim_log_output__(l, AIM_LOG_FLAG_INFO,
+                             fname, file, line, fmt, vargs);
         }
     }
 }

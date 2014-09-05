@@ -37,7 +37,7 @@ AIM_OBJECT_ID_DEFINE(aim_syslog_pvs_obj, "aim_syslog_pvs");
 
 typedef struct aim_pvs_syslog_s {
     aim_pvs_t pvs;
-    int priority;
+    uint32_t facility;
 } aim_pvs_syslog_t;
 
 
@@ -57,8 +57,46 @@ aim_pvs_syslog_vprintf__(aim_pvs_t* _pvs, const char* fmt, va_list vargs)
     if(!strcmp(fmt, "\n")) {
         return 0;
     }
-    vsyslog(pvs->priority, fmt, vargs);
+    vsyslog(pvs->facility | LOG_INFO, fmt, vargs);
     return 0;
+}
+
+void
+aim_pvs_syslog_logf(void* cookie, aim_log_flag_t flag, const char* str)
+{                                                                              
+    aim_pvs_syslog_t* pvs = (aim_pvs_syslog_t*)cookie;
+    int priority = pvs->facility;
+
+    if(!strcmp(str, "\n")) {
+        return;
+    }
+
+    /* generate severity from flag */
+    switch (flag) {
+    case AIM_LOG_FLAG_FATAL:
+        priority |= LOG_CRIT;
+        break;
+    case AIM_LOG_FLAG_BUG:
+    case AIM_LOG_FLAG_ERROR:
+        priority |= LOG_ERR;
+        break;
+    case AIM_LOG_FLAG_WARN:
+        priority |= LOG_WARNING;
+        break;
+    case AIM_LOG_FLAG_MSG:
+    case AIM_LOG_FLAG_INFO:
+        priority |= LOG_INFO;
+        break;
+    case AIM_LOG_FLAG_VERBOSE:
+    case AIM_LOG_FLAG_TRACE:
+    case AIM_LOG_FLAG_INTERNAL:
+    case AIM_LOG_FLAG_FTRACE:
+    default:
+        priority |= LOG_DEBUG;
+        break;
+    }
+
+    syslog(priority, "%s", str);
 }
 
 
@@ -85,8 +123,10 @@ aim_pvs_syslog_open(const char* ident, int option, int facility)
     rv = aim_zmalloc(sizeof(*rv));
     AIM_OBJECT_INIT(rv, aim_syslog_pvs_obj, 0, NULL,
                     aim_pvs_syslog_destroy__);
+    rv->facility = facility;
     rv->pvs.enabled = 1;
     rv->pvs.vprintf = aim_pvs_syslog_vprintf__;
+    rv->pvs.logf = aim_pvs_syslog_logf;
     rv->pvs.description=aim_strdup("{syslog}");
     ++refcount__;
     return (aim_pvs_t*)rv;

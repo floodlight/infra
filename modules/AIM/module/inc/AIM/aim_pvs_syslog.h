@@ -55,6 +55,16 @@ aim_pvs_t* aim_pvs_syslog_open(const char* ident, int option, int facility);
 aim_pvs_t* aim_pvs_syslog_get(void);
 
 
+/**
+ * @brief Log function for logging to syslog; to be used by aim_logf_set.
+ * @param cookie Pointer to relevant PVS.
+ * @param flag Associated log flag, to be interpreted for log severity.
+ * @param str String to log.
+ */
+void
+aim_pvs_syslog_logf(void* cookie, aim_log_flag_t flag, const char* str);
+
+
 #endif /* AIM_CONFIG_INCLUDE_PVS_SYSLOG */
 #endif /* __AIM_PVS_SYSLOG_H__ */
 /*@}*/

@@ -35,6 +35,7 @@
 #include <AIM/aim_config.h>
 #include <AIM/aim_valist.h>
 #include <AIM/aim_object.h>
+#include <AIM/aim_log_util.h>
 #include <stdarg.h>
 
 /** aim_pvs_t */
@@ -63,6 +64,12 @@ struct aim_pvs_s {
      * this stream.
      */
     aim_vprint_f vprintf;
+
+    /**
+     * This is the vector that will eventually log the output for
+     * this stream.
+     */
+    aim_log_f logf;
 
     /**
      * Any output stream can be enabled or disabled.

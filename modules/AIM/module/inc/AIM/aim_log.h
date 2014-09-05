@@ -35,6 +35,8 @@
 #include <AIM/aim_pvs.h>
 #include <AIM/aim_rl.h>
 #include <AIM/aim_utils.h>
+#include <AIM/aim_log_util.h>
+#include <AIM/aim_pvs_file.h>
 
 
 /******************************************************************************
@@ -43,43 +45,6 @@
  *
  *
  *****************************************************************************/
-
-/* <auto.start.enum(aim_log_flag).header> */
-/** aim_log_flag */
-typedef enum aim_log_flag_e {
-    AIM_LOG_FLAG_MSG,
-    AIM_LOG_FLAG_FATAL,
-    AIM_LOG_FLAG_ERROR,
-    AIM_LOG_FLAG_WARN,
-    AIM_LOG_FLAG_INFO,
-    AIM_LOG_FLAG_VERBOSE,
-    AIM_LOG_FLAG_TRACE,
-    AIM_LOG_FLAG_INTERNAL,
-    AIM_LOG_FLAG_BUG,
-    AIM_LOG_FLAG_FTRACE,
-} aim_log_flag_t;
-
-/** Enum names. */
-const char* aim_log_flag_name(aim_log_flag_t e);
-
-/** Enum values. */
-int aim_log_flag_value(const char* str, aim_log_flag_t* e, int substr);
-
-/** Enum descriptions. */
-const char* aim_log_flag_desc(aim_log_flag_t e);
-
-/** Enum validator. */
-int aim_log_flag_valid(aim_log_flag_t e);
-
-/** validator */
-#define AIM_LOG_FLAG_VALID(_e) \
-    (aim_log_flag_valid((_e)))
-
-/** aim_log_flag_map table. */
-extern aim_map_si_t aim_log_flag_map[];
-/** aim_log_flag_desc_map table. */
-extern aim_map_si_t aim_log_flag_desc_map[];
-/* <auto.end.enum(aim_log_flag).header> */
 
 /* <auto.start.enum(aim_log_bit).header> */
 /** aim_log_bit */
@@ -205,8 +170,11 @@ typedef struct aim_log_s {
     /** Custom flag bits */
     uint32_t custom_flags;
 
-    /** Output pvs */
-    aim_pvs_t* pvs;
+    /** Output log function */
+    aim_log_f logf;
+
+    /** Cookie to be passed to output log function */
+    void* log_cookie;
 
     /** Internal */
     struct aim_log_s* next;
@@ -222,9 +190,15 @@ typedef struct aim_log_s {
 #define AIM_LOG_STRUCT_DEFINE(_options, _common_flags,       \
                               _custom_map, _custom_flags)    \
     aim_log_t AIM_LOG_STRUCT = {                             \
-        AIM_LOG_MODULE_NAME_STR,                             \
-        _options, _common_flags, _custom_map, _custom_flags, \
-        &aim_pvs_stderr, NULL, 0                             \
+        .name = AIM_LOG_MODULE_NAME_STR,                     \
+        .options = _options,                                 \
+        .common_flags = _common_flags,                       \
+        .custom_map = _custom_map,                           \
+        .custom_flags = _custom_flags,                       \
+        .logf = aim_pvs_file_logf_stderr,                    \
+        .log_cookie = &aim_pvs_stderr,                       \
+        .next = NULL,                                        \
+        .env = 0                                             \
     }
 
 /**
@@ -299,6 +273,29 @@ void aim_log_pvs_set_all(aim_pvs_t* pvs);
  */
 aim_pvs_t* aim_log_pvs_get(aim_log_t* lobj);
 
+
+/**
+ * @brief Set a log object's log function.
+ * @param lobj The log object.
+ * @param logf The logging function to be used when generating logs.
+ * @param cookie To be passed to the logging function when invoked.
+ */
+void aim_logf_set(aim_log_t* lobj, aim_log_f logf, void* cookie);
+
+/**
+ * @brief Set every log object's log function.
+ * @param logf The logging function to be used when generating logs.
+ * @param cookie To be passed to the logging function when invoked.
+ */
+void aim_logf_set_all(aim_log_f logf, void* cookie);
+
+/**
+ * @brief Get a log object's log function and cookie.
+ * @param lobj The log object.
+ * @param logf Pointer to the logging function to be used when generating logs.
+ * @param cookie Pointer to the cookie To be passed to the logging function.
+ */
+void aim_logf_get(aim_log_t* lobj, aim_log_f* logf, void** cookie);
 
 
 /**
