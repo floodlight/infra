@@ -44,25 +44,6 @@
 aim_pvs_t* aim_pvs_fopen(const char* path, const char* mode);
 
 
-/**
- * @brief Log function for logging to stdout; to be used by aim_logf_set.
- * @param cookie Currently ignored by this function.
- * @param flag Currently ignored by this function.
- * @param str String to log.
- */
-void
-aim_pvs_file_logf_stdout(void* cookie, aim_log_flag_t flag, const char* str);
-
-/**
- * @brief Log function for logging to stderr; to be used by aim_logf_set.
- * @param cookie Currently ignored by this function.
- * @param flag Currently ignored by this function.
- * @param str String to log.
- */
-void
-aim_pvs_file_logf_stderr(void* cookie, aim_log_flag_t flag, const char* str);
-
-
 #endif /* __AIM_PVS_FILE_H__ */
 /*@}*/
 

@@ -100,42 +100,6 @@ aim_pvs_buffer_vprintf__(aim_pvs_t* _pvs, const char* fmt, va_list vargs)
 }
 
 
-/**
- * Output log function.
- */
-static void
-aim_pvs_buffer_logf__(void* cookie, aim_log_flag_t flag, const char* str)
-{
-    aim_pvs_buffer_t* pvs = (aim_pvs_buffer_t*) cookie;
-    int count;
-    char* p;
-    AIM_REFERENCE(flag);
-
-    count = strlen(str);
-
-    if(count > 0) {
-        aim_pvs_buffer_entry_t* entry;
-        count++;
-        p = aim_zmalloc(count);
-        memcpy(p, str, count);
-        entry = aim_zmalloc(sizeof(*entry));
-        entry->data = p;
-        entry->size = count;
-
-        if(pvs->list == NULL) {
-            pvs->list = entry;
-            pvs->last = entry;
-            pvs->next = entry;
-        }
-        else {
-            pvs->last->next = entry;
-            pvs->last = entry;
-        }
-        pvs->size+=count-1;
-    }
-}
-
-
 aim_pvs_t*
 aim_pvs_buffer_create(void)
 {
@@ -144,7 +108,7 @@ aim_pvs_buffer_create(void)
     AIM_OBJECT_INIT(rv, aim_buffer_pvs_obj, 0, NULL, aim_pvs_buffer_destroy__);
     rv->pvs.enabled = 1;
     rv->pvs.vprintf = aim_pvs_buffer_vprintf__;
-    rv->pvs.logf = aim_pvs_buffer_logf__;
+    rv->pvs.logf = aim_pvs_logf;
     rv->pvs.description = "{buffer}";
     return (aim_pvs_t*)rv;
 }

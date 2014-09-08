@@ -1,6 +1,6 @@
 /****************************************************************
  *
- *        Copyright 2013, Big Switch Networks, Inc.
+ *        Copyright 2013-2014, Big Switch Networks, Inc.
  *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
@@ -162,6 +162,17 @@ int aim_pvs_isatty(aim_pvs_t* pvs);
  * @returns A string describing the pvs. Do not modify or free.
  */
 const char* aim_pvs_desc_get(aim_pvs_t* pvs);
+
+
+/**
+ * @brief Log function for all pvs.
+ * @param cookie Pointer to relevant PVS.
+ * @param flag Associated log flag.
+ * @param str String to log.
+ */
+void
+aim_pvs_logf(void* cookie, aim_log_flag_t flag, const char* str);
+
 
 #endif /* __AIM_PVS_H__ */
 /*@}*/

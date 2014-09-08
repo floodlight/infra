@@ -37,64 +37,6 @@
 static void aim_log_env_init__(aim_log_t* l);
 #endif
 
-/**
- * Log colors.
- * This is done functionality (instead of through a static array)
- * to avoid buffer overruns if the flags increase (since there is no
- * 'count' member defined) and to catch at compile time a missing entry.
- */
-
-#define TTY_FG_BLACK  30
-#define TTY_FG_RED    31
-#define TTY_FG_GREEN  32
-#define TTY_FG_YELLOW 33
-#define TTY_FG_BLUE   34
-#define TTY_FG_VIOLET 35
-#define TTY_FG_CYAN   36
-#define TTY_FG_WHITE  37
-#define TTY_FG_NONE   00
-
-#define TTY_BG_BLACK  40
-#define TTY_BG_RED    41
-#define TTY_BG_GREEN  42
-#define TTY_BG_YELLOW 43
-#define TTY_BG_BLUE   44
-#define TTY_BG_VIOLET 45
-#define TTY_BG_CYAN   46
-#define TTY_BG_WHITE  47
-#define TTY_BG_NONE   00
-
-#define TTY_DULL      0
-#define TTY_BRIGHT    1
-
-#define _TTY_COLOR(_intensity, _fg) "\x1B[" #_intensity ";" #_fg "m"
-#define TTY_COLOR(_i, _f) _TTY_COLOR(_i, _f)
-
-static const char* color_reset__ = "\x1B[39m";
-static const char*
-aim_log_flag_color__(aim_log_flag_t flag)
-{
-#if AIM_CONFIG_LOG_INCLUDE_TTY_COLOR == 1
-    switch(flag)
-        {
-        case AIM_LOG_FLAG_INTERNAL:
-        case AIM_LOG_FLAG_BUG:
-        case AIM_LOG_FLAG_ERROR:
-            return TTY_COLOR(TTY_DULL, TTY_FG_RED);
-        case AIM_LOG_FLAG_FATAL:
-            return TTY_COLOR(TTY_BRIGHT, TTY_FG_RED);
-        case AIM_LOG_FLAG_WARN:
-            return TTY_COLOR(TTY_DULL, TTY_FG_YELLOW);
-        case AIM_LOG_FLAG_MSG:
-        case AIM_LOG_FLAG_INFO:
-        case AIM_LOG_FLAG_VERBOSE:
-        case AIM_LOG_FLAG_TRACE:
-        case AIM_LOG_FLAG_FTRACE:
-            return NULL;
-        }
-#endif
-    return NULL;
-}
 
 /**
  * All registered modules.
@@ -162,10 +104,9 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
     int i;
     int count;
     aim_map_si_t* map;
-    aim_pvs_t* log_pvs = (aim_pvs_t*) lobj->log_cookie;
 
     aim_printf(pvs, "name: %s\n", lobj->name);
-    aim_printf(pvs, "dest: %s\n", aim_pvs_desc_get(log_pvs));
+    aim_printf(pvs, "dest: %s\n", lobj->logf_desc);
 
     count = 0;
     aim_printf(pvs, "enabled options: ");
@@ -284,19 +225,21 @@ aim_logf_get(aim_log_t* lobj, aim_log_f* logf, void** cookie)
  * Set the PVS
  */
 void
-aim_logf_set(aim_log_t* lobj, aim_log_f logf, void* cookie)
+aim_logf_set(aim_log_t* lobj, char* desc, aim_log_f logf, void* cookie)
 {
     if(lobj) {
+        lobj->logf_desc = desc;
         lobj->logf = logf;
         lobj->log_cookie = cookie;
     }
 }
+
 void
-aim_logf_set_all(aim_log_f logf, void* cookie)
+aim_logf_set_all(char* desc, aim_log_f logf, void* cookie)
 {
     aim_log_t* lobj;
     AIM_LOG_FOREACH(lobj) {
-        aim_logf_set(lobj, logf, cookie);
+        aim_logf_set(lobj, desc, logf, cookie);
     }
 }
 
@@ -665,24 +608,10 @@ aim_log_vcommon(aim_log_t* l, aim_log_flag_t flag,
                 const char* fname, const char* file, int line,
                 const char* fmt, va_list vargs)
 {
-    const char* color = NULL;
-    aim_pvs_t* pvs = (aim_pvs_t*) l->log_cookie;
-
     if(flag == AIM_LOG_FLAG_MSG || flag == AIM_LOG_FLAG_FATAL ||
        aim_log_enabled(l, flag)) {
         if(rl == NULL || aim_ratelimiter_limit(rl, time) == 0) {
-
-            if(pvs && aim_pvs_isatty(pvs) == 1) {
-                if((color = aim_log_flag_color__(flag))) {
-                    aim_printf(pvs, color);
-                }
-            }
-
             aim_log_output__(l, flag, fname, file, line, fmt, vargs);
-
-            if(color) {
-                aim_printf(pvs, color_reset__);
-            }
         }
     }
 }
@@ -760,6 +689,7 @@ aim_log_syslog_level_map(const char *syslog_str, uint32_t *flags)
 
     return -1;
 }
+
 
 /**************************************************************************//**
  *

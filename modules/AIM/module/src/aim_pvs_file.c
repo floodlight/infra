@@ -83,32 +83,6 @@ aim_vprint_fp__(aim_pvs_t* pvs, const char* fmt, va_list vargs)
 }
 
 /**
- * AIM log functions
- */
-void
-aim_pvs_file_logf_stderr(void* cookie, aim_log_flag_t flag, const char* str)
-{
-    FILE *fp = stderr;
-    AIM_REFERENCE(cookie);
-    AIM_REFERENCE(flag);
-
-    fprintf(fp, "%s", str);
-    fflush(fp);
-}
-
-void
-aim_pvs_file_logf_stdout(void* cookie, aim_log_flag_t flag, const char* str)
-{
-    FILE *fp = stdout;
-    AIM_REFERENCE(cookie);
-    AIM_REFERENCE(flag);
-
-    fprintf(fp, "%s", str);
-    fflush(fp);
-}
-
-
-/**
  * Create a file PVS.
  */
 aim_pvs_t*
@@ -175,7 +149,7 @@ aim_pvs_t aim_pvs_stdout = {
                            NULL, NULL),
     "{stdout}",
     aim_vprint_fp__,
-    aim_pvs_file_logf_stdout,
+    aim_pvs_logf,
     1,
     0,
     isatty__,
@@ -186,7 +160,7 @@ aim_pvs_t aim_pvs_stderr = {
                            NULL, NULL),
     "{stderr}",
     aim_vprint_fp__,
-    aim_pvs_file_logf_stderr,
+    aim_pvs_logf,
     1,
     0,
     isatty__,

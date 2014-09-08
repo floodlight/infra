@@ -1,6 +1,6 @@
 /****************************************************************
  *
- *        Copyright 2013, Big Switch Networks, Inc.
+ *        Copyright 2013-2014, Big Switch Networks, Inc.
  *
  * Licensed under the Eclipse Public License, Version 1.0 (the
  * "License"); you may not use this file except in compliance
@@ -182,6 +182,9 @@ typedef struct aim_log_s {
     /** Internal */
     uint32_t env;
 
+    /** Internal */
+    const char* logf_desc;
+
 } aim_log_t;
 
 /**
@@ -195,10 +198,11 @@ typedef struct aim_log_s {
         .common_flags = _common_flags,                       \
         .custom_map = _custom_map,                           \
         .custom_flags = _custom_flags,                       \
-        .logf = aim_pvs_file_logf_stderr,                    \
+        .logf = aim_pvs_logf,                                \
         .log_cookie = &aim_pvs_stderr,                       \
         .next = NULL,                                        \
-        .env = 0                                             \
+        .env = 0,                                            \
+        .logf_desc = "{stderr}",                             \
     }
 
 /**
@@ -277,23 +281,26 @@ aim_pvs_t* aim_log_pvs_get(aim_log_t* lobj);
 /**
  * @brief Set a log object's log function.
  * @param lobj The log object.
+ * @param desc The logging function's string description.
  * @param logf The logging function to be used when generating logs.
  * @param cookie To be passed to the logging function when invoked.
  */
-void aim_logf_set(aim_log_t* lobj, aim_log_f logf, void* cookie);
+void aim_logf_set(aim_log_t* lobj, char* desc,
+                  aim_log_f logf, void* cookie);
 
 /**
  * @brief Set every log object's log function.
+ * @param desc The logging function's string description.
  * @param logf The logging function to be used when generating logs.
  * @param cookie To be passed to the logging function when invoked.
  */
-void aim_logf_set_all(aim_log_f logf, void* cookie);
+void aim_logf_set_all(char* desc, aim_log_f logf, void* cookie);
 
 /**
  * @brief Get a log object's log function and cookie.
  * @param lobj The log object.
  * @param logf Pointer to the logging function to be used when generating logs.
- * @param cookie Pointer to the cookie To be passed to the logging function.
+ * @param cookie Pointer to the cookie to be passed to the logging function.
  */
 void aim_logf_get(aim_log_t* lobj, aim_log_f* logf, void** cookie);
 

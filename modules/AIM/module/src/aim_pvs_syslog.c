@@ -61,44 +61,6 @@ aim_pvs_syslog_vprintf__(aim_pvs_t* _pvs, const char* fmt, va_list vargs)
     return 0;
 }
 
-void
-aim_pvs_syslog_logf(void* cookie, aim_log_flag_t flag, const char* str)
-{                                                                              
-    aim_pvs_syslog_t* pvs = (aim_pvs_syslog_t*)cookie;
-    int priority = pvs->facility;
-
-    if(!strcmp(str, "\n")) {
-        return;
-    }
-
-    /* generate severity from flag */
-    switch (flag) {
-    case AIM_LOG_FLAG_FATAL:
-        priority |= LOG_CRIT;
-        break;
-    case AIM_LOG_FLAG_BUG:
-    case AIM_LOG_FLAG_ERROR:
-        priority |= LOG_ERR;
-        break;
-    case AIM_LOG_FLAG_WARN:
-        priority |= LOG_WARNING;
-        break;
-    case AIM_LOG_FLAG_MSG:
-    case AIM_LOG_FLAG_INFO:
-        priority |= LOG_INFO;
-        break;
-    case AIM_LOG_FLAG_VERBOSE:
-    case AIM_LOG_FLAG_TRACE:
-    case AIM_LOG_FLAG_INTERNAL:
-    case AIM_LOG_FLAG_FTRACE:
-    default:
-        priority |= LOG_DEBUG;
-        break;
-    }
-
-    syslog(priority, "%s", str);
-}
-
 
 static char* ident__ = NULL;
 static int refcount__ = 0;
@@ -126,7 +88,7 @@ aim_pvs_syslog_open(const char* ident, int option, int facility)
     rv->facility = facility;
     rv->pvs.enabled = 1;
     rv->pvs.vprintf = aim_pvs_syslog_vprintf__;
-    rv->pvs.logf = aim_pvs_syslog_logf;
+    rv->pvs.logf = aim_pvs_logf;
     rv->pvs.description=aim_strdup("{syslog}");
     ++refcount__;
     return (aim_pvs_t*)rv;

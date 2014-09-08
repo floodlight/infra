@@ -29,6 +29,87 @@
 #include <AIM/aim_utils.h>
 #include <stdio.h>
 
+
+/**
+ * Log colors.
+ * This is done functionality (instead of through a static array)
+ * to avoid buffer overruns if the flags increase (since there is no
+ * 'count' member defined) and to catch at compile time a missing entry.
+ */
+
+#define TTY_FG_BLACK  30
+#define TTY_FG_RED    31
+#define TTY_FG_GREEN  32
+#define TTY_FG_YELLOW 33
+#define TTY_FG_BLUE   34
+#define TTY_FG_VIOLET 35
+#define TTY_FG_CYAN   36
+#define TTY_FG_WHITE  37
+#define TTY_FG_NONE   00
+
+#define TTY_BG_BLACK  40
+#define TTY_BG_RED    41
+#define TTY_BG_GREEN  42
+#define TTY_BG_YELLOW 43
+#define TTY_BG_BLUE   44
+#define TTY_BG_VIOLET 45
+#define TTY_BG_CYAN   46
+#define TTY_BG_WHITE  47
+#define TTY_BG_NONE   00
+
+#define TTY_DULL      0
+#define TTY_BRIGHT    1
+
+#define _TTY_COLOR(_intensity, _fg) "\x1B[" #_intensity ";" #_fg "m"
+#define TTY_COLOR(_i, _f) _TTY_COLOR(_i, _f)
+
+static const char* color_reset__ = "\x1B[39m";
+static const char*
+aim_log_flag_color__(aim_log_flag_t flag)
+{
+#if AIM_CONFIG_LOG_INCLUDE_TTY_COLOR == 1
+    switch(flag)
+        {
+        case AIM_LOG_FLAG_INTERNAL:
+        case AIM_LOG_FLAG_BUG:
+        case AIM_LOG_FLAG_ERROR:
+            return TTY_COLOR(TTY_DULL, TTY_FG_RED);
+        case AIM_LOG_FLAG_FATAL:
+            return TTY_COLOR(TTY_BRIGHT, TTY_FG_RED);
+        case AIM_LOG_FLAG_WARN:
+            return TTY_COLOR(TTY_DULL, TTY_FG_YELLOW);
+        case AIM_LOG_FLAG_MSG:
+        case AIM_LOG_FLAG_INFO:
+        case AIM_LOG_FLAG_VERBOSE:
+        case AIM_LOG_FLAG_TRACE:
+        case AIM_LOG_FLAG_FTRACE:
+            return NULL;
+        }
+#endif
+    return NULL;
+}
+
+
+void
+aim_pvs_logf(void* cookie, aim_log_flag_t flag, const char* str)
+{
+    const char* color = NULL;
+    aim_pvs_t* pvs = (aim_pvs_t*)cookie;
+
+    if(pvs && aim_pvs_isatty(pvs) == 1) {
+        if((color = aim_log_flag_color__(flag))) {
+            aim_printf(pvs, color);
+        }
+    }
+
+    aim_printf(pvs, "%s", str);
+
+    if(color) {
+        aim_printf(pvs, color_reset__);
+    }
+}
+
+
 int
 aim_pvs_avprintf(aim_pvs_t* pvs, const char* fmt, aim_va_list_t* vargs)
 {
