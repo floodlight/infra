@@ -145,6 +145,25 @@ int aim_main(int argc, char* argv[])
         AIM_LOG_MSG("%{aim_error}", AIM_ERROR_PARAM);
     }
 
+    {
+        aim_pvs_t* pvs = aim_pvs_buffer_create();
+        aim_pvs_logf(pvs, 0, "Buffer log: "
+                     "The quick brown fox jumped over the lazy dogs.\n");
+        {
+            char* s = aim_pvs_buffer_get(pvs);
+            aim_printf(&aim_pvs_stdout, "first: %s", s);
+            free(s);
+            aim_printf(pvs, "(second)");
+            s = aim_pvs_buffer_get(pvs);
+            aim_printf(&aim_pvs_stdout, "second: %s", s);
+            free(s);
+            aim_pvs_buffer_reset(pvs);
+            s = aim_pvs_buffer_get(pvs);
+            free(s);
+            aim_pvs_destroy(pvs);
+        }
+    }
+
     /* Test integer power of 2 utilities */
     {
        assert(!aim_is_pow2_u32(0));

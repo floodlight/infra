@@ -37,64 +37,6 @@
 static void aim_log_env_init__(aim_log_t* l);
 #endif
 
-/**
- * Log colors.
- * This is done functionality (instead of through a static array)
- * to avoid buffer overruns if the flags increase (since there is no
- * 'count' member defined) and to catch at compile time a missing entry.
- */
-
-#define TTY_FG_BLACK  30
-#define TTY_FG_RED    31
-#define TTY_FG_GREEN  32
-#define TTY_FG_YELLOW 33
-#define TTY_FG_BLUE   34
-#define TTY_FG_VIOLET 35
-#define TTY_FG_CYAN   36
-#define TTY_FG_WHITE  37
-#define TTY_FG_NONE   00
-
-#define TTY_BG_BLACK  40
-#define TTY_BG_RED    41
-#define TTY_BG_GREEN  42
-#define TTY_BG_YELLOW 43
-#define TTY_BG_BLUE   44
-#define TTY_BG_VIOLET 45
-#define TTY_BG_CYAN   46
-#define TTY_BG_WHITE  47
-#define TTY_BG_NONE   00
-
-#define TTY_DULL      0
-#define TTY_BRIGHT    1
-
-#define _TTY_COLOR(_intensity, _fg) "\x1B[" #_intensity ";" #_fg "m"
-#define TTY_COLOR(_i, _f) _TTY_COLOR(_i, _f)
-
-static const char* color_reset__ = "\x1B[39m";
-static const char*
-aim_log_flag_color__(aim_log_flag_t flag)
-{
-#if AIM_CONFIG_LOG_INCLUDE_TTY_COLOR == 1
-    switch(flag)
-        {
-        case AIM_LOG_FLAG_INTERNAL:
-        case AIM_LOG_FLAG_BUG:
-        case AIM_LOG_FLAG_ERROR:
-            return TTY_COLOR(TTY_DULL, TTY_FG_RED);
-        case AIM_LOG_FLAG_FATAL:
-            return TTY_COLOR(TTY_BRIGHT, TTY_FG_RED);
-        case AIM_LOG_FLAG_WARN:
-            return TTY_COLOR(TTY_DULL, TTY_FG_YELLOW);
-        case AIM_LOG_FLAG_MSG:
-        case AIM_LOG_FLAG_INFO:
-        case AIM_LOG_FLAG_VERBOSE:
-        case AIM_LOG_FLAG_TRACE:
-        case AIM_LOG_FLAG_FTRACE:
-            return NULL;
-        }
-#endif
-    return NULL;
-}
 
 /**
  * All registered modules.
@@ -164,7 +106,7 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
     aim_map_si_t* map;
 
     aim_printf(pvs, "name: %s\n", lobj->name);
-    aim_printf(pvs, "dest: %s\n", aim_pvs_desc_get(lobj->pvs));
+    aim_printf(pvs, "dest: %s\n", lobj->logf_desc);
 
     count = 0;
     aim_printf(pvs, "enabled options: ");
@@ -235,24 +177,26 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
 }
 
 /**
- * Get the PVS
+ * Get the PVS; the cookie is the PVS, and each PVS supports a log function.
  */
 aim_pvs_t*
 aim_log_pvs_get(aim_log_t* lobj)
 {
-    return (lobj) ? lobj->pvs : NULL;
+    return (lobj && lobj->logf == aim_pvs_logf) ? 
+        (aim_pvs_t*) lobj->log_cookie : NULL;
 }
 
 /**
- * Set the PVS
+ * Set the PVS; the cookie is the PVS, and each PVS supports a log function.
  */
 aim_pvs_t*
 aim_log_pvs_set(aim_log_t* lobj, aim_pvs_t* pvs)
 {
     aim_pvs_t* rv = NULL;
     if(lobj) {
-        rv = lobj->pvs;
-        lobj->pvs = pvs;
+        rv = (aim_pvs_t*) lobj->log_cookie;
+        lobj->logf = aim_pvs_logf;
+        lobj->log_cookie = pvs;
     }
     return rv;
 }
@@ -262,6 +206,41 @@ aim_log_pvs_set_all(aim_pvs_t* pvs)
     aim_log_t* lobj;
     AIM_LOG_FOREACH(lobj) {
         aim_log_pvs_set(lobj, pvs);
+    }
+}
+
+
+/**
+ * Get the log function and cookie
+ */
+void 
+aim_logf_get(aim_log_t* lobj, aim_log_f* logf, void** cookie)
+{
+    if(lobj) {
+        *logf = lobj->logf;
+        *cookie = lobj->log_cookie;
+    }
+}
+
+/**
+ * Set the PVS
+ */
+void
+aim_logf_set(aim_log_t* lobj, char* desc, aim_log_f logf, void* cookie)
+{
+    if(lobj) {
+        lobj->logf_desc = desc;
+        lobj->logf = logf;
+        lobj->log_cookie = cookie;
+    }
+}
+
+void
+aim_logf_set_all(char* desc, aim_log_f logf, void* cookie)
+{
+    aim_log_t* lobj;
+    AIM_LOG_FOREACH(lobj) {
+        aim_logf_set(lobj, desc, logf, cookie);
     }
 }
 
@@ -513,11 +492,16 @@ aim_log_time__(aim_pvs_t* pvs)
  * Basic output function for all log messages.
  */
 static void
-aim_log_output__(aim_log_t* l, const char* fname, const char* file,
+aim_log_output__(aim_log_t* l, aim_log_flag_t flag,
+                 const char* fname, const char* file,
                  int line, const char* fmt, va_list vargs)
 {
     aim_pvs_t* msg;
     char* pmsg;
+
+    if (!l->logf) {
+        return;
+    }
 
     msg = aim_pvs_buffer_create();
     if(AIM_BIT_GET(l->options, AIM_LOG_OPTION_TIMESTAMP)) {
@@ -532,7 +516,7 @@ aim_log_output__(aim_log_t* l, const char* fname, const char* file,
     }
     aim_printf(msg, "\n");
     pmsg = aim_pvs_buffer_get(msg);
-    aim_printf(l->pvs, "%s", pmsg);
+    l->logf(l->log_cookie, flag, pmsg);
     aim_free(pmsg);
     aim_pvs_destroy(msg);
 }
@@ -592,7 +576,7 @@ aim_log_enabled(aim_log_t* l, aim_log_flag_t flag)
         aim_log_env_init__(l);
     }
 #endif
-    return (l && l->pvs && AIM_BIT_GET(l->common_flags, flag));
+    return (l && l->logf && AIM_BIT_GET(l->common_flags, flag));
 }
 
 int
@@ -603,7 +587,7 @@ aim_log_custom_enabled(aim_log_t* l, int fid)
         aim_log_env_init__(l);
     }
 #endif
-    return (l && l->pvs && AIM_BIT_GET(l->custom_flags, fid));
+    return (l && l->logf && AIM_BIT_GET(l->custom_flags, fid));
 }
 
 
@@ -625,23 +609,10 @@ aim_log_vcommon(aim_log_t* l, aim_log_flag_t flag,
                 const char* fname, const char* file, int line,
                 const char* fmt, va_list vargs)
 {
-    const char* color = NULL;
-
     if(flag == AIM_LOG_FLAG_MSG || flag == AIM_LOG_FLAG_FATAL ||
        aim_log_enabled(l, flag)) {
         if(rl == NULL || aim_ratelimiter_limit(rl, time) == 0) {
-
-            if(aim_pvs_isatty(l->pvs) == 1) {
-                if((color = aim_log_flag_color__(flag))) {
-                    aim_printf(l->pvs, color);
-                }
-            }
-
-            aim_log_output__(l, fname, file, line, fmt, vargs);
-
-            if(color) {
-                aim_printf(l->pvs, color_reset__);
-            }
+            aim_log_output__(l, flag, fname, file, line, fmt, vargs);
         }
     }
 }
@@ -667,7 +638,8 @@ aim_log_vcustom(aim_log_t* l, int fid,
 {
     if(aim_log_custom_enabled(l, fid)) {
         if(rl == NULL || aim_ratelimiter_limit(rl, time) == 0) {
-            aim_log_output__(l, fname, file, line, fmt, vargs);
+            aim_log_output__(l, AIM_LOG_FLAG_INFO,
+                             fname, file, line, fmt, vargs);
         }
     }
 }
@@ -718,6 +690,7 @@ aim_log_syslog_level_map(const char *syslog_str, uint32_t *flags)
 
     return -1;
 }
+
 
 /**************************************************************************//**
  *

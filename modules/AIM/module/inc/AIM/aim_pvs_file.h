@@ -47,5 +47,3 @@ aim_pvs_t* aim_pvs_fopen(const char* path, const char* mode);
 #endif /* __AIM_PVS_FILE_H__ */
 /*@}*/
 
-
-
