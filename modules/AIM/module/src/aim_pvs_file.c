@@ -149,7 +149,6 @@ aim_pvs_t aim_pvs_stdout = {
                            NULL, NULL),
     "{stdout}",
     aim_vprint_fp__,
-    aim_pvs_logf,
     1,
     0,
     isatty__,
@@ -160,7 +159,6 @@ aim_pvs_t aim_pvs_stderr = {
                            NULL, NULL),
     "{stderr}",
     aim_vprint_fp__,
-    aim_pvs_logf,
     1,
     0,
     isatty__,
@@ -171,7 +169,6 @@ aim_pvs_t aim_pvs_none = {
                            NULL, NULL),
     "{none}",
     aim_vprint_fp__,
-    NULL,
     1,
     0
 };

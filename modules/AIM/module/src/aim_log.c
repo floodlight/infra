@@ -182,7 +182,8 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
 aim_pvs_t*
 aim_log_pvs_get(aim_log_t* lobj)
 {
-    return (lobj) ? (aim_pvs_t*) lobj->log_cookie : NULL;
+    return (lobj && lobj->logf == aim_pvs_logf) ? 
+        (aim_pvs_t*) lobj->log_cookie : NULL;
 }
 
 /**
@@ -194,7 +195,7 @@ aim_log_pvs_set(aim_log_t* lobj, aim_pvs_t* pvs)
     aim_pvs_t* rv = NULL;
     if(lobj) {
         rv = (aim_pvs_t*) lobj->log_cookie;
-        lobj->logf = pvs->logf;
+        lobj->logf = aim_pvs_logf;
         lobj->log_cookie = pvs;
     }
     return rv;

@@ -108,7 +108,6 @@ aim_pvs_buffer_create(void)
     AIM_OBJECT_INIT(rv, aim_buffer_pvs_obj, 0, NULL, aim_pvs_buffer_destroy__);
     rv->pvs.enabled = 1;
     rv->pvs.vprintf = aim_pvs_buffer_vprintf__;
-    rv->pvs.logf = aim_pvs_logf;
     rv->pvs.description = "{buffer}";
     return (aim_pvs_t*)rv;
 }

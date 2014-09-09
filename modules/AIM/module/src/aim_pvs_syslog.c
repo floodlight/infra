@@ -88,7 +88,6 @@ aim_pvs_syslog_open(const char* ident, int option, int facility)
     rv->facility = facility;
     rv->pvs.enabled = 1;
     rv->pvs.vprintf = aim_pvs_syslog_vprintf__;
-    rv->pvs.logf = aim_pvs_logf;
     rv->pvs.description=aim_strdup("{syslog}");
     ++refcount__;
     return (aim_pvs_t*)rv;

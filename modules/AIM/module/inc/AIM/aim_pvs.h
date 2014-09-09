@@ -66,12 +66,6 @@ struct aim_pvs_s {
     aim_vprint_f vprintf;
 
     /**
-     * This is the vector that will eventually log the output for
-     * this stream.
-     */
-    aim_log_f logf;
-
-    /**
      * Any output stream can be enabled or disabled.
      */
     int enabled;

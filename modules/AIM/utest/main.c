@@ -147,8 +147,8 @@ int aim_main(int argc, char* argv[])
 
     {
         aim_pvs_t* pvs = aim_pvs_buffer_create();
-        pvs->logf(pvs, 0, "Buffer log: "
-                  "The quick brown fox jumped over the lazy dogs.\n");
+        aim_pvs_logf(pvs, 0, "Buffer log: "
+                     "The quick brown fox jumped over the lazy dogs.\n");
         {
             char* s = aim_pvs_buffer_get(pvs);
             aim_printf(&aim_pvs_stdout, "first: %s", s);
