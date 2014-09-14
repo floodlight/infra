@@ -789,7 +789,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, MSG, __VA_ARGS__)
 /** Log an object-level msg with ratelimiting */
 #define AIM_LOG_OBJ_RL_MSG(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, MSG, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, MSG, _rl, _time, __VA_ARGS__)
 
 
 /** Log an object-level fatal */
@@ -797,7 +797,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, FATAL, __VA_ARGS__)
 /** Log an object-level fatal with ratelimiting */
 #define AIM_LOG_OBJ_RL_FATAL(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, FATAL, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, FATAL, _rl, _time, __VA_ARGS__)
 
 
 /** Log an object-level error */
@@ -805,7 +805,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, ERROR, __VA_ARGS__)
 /** Log an object-level error with ratelimiting */
 #define AIM_LOG_OBJ_RL_ERROR(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, ERROR, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, ERROR, _rl, _time, __VA_ARGS__)
 
 
 /** Log an object-level warn */
@@ -813,7 +813,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, WARN, __VA_ARGS__)
 /** Log an object-level warn with ratelimiting */
 #define AIM_LOG_OBJ_RL_WARN(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, WARN, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, WARN, _rl, _time, __VA_ARGS__)
 
 
 /** Log an object-level info */
@@ -821,7 +821,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, INFO, __VA_ARGS__)
 /** Log an object-level info with ratelimiting */
 #define AIM_LOG_OBJ_RL_INFO(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, INFO, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, INFO, _rl, _time, __VA_ARGS__)
 
 
 /** Log an object-level verbose */
@@ -829,7 +829,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, VERBOSE, __VA_ARGS__)
 /** Log an object-level verbose with ratelimiting */
 #define AIM_LOG_OBJ_RL_VERBOSE(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, VERBOSE, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, VERBOSE, _rl, _time, __VA_ARGS__)
 
 
 /** Log an object-level trace */
@@ -837,7 +837,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, TRACE, __VA_ARGS__)
 /** Log an object-level trace with ratelimiting */
 #define AIM_LOG_OBJ_RL_TRACE(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, TRACE, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, TRACE, _rl, _time, __VA_ARGS__)
 
 
 /** Log an object-level internal */
@@ -845,7 +845,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, INTERNAL, __VA_ARGS__)
 /** Log an object-level internal with ratelimiting */
 #define AIM_LOG_OBJ_RL_INTERNAL(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, INTERNAL, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, INTERNAL, _rl, _time, __VA_ARGS__)
 
 
 /** Log an object-level bug */
@@ -853,7 +853,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, BUG, __VA_ARGS__)
 /** Log an object-level bug with ratelimiting */
 #define AIM_LOG_OBJ_RL_BUG(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, BUG, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, BUG, _rl, _time, __VA_ARGS__)
 
 
 /** Log an object-level ftrace */
@@ -861,7 +861,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_COMMON(_obj, FTRACE, __VA_ARGS__)
 /** Log an object-level ftrace with ratelimiting */
 #define AIM_LOG_OBJ_RL_FTRACE(_obj, _rl, _time, ...) \
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, FTRACE, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, FTRACE, _rl, _time, __VA_ARGS__)
 
 
 /******************************************************************************
@@ -874,61 +874,61 @@ extern aim_log_t AIM_LOG_STRUCT;
 /** MSG -> OBJ_MSG */
 #define AIM_LOG_MSG AIM_LOG_OBJ_MSG
 /** RL_MSG -> OBJ_RL_MSG */
-#define AIM_LOG_RL_MSG AIM_LOG_RL_OBJ_MSG
+#define AIM_LOG_RL_MSG AIM_LOG_OBJ_RL_MSG
 
 
 /** FATAL -> OBJ_FATAL */
 #define AIM_LOG_FATAL AIM_LOG_OBJ_FATAL
 /** RL_FATAL -> OBJ_RL_FATAL */
-#define AIM_LOG_RL_FATAL AIM_LOG_RL_OBJ_FATAL
+#define AIM_LOG_RL_FATAL AIM_LOG_OBJ_RL_FATAL
 
 
 /** ERROR -> OBJ_ERROR */
 #define AIM_LOG_ERROR AIM_LOG_OBJ_ERROR
 /** RL_ERROR -> OBJ_RL_ERROR */
-#define AIM_LOG_RL_ERROR AIM_LOG_RL_OBJ_ERROR
+#define AIM_LOG_RL_ERROR AIM_LOG_OBJ_RL_ERROR
 
 
 /** WARN -> OBJ_WARN */
 #define AIM_LOG_WARN AIM_LOG_OBJ_WARN
 /** RL_WARN -> OBJ_RL_WARN */
-#define AIM_LOG_RL_WARN AIM_LOG_RL_OBJ_WARN
+#define AIM_LOG_RL_WARN AIM_LOG_OBJ_RL_WARN
 
 
 /** INFO -> OBJ_INFO */
 #define AIM_LOG_INFO AIM_LOG_OBJ_INFO
 /** RL_INFO -> OBJ_RL_INFO */
-#define AIM_LOG_RL_INFO AIM_LOG_RL_OBJ_INFO
+#define AIM_LOG_RL_INFO AIM_LOG_OBJ_RL_INFO
 
 
 /** VERBOSE -> OBJ_VERBOSE */
 #define AIM_LOG_VERBOSE AIM_LOG_OBJ_VERBOSE
 /** RL_VERBOSE -> OBJ_RL_VERBOSE */
-#define AIM_LOG_RL_VERBOSE AIM_LOG_RL_OBJ_VERBOSE
+#define AIM_LOG_RL_VERBOSE AIM_LOG_OBJ_RL_VERBOSE
 
 
 /** TRACE -> OBJ_TRACE */
 #define AIM_LOG_TRACE AIM_LOG_OBJ_TRACE
 /** RL_TRACE -> OBJ_RL_TRACE */
-#define AIM_LOG_RL_TRACE AIM_LOG_RL_OBJ_TRACE
+#define AIM_LOG_RL_TRACE AIM_LOG_OBJ_RL_TRACE
 
 
 /** INTERNAL -> OBJ_INTERNAL */
 #define AIM_LOG_INTERNAL AIM_LOG_OBJ_INTERNAL
 /** RL_INTERNAL -> OBJ_RL_INTERNAL */
-#define AIM_LOG_RL_INTERNAL AIM_LOG_RL_OBJ_INTERNAL
+#define AIM_LOG_RL_INTERNAL AIM_LOG_OBJ_RL_INTERNAL
 
 
 /** BUG -> OBJ_BUG */
 #define AIM_LOG_BUG AIM_LOG_OBJ_BUG
 /** RL_BUG -> OBJ_RL_BUG */
-#define AIM_LOG_RL_BUG AIM_LOG_RL_OBJ_BUG
+#define AIM_LOG_RL_BUG AIM_LOG_OBJ_RL_BUG
 
 
 /** FTRACE -> OBJ_FTRACE */
 #define AIM_LOG_FTRACE AIM_LOG_OBJ_FTRACE
 /** RL_FTRACE -> OBJ_RL_FTRACE */
-#define AIM_LOG_RL_FTRACE AIM_LOG_RL_OBJ_FTRACE
+#define AIM_LOG_RL_FTRACE AIM_LOG_OBJ_RL_FTRACE
 
 
 #else
