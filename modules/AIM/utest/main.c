@@ -205,8 +205,8 @@ int aim_main(int argc, char* argv[])
 
     /* Test aim_dfstrdup() */
     {
-        char* rv = aim_dfstrdup("%d %{bool} %{bool} %d", 1, 1, 0, 0);
-        assert(!strcmp(rv, "1 True False 0"));
+        char* rv = aim_dfstrdup("%d %{bool} %{bool} %d %{8bits}", 1, 1, 0, 0, 0xA5);
+        assert(!strcmp(rv, "1 True False 0 10100101"));
         aim_free(rv);
     }
     return 0;

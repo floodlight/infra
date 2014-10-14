@@ -782,6 +782,25 @@ aim_datatype_ts__signal__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
     return AIM_STATUS_OK;
 }
 
+static int
+aim_datatype_ts__8bits__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
+                         const char** rv)
+{
+    /* note - chars are promoted to ints variadically */
+    int byte = va_arg(vargs->val, int);
+    int i;
+
+    char* s = aim_zmalloc(9);
+    *rv = s;
+
+    for(i = 7; i >= 0; i--) {
+        *s++ = (byte & (1 << i)) ? '1' : '0';
+    }
+
+    AIM_REFERENCE(dtc);
+    return AIM_STATUS_OK;
+}
+
 int
 aim_datatypes_init()
 {
@@ -841,7 +860,10 @@ aim_datatypes_init()
                           NULL,
                           aim_datatype_ts__signal__,
                           NULL);
-
+    aim_datatype_register(0, "8bits", "Bits in an 8 bit value.",
+                          NULL,
+                          aim_datatype_ts__8bits__,
+                          NULL);
    return 0;
 }
 
