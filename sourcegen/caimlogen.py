@@ -77,7 +77,7 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
     AIM_LOG_OBJ_COMMON(_obj, %(NAME)s, __VA_ARGS__)
 /** Log an object-level %(name)s with ratelimiting */
 #define AIM_LOG_OBJ_RL_%(NAME)s(_obj, _rl, _time, ...) \\
-    AIM_LOG_OBJ_RL_COMMON(_obj, _rl, _time, %(NAME)s, __VA_ARGS__)
+    AIM_LOG_OBJ_RL_COMMON(_obj, %(NAME)s, _rl, _time, __VA_ARGS__)
 
 """ % dict(NAME=f.upper(), name=f.lower())
 
@@ -94,7 +94,7 @@ class CAIMCommonLogMacroGenerator(CObjectGenerator):
 /** %(NAME)s -> OBJ_%(NAME)s */
 #define AIM_LOG_%(NAME)s AIM_LOG_OBJ_%(NAME)s
 /** RL_%(NAME)s -> OBJ_RL_%(NAME)s */
-#define AIM_LOG_RL_%(NAME)s AIM_LOG_RL_OBJ_%(NAME)s
+#define AIM_LOG_RL_%(NAME)s AIM_LOG_OBJ_RL_%(NAME)s
 
 """ % dict(NAME=f.upper(), name=f.lower())
 

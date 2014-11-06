@@ -39,6 +39,45 @@ AIM_LOG_STRUCT_DEFINE(1, 0xFFFF, NULL, 0);
 
 extern int utest_list(void);
 
+
+void syslogf(void* cookie, aim_syslog_flag_t flag, const char* str)
+{
+    printf("%s: cookie 0x%p, flag %s, msg %s",
+           __FUNCTION__, cookie, aim_syslog_flag_name(flag), str);
+}
+
+#define LOG_MACROS                               \
+    log_desc(EMERG)                              \
+    log_desc(ALERT)                              \
+    log_desc(CRIT)                               \
+    log_desc(ERROR)                              \
+    log_desc(WARN)                               \
+    log_desc(NOTICE)                             \
+    log_desc(INFO)
+
+void test_logging(void)
+{
+    aim_syslog_handler_t h1, h2;
+
+    aim_syslogf_register(&h1, syslogf, (void*) 0x1234);
+    aim_syslogf_register(&h2, syslogf, (void*) 0x5678);
+
+#define log_desc(level)                                                 \
+    AIM_SYSLOG_##level("docstring", "syslog test %s", #level);          \
+    AIM_SYSLOG_RL_##level("docstring", NULL, 0, "syslog rl test %s", #level);
+
+    LOG_MACROS;
+#undef log_desc
+
+    /* DEBUG has no docstring */
+    AIM_SYSLOG_DEBUG("syslog test %s", "DEBUG");
+    AIM_SYSLOG_RL_DEBUG(NULL, 0, "syslog test %s", "DEBUG");
+
+    aim_syslogf_unregister(&h1);
+    aim_syslogf_unregister(&h2);
+}
+
+
 int aim_main(int argc, char* argv[])
 {
     int i;
@@ -209,5 +248,8 @@ int aim_main(int argc, char* argv[])
         assert(!strcmp(rv, "1 True False 0 10100101"));
         aim_free(rv);
     }
+
+    test_logging();
+
     return 0;
 }

@@ -37,6 +37,7 @@
 #include <AIM/aim_utils.h>
 #include <AIM/aim_log_util.h>
 #include <AIM/aim_pvs_file.h>
+#include <AIM/aim_list.h>
 
 
 /******************************************************************************
@@ -145,6 +146,52 @@ extern aim_map_si_t aim_log_option_bit_map[];
 extern aim_map_si_t aim_log_option_bit_desc_map[];
 /* <auto.end.enum(aim_log_option_bit).header> */
 
+/* <auto.start.enum(aim_syslog_flag).header> */
+/** aim_syslog_flag */
+typedef enum aim_syslog_flag_e {
+    AIM_SYSLOG_FLAG_EMERG,
+    AIM_SYSLOG_FLAG_ALERT,
+    AIM_SYSLOG_FLAG_CRIT,
+    AIM_SYSLOG_FLAG_ERROR,
+    AIM_SYSLOG_FLAG_WARN,
+    AIM_SYSLOG_FLAG_NOTICE,
+    AIM_SYSLOG_FLAG_INFO,
+    AIM_SYSLOG_FLAG_DEBUG,
+    AIM_SYSLOG_FLAG_LAST = AIM_SYSLOG_FLAG_DEBUG,
+    AIM_SYSLOG_FLAG_COUNT,
+    AIM_SYSLOG_FLAG_INVALID = -1,
+} aim_syslog_flag_t;
+
+/** Strings macro. */
+#define AIM_SYSLOG_FLAG_STRINGS \
+{\
+    "emerg", \
+    "alert", \
+    "crit", \
+    "error", \
+    "warn", \
+    "notice", \
+    "info", \
+    "debug", \
+}
+/** Enum names. */
+const char* aim_syslog_flag_name(aim_syslog_flag_t e);
+
+/** Enum values. */
+int aim_syslog_flag_value(const char* str, aim_syslog_flag_t* e, int substr);
+
+/** Enum descriptions. */
+const char* aim_syslog_flag_desc(aim_syslog_flag_t e);
+
+/** validator */
+#define AIM_SYSLOG_FLAG_VALID(_e) \
+    ( (0 <= (_e)) && ((_e) <= AIM_SYSLOG_FLAG_DEBUG))
+
+/** aim_syslog_flag_map table. */
+extern aim_map_si_t aim_syslog_flag_map[];
+/** aim_syslog_flag_desc_map table. */
+extern aim_map_si_t aim_syslog_flag_desc_map[];
+/* <auto.end.enum(aim_syslog_flag).header> */
 
 
 /**************************************************************************//**
@@ -1002,6 +1049,205 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_MOD_RL_COMMON(FTRACE, _rl, _time, "%s:EXIT " AIM_VA_ARGS_FIRST(__VA_ARGS__), __func__ AIM_VA_ARGS_REST(__VA_ARGS__))
 
 #endif /* AIM_LOG_MODULE_NAME */
+
+
+/* Syslog macros */
+#define AIM_SYSLOG_EMERG(_documentation, ...)                           \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_EMERG, NULL, 0,              \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_COMMON(MSG, "EMERG: "                               \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+    } while (0);
+#define AIM_SYSLOG_RL_EMERG(_documentation, _rl, _time, ...)            \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_EMERG, _rl, _time,           \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_RL_COMMON(MSG, _rl, _time, "EMERG: "                \
+                              AIM_VA_ARGS_FIRST(__VA_ARGS__)            \
+                              AIM_VA_ARGS_REST(__VA_ARGS__));           \
+    } while (0);
+
+#define AIM_SYSLOG_ALERT(_documentation, ...)                           \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_ALERT, NULL, 0,              \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_COMMON(MSG, "ALERT: "                               \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+    } while (0);
+#define AIM_SYSLOG_RL_ALERT(_documentation, _rl, _time, ...)            \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_ALERT, _rl, _time,           \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_RL_COMMON(MSG, _rl, _time, "ALERT: "                \
+                              AIM_VA_ARGS_FIRST(__VA_ARGS__)            \
+                              AIM_VA_ARGS_REST(__VA_ARGS__));           \
+    } while (0);
+
+#define AIM_SYSLOG_CRIT(_documentation, ...)                            \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_CRIT, NULL, 0,               \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_COMMON(MSG, "CRIT: "                                \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+    } while (0);
+#define AIM_SYSLOG_RL_CRIT(_documentation, _rl, _time, ...)             \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_CRIT, _rl, _time,            \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_RL_COMMON(MSG, _rl, _time, "CRIT: "                 \
+                              AIM_VA_ARGS_FIRST(__VA_ARGS__)            \
+                              AIM_VA_ARGS_REST(__VA_ARGS__));           \
+    } while (0);
+
+#define AIM_SYSLOG_ERROR(_documentation, ...)                           \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_ERROR, NULL, 0,              \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_COMMON(MSG, "ERROR: "                               \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+    } while (0);
+#define AIM_SYSLOG_RL_ERROR(_documentation, _rl, _time, ...)            \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_ERROR, _rl, _time,           \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_RL_COMMON(MSG, _rl, _time, "ERROR: "                \
+                              AIM_VA_ARGS_FIRST(__VA_ARGS__)            \
+                              AIM_VA_ARGS_REST(__VA_ARGS__));           \
+    } while (0);
+
+#define AIM_SYSLOG_WARN(_documentation, ...)                            \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_WARN, NULL, 0,               \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_COMMON(MSG, "WARN: "                                \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+    } while (0);
+#define AIM_SYSLOG_RL_WARN(_documentation, _rl, _time, ...)             \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_WARN, _rl, _time,            \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_RL_COMMON(MSG, _rl, _time, "WARN: "                 \
+                              AIM_VA_ARGS_FIRST(__VA_ARGS__)            \
+                              AIM_VA_ARGS_REST(__VA_ARGS__));           \
+    } while (0);
+
+#define AIM_SYSLOG_NOTICE(_documentation, ...)                          \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_NOTICE, NULL, 0,             \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_COMMON(MSG, "NOTICE: "                              \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+    } while (0);
+#define AIM_SYSLOG_RL_NOTICE(_documentation, _rl, _time, ...)           \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_NOTICE, _rl, _time,          \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_RL_COMMON(MSG, _rl, _time, "NOTICE: "               \
+                              AIM_VA_ARGS_FIRST(__VA_ARGS__)            \
+                              AIM_VA_ARGS_REST(__VA_ARGS__));           \
+    } while (0);
+
+#define AIM_SYSLOG_INFO(_documentation, ...)                            \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_INFO, NULL, 0,               \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_COMMON(MSG, "INFO: "                                \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+    } while (0);
+#define AIM_SYSLOG_RL_INFO(_documentation, _rl, _time, ...)             \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_INFO, _rl, _time,            \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_RL_COMMON(MSG, _rl, _time, "INFO: "                 \
+                              AIM_VA_ARGS_FIRST(__VA_ARGS__)            \
+                              AIM_VA_ARGS_REST(__VA_ARGS__));           \
+    } while (0);
+
+#define AIM_SYSLOG_DEBUG(...)                                           \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_DEBUG, NULL, 0,              \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_COMMON(MSG, "DEBUG: "                               \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+    } while (0);
+#define AIM_SYSLOG_RL_DEBUG(_rl, _time, ...)                            \
+    do {                                                                \
+        aim_syslogf_invoke(AIM_SYSLOG_FLAG_DEBUG, _rl, _time,           \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__)               \
+                           AIM_VA_ARGS_REST(__VA_ARGS__));              \
+        AIM_LOG_MOD_RL_COMMON(MSG, _rl, _time, "DEBUG: "                \
+                              AIM_VA_ARGS_FIRST(__VA_ARGS__)            \
+                              AIM_VA_ARGS_REST(__VA_ARGS__));           \
+    } while (0);
+
+
+/**
+ * @brief Log function typedef, to be used by aim_syslogf_register and
+ *   aim_dbglogf_register.
+ * @param cookie To be passed to logging function when it is invoked.
+ * @param flag Log level.
+ * @param str String to log.
+ */
+typedef void (*aim_syslog_f)(void* cookie, aim_syslog_flag_t flag, 
+                             const char* str);
+
+typedef struct aim_syslog_handler_s {
+    aim_syslog_f logf;
+    void *cookie;
+    list_links_t links;
+} aim_syslog_handler_t;
+
+/**
+ * @brief Register a syslog handler.
+ * @param handler The syslog handler block.
+ * @param logf The actual syslog logging function.
+ * @param cookie To be passed to the logging function when invoked.
+ */
+void aim_syslogf_register(aim_syslog_handler_t *handler,
+                          aim_syslog_f logf, void* cookie);
+
+/**
+ * @brief Unregister a syslog handler.
+ * @param handler The syslog handler block.
+ */
+void aim_syslogf_unregister(aim_syslog_handler_t *handler);
+
+/**
+ * @brief Invoke the registered syslog log functions.
+ * @param flag  The syslog level.
+ * @param rl    The aim ratelimiter.
+ * @param time  The current time.
+ * @param fmt   The message format string.
+ * @param vargs The arguments.
+ */
+void aim_syslogf_invoke(aim_syslog_flag_t flag,
+                        aim_ratelimiter_t* rl, uint64_t time,
+                        const char* fmt, ...);
+
 
 /**
  * @brief Map a syslog level string to a set of flags and options
