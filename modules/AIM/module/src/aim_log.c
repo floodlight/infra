@@ -645,6 +645,62 @@ aim_log_vcustom(aim_log_t* l, int fid,
 }
 
 
+static LIST_DEFINE(syslog_handlers);
+
+/**
+ * Register a syslog handler.
+ */
+void
+aim_syslogf_register(aim_syslog_handler_t *handler,
+                     aim_syslog_f logf, void* cookie)
+{
+    handler->logf = logf;
+    handler->cookie = cookie;
+    list_push(&syslog_handlers, &handler->links);
+}
+
+/**
+ * Unregister a syslog handler.
+ */
+void aim_syslogf_unregister(aim_syslog_handler_t *handler)
+{
+    list_remove(&handler->links);
+    AIM_MEMSET(handler, 0, sizeof(*handler));
+}
+
+
+/**
+ * Invoke the registered syslog log functions.
+ */
+void aim_syslogf_invoke(aim_syslog_flag_t flag,
+                        aim_ratelimiter_t* rl, uint64_t time,
+                        const char* fmt, ...)
+{
+    if(rl == NULL || aim_ratelimiter_limit(rl, time) == 0) {
+        va_list vargs;
+        aim_pvs_t* msg;
+        char* pmsg;
+        list_links_t* cur;
+
+        msg = aim_pvs_buffer_create();
+        va_start(vargs, fmt);
+        aim_vprintf(msg, fmt, vargs);
+        va_end(vargs);
+        aim_printf(msg, "\n");
+        pmsg = aim_pvs_buffer_get(msg);
+        
+        LIST_FOREACH(&syslog_handlers, cur) {
+            aim_syslog_handler_t* handler = 
+                container_of(cur, links, aim_syslog_handler_t);
+            handler->logf(handler->cookie, flag, pmsg);
+        }
+
+        aim_free(pmsg);
+        aim_pvs_destroy(msg);
+    }
+}
+
+
 int
 aim_log_syslog_level_map(const char *syslog_str, uint32_t *flags)
 {

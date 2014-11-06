@@ -130,6 +130,17 @@ aim_log_bits: &aim_log_bits
 - bug:       (1 << AIM_LOG_FLAG_BUG)
 - ftrace:    (1 << AIM_LOG_FLAG_FTRACE)
 
+aim_syslog_types: &aim_syslog_types
+- emerg
+- alert
+- crit
+- error
+- warn
+- notice
+- info
+- debug
+
+
 definitions:
   cdefs:
     AIM_CONFIG_HEADER:
@@ -166,6 +177,10 @@ definitions:
 
     aim_error:
       members: *aim_error_types
+
+    aim_syslog_flag:
+      members: *aim_syslog_types
+
 
   portingmacro:
     AIM:

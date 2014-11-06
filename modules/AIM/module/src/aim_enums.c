@@ -171,6 +171,136 @@ aim_log_option_valid(aim_log_option_t e)
 }
 
 
+aim_map_si_t aim_error_map[] =
+{
+    { "none", AIM_ERROR_NONE },
+    { "param", AIM_ERROR_PARAM },
+    { "not_found", AIM_ERROR_NOT_FOUND },
+    { "internal", AIM_ERROR_INTERNAL },
+    { NULL, 0 }
+};
+
+aim_map_si_t aim_error_desc_map[] =
+{
+    { "No error.", AIM_ERROR_NONE },
+    { "One of the function parameters was invalid.", AIM_ERROR_PARAM },
+    { "The requested object was not found.", AIM_ERROR_NOT_FOUND },
+    { "An unexpected internal error occurred.", AIM_ERROR_INTERNAL },
+    { NULL, 0 }
+};
+
+const char*
+aim_error_name(aim_error_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_error_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_error'";
+    }
+}
+
+int
+aim_error_value(const char* str, aim_error_t* e, int substr)
+{
+    int i;
+    AIM_REFERENCE(substr);
+    if(aim_map_si_s(&i, str, aim_error_map, 0)) {
+        /* Enum Found */
+        *e = i;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+const char*
+aim_error_desc(aim_error_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_error_desc_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_error'";
+    }
+}
+
+int
+aim_error_valid(aim_error_t e)
+{
+    return aim_map_si_i(NULL, e, aim_error_map, 0) ? 1 : 0;
+}
+
+
+aim_map_si_t aim_syslog_flag_map[] =
+{
+    { "emerg", AIM_SYSLOG_FLAG_EMERG },
+    { "alert", AIM_SYSLOG_FLAG_ALERT },
+    { "crit", AIM_SYSLOG_FLAG_CRIT },
+    { "error", AIM_SYSLOG_FLAG_ERROR },
+    { "warn", AIM_SYSLOG_FLAG_WARN },
+    { "notice", AIM_SYSLOG_FLAG_NOTICE },
+    { "info", AIM_SYSLOG_FLAG_INFO },
+    { "debug", AIM_SYSLOG_FLAG_DEBUG },
+    { NULL, 0 }
+};
+
+aim_map_si_t aim_syslog_flag_desc_map[] =
+{
+    { "None", AIM_SYSLOG_FLAG_EMERG },
+    { "None", AIM_SYSLOG_FLAG_ALERT },
+    { "None", AIM_SYSLOG_FLAG_CRIT },
+    { "None", AIM_SYSLOG_FLAG_ERROR },
+    { "None", AIM_SYSLOG_FLAG_WARN },
+    { "None", AIM_SYSLOG_FLAG_NOTICE },
+    { "None", AIM_SYSLOG_FLAG_INFO },
+    { "None", AIM_SYSLOG_FLAG_DEBUG },
+    { NULL, 0 }
+};
+
+const char*
+aim_syslog_flag_name(aim_syslog_flag_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_syslog_flag_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_syslog_flag'";
+    }
+}
+
+int
+aim_syslog_flag_value(const char* str, aim_syslog_flag_t* e, int substr)
+{
+    int i;
+    AIM_REFERENCE(substr);
+    if(aim_map_si_s(&i, str, aim_syslog_flag_map, 0)) {
+        /* Enum Found */
+        *e = i;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+const char*
+aim_syslog_flag_desc(aim_syslog_flag_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_syslog_flag_desc_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_syslog_flag'";
+    }
+}
+
+
 aim_map_si_t aim_log_bit_map[] =
 {
     { "msg", AIM_LOG_BIT_MSG },
@@ -244,70 +374,6 @@ int
 aim_log_bit_valid(aim_log_bit_t e)
 {
     return aim_map_si_i(NULL, e, aim_log_bit_map, 0) ? 1 : 0;
-}
-
-
-aim_map_si_t aim_error_map[] =
-{
-    { "none", AIM_ERROR_NONE },
-    { "param", AIM_ERROR_PARAM },
-    { "not_found", AIM_ERROR_NOT_FOUND },
-    { "internal", AIM_ERROR_INTERNAL },
-    { NULL, 0 }
-};
-
-aim_map_si_t aim_error_desc_map[] =
-{
-    { "No error.", AIM_ERROR_NONE },
-    { "One of the function parameters was invalid.", AIM_ERROR_PARAM },
-    { "The requested object was not found.", AIM_ERROR_NOT_FOUND },
-    { "An unexpected internal error occurred.", AIM_ERROR_INTERNAL },
-    { NULL, 0 }
-};
-
-const char*
-aim_error_name(aim_error_t e)
-{
-    const char* name;
-    if(aim_map_si_i(&name, e, aim_error_map, 0)) {
-        return name;
-    }
-    else {
-        return "-invalid value for enum type 'aim_error'";
-    }
-}
-
-int
-aim_error_value(const char* str, aim_error_t* e, int substr)
-{
-    int i;
-    AIM_REFERENCE(substr);
-    if(aim_map_si_s(&i, str, aim_error_map, 0)) {
-        /* Enum Found */
-        *e = i;
-        return 0;
-    }
-    else {
-        return -1;
-    }
-}
-
-const char*
-aim_error_desc(aim_error_t e)
-{
-    const char* name;
-    if(aim_map_si_i(&name, e, aim_error_desc_map, 0)) {
-        return name;
-    }
-    else {
-        return "-invalid value for enum type 'aim_error'";
-    }
-}
-
-int
-aim_error_valid(aim_error_t e)
-{
-    return aim_map_si_i(NULL, e, aim_error_map, 0) ? 1 : 0;
 }
 
 
