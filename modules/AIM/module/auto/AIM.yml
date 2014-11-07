@@ -117,6 +117,14 @@ aim_log_types: &aim_log_types
 - internal
 - bug
 - ftrace
+- syslog_emerg
+- syslog_alert
+- syslog_crit
+- syslog_error
+- syslog_warn
+- syslog_notice
+- syslog_info
+- syslog_debug
 
 aim_log_bits: &aim_log_bits
 - msg :      (1 << AIM_LOG_FLAG_MSG)
@@ -129,6 +137,14 @@ aim_log_bits: &aim_log_bits
 - internal : (1 << AIM_LOG_FLAG_INTERNAL)
 - bug:       (1 << AIM_LOG_FLAG_BUG)
 - ftrace:    (1 << AIM_LOG_FLAG_FTRACE)
+- syslog_emerg:   (1 << AIM_LOG_FLAG_SYSLOG_EMERG)
+- syslog_alert:   (1 << AIM_LOG_FLAG_SYSLOG_ALERT)
+- syslog_crit:    (1 << AIM_LOG_FLAG_SYSLOG_CRIT)
+- syslog_error:   (1 << AIM_LOG_FLAG_SYSLOG_ERROR)
+- syslog_warn:    (1 << AIM_LOG_FLAG_SYSLOG_WARN)
+- syslog_notice:  (1 << AIM_LOG_FLAG_SYSLOG_NOTICE)
+- syslog_info:    (1 << AIM_LOG_FLAG_SYSLOG_INFO)
+- syslog_debug:   (1 << AIM_LOG_FLAG_SYSLOG_DEBUG)
 
 definitions:
   cdefs:
@@ -142,7 +158,6 @@ definitions:
 
   enum:
     aim_log_flag:
-      linear: false
       members: *aim_log_types
     aim_log_bit:
       linear: false

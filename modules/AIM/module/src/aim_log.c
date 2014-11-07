@@ -138,8 +138,7 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
 
     aim_printf(pvs, "enabled: ");
     count = 0;
-    /* @fixme */
-    for(i = 0; i <= AIM_LOG_FLAG_FTRACE; i++) {
+    for(i = 0; i < AIM_LOG_FLAG_COUNT; i++) {
         if(AIM_BIT_GET(lobj->common_flags, i)) {
             aim_printf(pvs, "%s ", aim_log_flag_name(i));
             count++;
@@ -158,7 +157,7 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
 
     aim_printf(pvs, "disabled: ");
     count = 0;
-    for(i = 0; i < AIM_LOG_FLAG_FTRACE; i++) {
+    for(i = 0; i < AIM_LOG_FLAG_COUNT; i++) {
         if(AIM_BIT_GET(lobj->common_flags, i) == 0) {
             aim_printf(pvs, "%s ", aim_log_flag_name(i));
             count++;

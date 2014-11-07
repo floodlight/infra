@@ -43,6 +43,14 @@ aim_map_si_t aim_log_flag_map[] =
     { "internal", AIM_LOG_FLAG_INTERNAL },
     { "bug", AIM_LOG_FLAG_BUG },
     { "ftrace", AIM_LOG_FLAG_FTRACE },
+    { "syslog_emerg", AIM_LOG_FLAG_SYSLOG_EMERG },
+    { "syslog_alert", AIM_LOG_FLAG_SYSLOG_ALERT },
+    { "syslog_crit", AIM_LOG_FLAG_SYSLOG_CRIT },
+    { "syslog_error", AIM_LOG_FLAG_SYSLOG_ERROR },
+    { "syslog_warn", AIM_LOG_FLAG_SYSLOG_WARN },
+    { "syslog_notice", AIM_LOG_FLAG_SYSLOG_NOTICE },
+    { "syslog_info", AIM_LOG_FLAG_SYSLOG_INFO },
+    { "syslog_debug", AIM_LOG_FLAG_SYSLOG_DEBUG },
     { NULL, 0 }
 };
 
@@ -58,6 +66,14 @@ aim_map_si_t aim_log_flag_desc_map[] =
     { "None", AIM_LOG_FLAG_INTERNAL },
     { "None", AIM_LOG_FLAG_BUG },
     { "None", AIM_LOG_FLAG_FTRACE },
+    { "None", AIM_LOG_FLAG_SYSLOG_EMERG },
+    { "None", AIM_LOG_FLAG_SYSLOG_ALERT },
+    { "None", AIM_LOG_FLAG_SYSLOG_CRIT },
+    { "None", AIM_LOG_FLAG_SYSLOG_ERROR },
+    { "None", AIM_LOG_FLAG_SYSLOG_WARN },
+    { "None", AIM_LOG_FLAG_SYSLOG_NOTICE },
+    { "None", AIM_LOG_FLAG_SYSLOG_INFO },
+    { "None", AIM_LOG_FLAG_SYSLOG_DEBUG },
     { NULL, 0 }
 };
 
@@ -98,12 +114,6 @@ aim_log_flag_desc(aim_log_flag_t e)
     else {
         return "-invalid value for enum type 'aim_log_flag'";
     }
-}
-
-int
-aim_log_flag_valid(aim_log_flag_t e)
-{
-    return aim_map_si_i(NULL, e, aim_log_flag_map, 0) ? 1 : 0;
 }
 
 
@@ -183,6 +193,14 @@ aim_map_si_t aim_log_bit_map[] =
     { "internal", AIM_LOG_BIT_INTERNAL },
     { "bug", AIM_LOG_BIT_BUG },
     { "ftrace", AIM_LOG_BIT_FTRACE },
+    { "syslog_emerg", AIM_LOG_BIT_SYSLOG_EMERG },
+    { "syslog_alert", AIM_LOG_BIT_SYSLOG_ALERT },
+    { "syslog_crit", AIM_LOG_BIT_SYSLOG_CRIT },
+    { "syslog_error", AIM_LOG_BIT_SYSLOG_ERROR },
+    { "syslog_warn", AIM_LOG_BIT_SYSLOG_WARN },
+    { "syslog_notice", AIM_LOG_BIT_SYSLOG_NOTICE },
+    { "syslog_info", AIM_LOG_BIT_SYSLOG_INFO },
+    { "syslog_debug", AIM_LOG_BIT_SYSLOG_DEBUG },
     { NULL, 0 }
 };
 
@@ -198,6 +216,14 @@ aim_map_si_t aim_log_bit_desc_map[] =
     { "None", AIM_LOG_BIT_INTERNAL },
     { "None", AIM_LOG_BIT_BUG },
     { "None", AIM_LOG_BIT_FTRACE },
+    { "None", AIM_LOG_BIT_SYSLOG_EMERG },
+    { "None", AIM_LOG_BIT_SYSLOG_ALERT },
+    { "None", AIM_LOG_BIT_SYSLOG_CRIT },
+    { "None", AIM_LOG_BIT_SYSLOG_ERROR },
+    { "None", AIM_LOG_BIT_SYSLOG_WARN },
+    { "None", AIM_LOG_BIT_SYSLOG_NOTICE },
+    { "None", AIM_LOG_BIT_SYSLOG_INFO },
+    { "None", AIM_LOG_BIT_SYSLOG_DEBUG },
     { NULL, 0 }
 };
 

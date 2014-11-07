@@ -73,16 +73,17 @@ aim_log_flag_color__(aim_log_flag_t flag)
         case AIM_LOG_FLAG_INTERNAL:
         case AIM_LOG_FLAG_BUG:
         case AIM_LOG_FLAG_ERROR:
+        case AIM_LOG_FLAG_SYSLOG_ERROR:
             return TTY_COLOR(TTY_DULL, TTY_FG_RED);
         case AIM_LOG_FLAG_FATAL:
+        case AIM_LOG_FLAG_SYSLOG_CRIT:
+        case AIM_LOG_FLAG_SYSLOG_ALERT:
+        case AIM_LOG_FLAG_SYSLOG_EMERG:
             return TTY_COLOR(TTY_BRIGHT, TTY_FG_RED);
         case AIM_LOG_FLAG_WARN:
+        case AIM_LOG_FLAG_SYSLOG_WARN:
             return TTY_COLOR(TTY_DULL, TTY_FG_YELLOW);
-        case AIM_LOG_FLAG_MSG:
-        case AIM_LOG_FLAG_INFO:
-        case AIM_LOG_FLAG_VERBOSE:
-        case AIM_LOG_FLAG_TRACE:
-        case AIM_LOG_FLAG_FTRACE:
+        default:
             return NULL;
         }
 #endif

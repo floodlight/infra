@@ -59,6 +59,14 @@ typedef enum aim_log_bit_e {
     AIM_LOG_BIT_INTERNAL = (1 << AIM_LOG_FLAG_INTERNAL),
     AIM_LOG_BIT_BUG = (1 << AIM_LOG_FLAG_BUG),
     AIM_LOG_BIT_FTRACE = (1 << AIM_LOG_FLAG_FTRACE),
+    AIM_LOG_BIT_SYSLOG_EMERG = (1 << AIM_LOG_FLAG_SYSLOG_EMERG),
+    AIM_LOG_BIT_SYSLOG_ALERT = (1 << AIM_LOG_FLAG_SYSLOG_ALERT),
+    AIM_LOG_BIT_SYSLOG_CRIT = (1 << AIM_LOG_FLAG_SYSLOG_CRIT),
+    AIM_LOG_BIT_SYSLOG_ERROR = (1 << AIM_LOG_FLAG_SYSLOG_ERROR),
+    AIM_LOG_BIT_SYSLOG_WARN = (1 << AIM_LOG_FLAG_SYSLOG_WARN),
+    AIM_LOG_BIT_SYSLOG_NOTICE = (1 << AIM_LOG_FLAG_SYSLOG_NOTICE),
+    AIM_LOG_BIT_SYSLOG_INFO = (1 << AIM_LOG_FLAG_SYSLOG_INFO),
+    AIM_LOG_BIT_SYSLOG_DEBUG = (1 << AIM_LOG_FLAG_SYSLOG_DEBUG),
 } aim_log_bit_t;
 
 /** Enum names. */
@@ -778,6 +786,70 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_MOD_RL_COMMON(FTRACE, _rl, _time, __VA_ARGS__)
 
 
+/** Log a module-level syslog_emerg */
+#define AIM_LOG_MOD_SYSLOG_EMERG(...) \
+    AIM_LOG_MOD_COMMON(SYSLOG_EMERG, __VA_ARGS__)
+/** Log a module-level syslog_emerg with ratelimiting */
+#define AIM_LOG_MOD_RL_SYSLOG_EMERG(_rl, _time, ...)           \
+    AIM_LOG_MOD_RL_COMMON(SYSLOG_EMERG, _rl, _time, __VA_ARGS__)
+
+
+/** Log a module-level syslog_alert */
+#define AIM_LOG_MOD_SYSLOG_ALERT(...) \
+    AIM_LOG_MOD_COMMON(SYSLOG_ALERT, __VA_ARGS__)
+/** Log a module-level syslog_alert with ratelimiting */
+#define AIM_LOG_MOD_RL_SYSLOG_ALERT(_rl, _time, ...)           \
+    AIM_LOG_MOD_RL_COMMON(SYSLOG_ALERT, _rl, _time, __VA_ARGS__)
+
+
+/** Log a module-level syslog_crit */
+#define AIM_LOG_MOD_SYSLOG_CRIT(...) \
+    AIM_LOG_MOD_COMMON(SYSLOG_CRIT, __VA_ARGS__)
+/** Log a module-level syslog_crit with ratelimiting */
+#define AIM_LOG_MOD_RL_SYSLOG_CRIT(_rl, _time, ...)           \
+    AIM_LOG_MOD_RL_COMMON(SYSLOG_CRIT, _rl, _time, __VA_ARGS__)
+
+
+/** Log a module-level syslog_error */
+#define AIM_LOG_MOD_SYSLOG_ERROR(...) \
+    AIM_LOG_MOD_COMMON(SYSLOG_ERROR, __VA_ARGS__)
+/** Log a module-level syslog_error with ratelimiting */
+#define AIM_LOG_MOD_RL_SYSLOG_ERROR(_rl, _time, ...)           \
+    AIM_LOG_MOD_RL_COMMON(SYSLOG_ERROR, _rl, _time, __VA_ARGS__)
+
+
+/** Log a module-level syslog_warn */
+#define AIM_LOG_MOD_SYSLOG_WARN(...) \
+    AIM_LOG_MOD_COMMON(SYSLOG_WARN, __VA_ARGS__)
+/** Log a module-level syslog_warn with ratelimiting */
+#define AIM_LOG_MOD_RL_SYSLOG_WARN(_rl, _time, ...)           \
+    AIM_LOG_MOD_RL_COMMON(SYSLOG_WARN, _rl, _time, __VA_ARGS__)
+
+
+/** Log a module-level syslog_notice */
+#define AIM_LOG_MOD_SYSLOG_NOTICE(...) \
+    AIM_LOG_MOD_COMMON(SYSLOG_NOTICE, __VA_ARGS__)
+/** Log a module-level syslog_notice with ratelimiting */
+#define AIM_LOG_MOD_RL_SYSLOG_NOTICE(_rl, _time, ...)           \
+    AIM_LOG_MOD_RL_COMMON(SYSLOG_NOTICE, _rl, _time, __VA_ARGS__)
+
+
+/** Log a module-level syslog_info */
+#define AIM_LOG_MOD_SYSLOG_INFO(...) \
+    AIM_LOG_MOD_COMMON(SYSLOG_INFO, __VA_ARGS__)
+/** Log a module-level syslog_info with ratelimiting */
+#define AIM_LOG_MOD_RL_SYSLOG_INFO(_rl, _time, ...)           \
+    AIM_LOG_MOD_RL_COMMON(SYSLOG_INFO, _rl, _time, __VA_ARGS__)
+
+
+/** Log a module-level syslog_debug */
+#define AIM_LOG_MOD_SYSLOG_DEBUG(...) \
+    AIM_LOG_MOD_COMMON(SYSLOG_DEBUG, __VA_ARGS__)
+/** Log a module-level syslog_debug with ratelimiting */
+#define AIM_LOG_MOD_RL_SYSLOG_DEBUG(_rl, _time, ...)           \
+    AIM_LOG_MOD_RL_COMMON(SYSLOG_DEBUG, _rl, _time, __VA_ARGS__)
+
+
 /******************************************************************************
  *
  * Common Object Log Macros
@@ -864,6 +936,70 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_OBJ_RL_COMMON(_obj, FTRACE, _rl, _time, __VA_ARGS__)
 
 
+/** Log an object-level syslog_emerg */
+#define AIM_LOG_OBJ_SYSLOG_EMERG(_obj, ...) \
+    AIM_LOG_OBJ_COMMON(_obj, SYSLOG_EMERG, __VA_ARGS__)
+/** Log an object-level syslog_emerg with ratelimiting */
+#define AIM_LOG_OBJ_RL_SYSLOG_EMERG(_obj, _rl, _time, ...) \
+    AIM_LOG_OBJ_RL_COMMON(_obj, SYSLOG_EMERG, _rl, _time, __VA_ARGS__)
+
+
+/** Log an object-level syslog_alert */
+#define AIM_LOG_OBJ_SYSLOG_ALERT(_obj, ...) \
+    AIM_LOG_OBJ_COMMON(_obj, SYSLOG_ALERT, __VA_ARGS__)
+/** Log an object-level syslog_alert with ratelimiting */
+#define AIM_LOG_OBJ_RL_SYSLOG_ALERT(_obj, _rl, _time, ...) \
+    AIM_LOG_OBJ_RL_COMMON(_obj, SYSLOG_ALERT, _rl, _time, __VA_ARGS__)
+
+
+/** Log an object-level syslog_crit */
+#define AIM_LOG_OBJ_SYSLOG_CRIT(_obj, ...) \
+    AIM_LOG_OBJ_COMMON(_obj, SYSLOG_CRIT, __VA_ARGS__)
+/** Log an object-level syslog_crit with ratelimiting */
+#define AIM_LOG_OBJ_RL_SYSLOG_CRIT(_obj, _rl, _time, ...) \
+    AIM_LOG_OBJ_RL_COMMON(_obj, SYSLOG_CRIT, _rl, _time, __VA_ARGS__)
+
+
+/** Log an object-level syslog_error */
+#define AIM_LOG_OBJ_SYSLOG_ERROR(_obj, ...) \
+    AIM_LOG_OBJ_COMMON(_obj, SYSLOG_ERROR, __VA_ARGS__)
+/** Log an object-level syslog_error with ratelimiting */
+#define AIM_LOG_OBJ_RL_SYSLOG_ERROR(_obj, _rl, _time, ...) \
+    AIM_LOG_OBJ_RL_COMMON(_obj, SYSLOG_ERROR, _rl, _time, __VA_ARGS__)
+
+
+/** Log an object-level syslog_warn */
+#define AIM_LOG_OBJ_SYSLOG_WARN(_obj, ...) \
+    AIM_LOG_OBJ_COMMON(_obj, SYSLOG_WARN, __VA_ARGS__)
+/** Log an object-level syslog_warn with ratelimiting */
+#define AIM_LOG_OBJ_RL_SYSLOG_WARN(_obj, _rl, _time, ...) \
+    AIM_LOG_OBJ_RL_COMMON(_obj, SYSLOG_WARN, _rl, _time, __VA_ARGS__)
+
+
+/** Log an object-level syslog_notice */
+#define AIM_LOG_OBJ_SYSLOG_NOTICE(_obj, ...) \
+    AIM_LOG_OBJ_COMMON(_obj, SYSLOG_NOTICE, __VA_ARGS__)
+/** Log an object-level syslog_notice with ratelimiting */
+#define AIM_LOG_OBJ_RL_SYSLOG_NOTICE(_obj, _rl, _time, ...) \
+    AIM_LOG_OBJ_RL_COMMON(_obj, SYSLOG_NOTICE, _rl, _time, __VA_ARGS__)
+
+
+/** Log an object-level syslog_info */
+#define AIM_LOG_OBJ_SYSLOG_INFO(_obj, ...) \
+    AIM_LOG_OBJ_COMMON(_obj, SYSLOG_INFO, __VA_ARGS__)
+/** Log an object-level syslog_info with ratelimiting */
+#define AIM_LOG_OBJ_RL_SYSLOG_INFO(_obj, _rl, _time, ...) \
+    AIM_LOG_OBJ_RL_COMMON(_obj, SYSLOG_INFO, _rl, _time, __VA_ARGS__)
+
+
+/** Log an object-level syslog_debug */
+#define AIM_LOG_OBJ_SYSLOG_DEBUG(_obj, ...) \
+    AIM_LOG_OBJ_COMMON(_obj, SYSLOG_DEBUG, __VA_ARGS__)
+/** Log an object-level syslog_debug with ratelimiting */
+#define AIM_LOG_OBJ_RL_SYSLOG_DEBUG(_obj, _rl, _time, ...) \
+    AIM_LOG_OBJ_RL_COMMON(_obj, SYSLOG_DEBUG, _rl, _time, __VA_ARGS__)
+
+
 /******************************************************************************
  *
  * Default Macro Mappings
@@ -931,6 +1067,54 @@ extern aim_log_t AIM_LOG_STRUCT;
 #define AIM_LOG_RL_FTRACE AIM_LOG_OBJ_RL_FTRACE
 
 
+/** SYSLOG_EMERG -> OBJ_SYSLOG_EMERG */
+#define AIM_LOG_SYSLOG_EMERG AIM_LOG_OBJ_SYSLOG_EMERG
+/** RL_SYSLOG_EMERG -> OBJ_RL_SYSLOG_EMERG */
+#define AIM_LOG_RL_SYSLOG_EMERG AIM_LOG_OBJ_RL_SYSLOG_EMERG
+
+
+/** SYSLOG_ALERT -> OBJ_SYSLOG_ALERT */
+#define AIM_LOG_SYSLOG_ALERT AIM_LOG_OBJ_SYSLOG_ALERT
+/** RL_SYSLOG_ALERT -> OBJ_RL_SYSLOG_ALERT */
+#define AIM_LOG_RL_SYSLOG_ALERT AIM_LOG_OBJ_RL_SYSLOG_ALERT
+
+
+/** SYSLOG_CRIT -> OBJ_SYSLOG_CRIT */
+#define AIM_LOG_SYSLOG_CRIT AIM_LOG_OBJ_SYSLOG_CRIT
+/** RL_SYSLOG_CRIT -> OBJ_RL_SYSLOG_CRIT */
+#define AIM_LOG_RL_SYSLOG_CRIT AIM_LOG_OBJ_RL_SYSLOG_CRIT
+
+
+/** SYSLOG_ERROR -> OBJ_SYSLOG_ERROR */
+#define AIM_LOG_SYSLOG_ERROR AIM_LOG_OBJ_SYSLOG_ERROR
+/** RL_SYSLOG_ERROR -> OBJ_RL_SYSLOG_ERROR */
+#define AIM_LOG_RL_SYSLOG_ERROR AIM_LOG_OBJ_RL_SYSLOG_ERROR
+
+
+/** SYSLOG_WARN -> OBJ_SYSLOG_WARN */
+#define AIM_LOG_SYSLOG_WARN AIM_LOG_OBJ_SYSLOG_WARN
+/** RL_SYSLOG_WARN -> OBJ_RL_SYSLOG_WARN */
+#define AIM_LOG_RL_SYSLOG_WARN AIM_LOG_OBJ_RL_SYSLOG_WARN
+
+
+/** SYSLOG_NOTICE -> OBJ_SYSLOG_NOTICE */
+#define AIM_LOG_SYSLOG_NOTICE AIM_LOG_OBJ_SYSLOG_NOTICE
+/** RL_SYSLOG_NOTICE -> OBJ_RL_SYSLOG_NOTICE */
+#define AIM_LOG_RL_SYSLOG_NOTICE AIM_LOG_OBJ_RL_SYSLOG_NOTICE
+
+
+/** SYSLOG_INFO -> OBJ_SYSLOG_INFO */
+#define AIM_LOG_SYSLOG_INFO AIM_LOG_OBJ_SYSLOG_INFO
+/** RL_SYSLOG_INFO -> OBJ_RL_SYSLOG_INFO */
+#define AIM_LOG_RL_SYSLOG_INFO AIM_LOG_OBJ_RL_SYSLOG_INFO
+
+
+/** SYSLOG_DEBUG -> OBJ_SYSLOG_DEBUG */
+#define AIM_LOG_SYSLOG_DEBUG AIM_LOG_OBJ_SYSLOG_DEBUG
+/** RL_SYSLOG_DEBUG -> OBJ_RL_SYSLOG_DEBUG */
+#define AIM_LOG_RL_SYSLOG_DEBUG AIM_LOG_OBJ_RL_SYSLOG_DEBUG
+
+
 #else
 
 /** MSG -> MOD_MSG */
@@ -983,6 +1167,46 @@ extern aim_log_t AIM_LOG_STRUCT;
 /** RL_FTRACE -> MOD_RL_FTRACE */
 #define AIM_LOG_RL_FTRACE AIM_LOG_MOD_RL_FTRACE
 
+/** SYSLOG_EMERG -> MOD_SYSLOG_EMERG */
+#define AIM_LOG_SYSLOG_EMERG AIM_LOG_MOD_SYSLOG_EMERG
+/** RL_SYSLOG_EMERG -> MOD_RL_SYSLOG_EMERG */
+#define AIM_LOG_RL_SYSLOG_EMERG AIM_LOG_MOD_RL_SYSLOG_EMERG
+
+/** SYSLOG_ALERT -> MOD_SYSLOG_ALERT */
+#define AIM_LOG_SYSLOG_ALERT AIM_LOG_MOD_SYSLOG_ALERT
+/** RL_SYSLOG_ALERT -> MOD_RL_SYSLOG_ALERT */
+#define AIM_LOG_RL_SYSLOG_ALERT AIM_LOG_MOD_RL_SYSLOG_ALERT
+
+/** SYSLOG_CRIT -> MOD_SYSLOG_CRIT */
+#define AIM_LOG_SYSLOG_CRIT AIM_LOG_MOD_SYSLOG_CRIT
+/** RL_SYSLOG_CRIT -> MOD_RL_SYSLOG_CRIT */
+#define AIM_LOG_RL_SYSLOG_CRIT AIM_LOG_MOD_RL_SYSLOG_CRIT
+
+/** SYSLOG_ERROR -> MOD_SYSLOG_ERROR */
+#define AIM_LOG_SYSLOG_ERROR AIM_LOG_MOD_SYSLOG_ERROR
+/** RL_SYSLOG_ERROR -> MOD_RL_SYSLOG_ERROR */
+#define AIM_LOG_RL_SYSLOG_ERROR AIM_LOG_MOD_RL_SYSLOG_ERROR
+
+/** SYSLOG_WARN -> MOD_SYSLOG_WARN */
+#define AIM_LOG_SYSLOG_WARN AIM_LOG_MOD_SYSLOG_WARN
+/** RL_SYSLOG_WARN -> MOD_RL_SYSLOG_WARN */
+#define AIM_LOG_RL_SYSLOG_WARN AIM_LOG_MOD_RL_SYSLOG_WARN
+
+/** SYSLOG_NOTICE -> MOD_SYSLOG_NOTICE */
+#define AIM_LOG_SYSLOG_NOTICE AIM_LOG_MOD_SYSLOG_NOTICE
+/** RL_SYSLOG_NOTICE -> MOD_RL_SYSLOG_NOTICE */
+#define AIM_LOG_RL_SYSLOG_NOTICE AIM_LOG_MOD_RL_SYSLOG_NOTICE
+
+/** SYSLOG_INFO -> MOD_SYSLOG_INFO */
+#define AIM_LOG_SYSLOG_INFO AIM_LOG_MOD_SYSLOG_INFO
+/** RL_SYSLOG_INFO -> MOD_RL_SYSLOG_INFO */
+#define AIM_LOG_RL_SYSLOG_INFO AIM_LOG_MOD_RL_SYSLOG_INFO
+
+/** SYSLOG_DEBUG -> MOD_SYSLOG_DEBUG */
+#define AIM_LOG_SYSLOG_DEBUG AIM_LOG_MOD_SYSLOG_DEBUG
+/** RL_SYSLOG_DEBUG -> MOD_RL_SYSLOG_DEBUG */
+#define AIM_LOG_RL_SYSLOG_DEBUG AIM_LOG_MOD_RL_SYSLOG_DEBUG
+
 #endif
 /* <auto.end.aim_common_log_macro(ALL).header> */
 
@@ -1002,6 +1226,49 @@ extern aim_log_t AIM_LOG_STRUCT;
     AIM_LOG_MOD_RL_COMMON(FTRACE, _rl, _time, "%s:EXIT " AIM_VA_ARGS_FIRST(__VA_ARGS__), __func__ AIM_VA_ARGS_REST(__VA_ARGS__))
 
 #endif /* AIM_LOG_MODULE_NAME */
+
+
+/* Syslog macros */
+#define AIM_SYSLOG_EMERG(_documentation, ...) \
+    AIM_LOG_SYSLOG_EMERG(__VA_ARGS__)
+#define AIM_SYSLOG_RL_EMERG(_documentation, ...) \
+    AIM_LOG_RL_SYSLOG_EMERG(__VA_ARGS__)
+
+#define AIM_SYSLOG_ALERT(_documentation, ...) \
+    AIM_LOG_SYSLOG_ALERT(__VA_ARGS__)
+#define AIM_SYSLOG_RL_ALERT(_documentation, ...) \
+    AIM_LOG_RL_SYSLOG_ALERT(__VA_ARGS__)
+
+#define AIM_SYSLOG_CRIT(_documentation, ...) \
+    AIM_LOG_SYSLOG_CRIT(__VA_ARGS__)
+#define AIM_SYSLOG_RL_CRIT(_documentation, ...) \
+    AIM_LOG_RL_SYSLOG_CRIT(__VA_ARGS__)
+
+#define AIM_SYSLOG_ERROR(_documentation, ...) \
+    AIM_LOG_SYSLOG_ERROR(__VA_ARGS__)
+#define AIM_SYSLOG_RL_ERROR(_documentation, ...) \
+    AIM_LOG_RL_SYSLOG_ERROR(__VA_ARGS__)
+
+#define AIM_SYSLOG_WARN(_documentation, ...) \
+    AIM_LOG_SYSLOG_WARN(__VA_ARGS__)
+#define AIM_SYSLOG_RL_WARN(_documentation, ...) \
+    AIM_LOG_RL_SYSLOG_WARN(__VA_ARGS__)
+
+#define AIM_SYSLOG_NOTICE(_documentation, ...) \
+    AIM_LOG_SYSLOG_NOTICE(__VA_ARGS__)
+#define AIM_SYSLOG_RL_NOTICE(_documentation, ...) \
+    AIM_LOG_RL_SYSLOG_NOTICE(__VA_ARGS__)
+
+#define AIM_SYSLOG_INFO(_documentation, ...) \
+    AIM_LOG_SYSLOG_INFO(__VA_ARGS__)
+#define AIM_SYSLOG_RL_INFO(_documentation, ...) \
+    AIM_LOG_RL_SYSLOG_INFO(__VA_ARGS__)
+
+#define AIM_SYSLOG_DEBUG(...) \
+    AIM_LOG_SYSLOG_DEBUG(__VA_ARGS__)
+#define AIM_SYSLOG_RL_DEBUG(...) \
+    AIM_LOG_RL_SYSLOG_DEBUG(__VA_ARGS__)
+
 
 /**
  * @brief Map a syslog level string to a set of flags and options
