@@ -549,18 +549,21 @@ class CEnumGenerator(CObjectGenerator):
 
         return s
 
-    def Header(self):
+    def SupportHeader(self):
         s = ""
-        s += self.Define() + "\n"
-
         if self.IsLinear():
             s += self.StringsMacro()
-
         s += self.EnumProtos()
         s += self.util.mapstruct.ExternTable(self.MapTableName())
         s += self.util.mapstruct.ExternTable(self.DescMapTableName())
+        return s
 
+    def Header(self):
+        s = ""
+        s += self.Define() + "\n"
+        s += self.SupportHeader();
         return s;
+
 
     def Source(self):
         s = ""
