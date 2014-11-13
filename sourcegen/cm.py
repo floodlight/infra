@@ -114,15 +114,16 @@ class ConfigManager:
                     # Specific object name
                     return [ name ]
 
-                # Append all keys and keep searching
-                for k in c.definitions[type_].keys():
+                for (k,v) in c.definitions[type_].iteritems():
                     if not k.startswith('__'):
-                        allList.append(k)
+                        if name == "ALL":
+                            allList.append(k)
+                        else:
+                            if 'tag' in v and name.startswith("tag:"):
+                                tag = name.split(":")[1]
+                                if v['tag'] == tag:
+                                    allList.append(k)
 
-        if name == "ALL":
-            return list(set(allList))
-        else:
-            return []
 
-
+        return list(set(allList))
 
