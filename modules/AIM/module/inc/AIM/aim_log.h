@@ -218,7 +218,11 @@ typedef struct aim_log_s {
  */
 #define AIM_LOG_BITS_BASELINE                                     \
     (AIM_LOG_BIT_FATAL + AIM_LOG_BIT_ERROR + AIM_LOG_BIT_WARN +   \
-     AIM_LOG_BIT_BUG + AIM_LOG_BIT_INTERNAL)
+     AIM_LOG_BIT_BUG + AIM_LOG_BIT_INTERNAL +                     \
+     AIM_LOG_BIT_SYSLOG_EMERG + AIM_LOG_BIT_SYSLOG_ALERT +        \
+     AIM_LOG_BIT_SYSLOG_CRIT + AIM_LOG_BIT_SYSLOG_ERROR +         \
+     AIM_LOG_BIT_SYSLOG_WARN + AIM_LOG_BIT_SYSLOG_NOTICE +        \
+     AIM_LOG_BIT_SYSLOG_INFO + AIM_LOG_BIT_SYSLOG_DEBUG)
 
 /**
  * Reasonable default log settings
