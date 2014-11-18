@@ -630,8 +630,8 @@ extern aim_log_t AIM_LOG_STRUCT;
             aim_log_common(AIM_LOG_STRUCT_POINTER, AIM_LOG_FLAG_##_flag,    \
                            _rl, _time,                                      \
                            __func__, __FILE__, __LINE__,                    \
-                           AIM_LOG_MODULE_NAME_STR AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 \
-                           ": " #_flag ": " AIM_VA_ARGS_FIRST(__VA_ARGS__) AIM_VA_ARGS_REST(__VA_ARGS__)); \
+                           "[" AIM_LOG_MODULE_NAME_STR "] " AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 \
+                           AIM_VA_ARGS_FIRST(__VA_ARGS__) AIM_VA_ARGS_REST(__VA_ARGS__)); \
         }                                                                   \
     } while (0)
 
@@ -653,7 +653,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     aim_log_custom(AIM_LOG_STRUCT_POINTER, _fid,                        \
                    _rl, _time,                                          \
                    __func__, __FILE__, __LINE__,                        \
-                   AIM_LOG_MODULE_NAME_STR AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 \
+                   "[" AIM_LOG_MODULE_NAME_STR "] " AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 \
                    ": " _fname ": " AIM_VA_ARGS_FIRST(__VA_ARGS__) AIM_VA_ARGS_REST(__VA_ARGS__))
 
 /**
@@ -672,8 +672,8 @@ extern aim_log_t AIM_LOG_STRUCT;
     aim_log_common(AIM_LOG_STRUCT_POINTER, AIM_LOG_FLAG_##_flag,        \
                    _rl, _time,                                          \
                    __func__, __FILE__, __LINE__,                        \
-                   AIM_LOG_MODULE_NAME_STR AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 "(%s)" \
-                   ": " #_flag ": " AIM_VA_ARGS_FIRST(__VA_ARGS__),  (_obj)->log_string AIM_VA_ARGS_REST(__VA_ARGS__))
+                   "[" AIM_LOG_MODULE_NAME_STR "] " AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 "(%s)" \
+                   AIM_VA_ARGS_FIRST(__VA_ARGS__),  (_obj)->log_string AIM_VA_ARGS_REST(__VA_ARGS__))
 
 
 /**
@@ -691,7 +691,7 @@ extern aim_log_t AIM_LOG_STRUCT;
     aim_log_custom(AIM_LOG_STRUCT_POINTER, _fid,                        \
                    _rl, _time,                                          \
                    __func__, __FILE__, __LINE__,                        \
-                   AIM_LOG_MODULE_NAME_STR AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 "(%s)" \
+                   "[" AIM_LOG_MODULE_NAME_STR "] " AIM_LOG_PREFIX1 AIM_LOG_PREFIX2 "(%s)" \
                    ": " _fname ": " AIM_VA_ARGS_FIRST(__VA_ARGS__),  (_obj)->log_string AIM_VA_ARGS_REST(__VA_ARGS__))
 
 
