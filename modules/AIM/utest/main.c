@@ -61,8 +61,8 @@ void test_logging(void)
     aim_logf_set_all("testlogf", test_logf, NULL);
 
 #define log_desc(level)                                                 \
-    AIM_SYSLOG_##level("docstring", "syslog test %s", #level);          \
-    AIM_SYSLOG_RL_##level("docstring", NULL, 0, "syslog rl test %s", #level);
+    AIM_SYSLOG_##level("humanformat", "docstring", "syslog test %s", #level); \
+    AIM_SYSLOG_RL_##level("humanformat", "docstring", NULL, 0, "syslog rl test %s", #level);
 
     LOG_MACROS;
 #undef log_desc

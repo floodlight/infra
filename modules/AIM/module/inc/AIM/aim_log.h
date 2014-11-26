@@ -1233,39 +1233,39 @@ extern aim_log_t AIM_LOG_STRUCT;
 
 
 /* Syslog macros */
-#define AIM_SYSLOG_EMERG(_documentation, ...) \
+#define AIM_SYSLOG_EMERG(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_SYSLOG_EMERG(__VA_ARGS__)
-#define AIM_SYSLOG_RL_EMERG(_documentation, ...) \
+#define AIM_SYSLOG_RL_EMERG(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_RL_SYSLOG_EMERG(__VA_ARGS__)
 
-#define AIM_SYSLOG_ALERT(_documentation, ...) \
+#define AIM_SYSLOG_ALERT(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_SYSLOG_ALERT(__VA_ARGS__)
-#define AIM_SYSLOG_RL_ALERT(_documentation, ...) \
+#define AIM_SYSLOG_RL_ALERT(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_RL_SYSLOG_ALERT(__VA_ARGS__)
 
-#define AIM_SYSLOG_CRIT(_documentation, ...) \
+#define AIM_SYSLOG_CRIT(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_SYSLOG_CRIT(__VA_ARGS__)
-#define AIM_SYSLOG_RL_CRIT(_documentation, ...) \
+#define AIM_SYSLOG_RL_CRIT(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_RL_SYSLOG_CRIT(__VA_ARGS__)
 
-#define AIM_SYSLOG_ERROR(_documentation, ...) \
+#define AIM_SYSLOG_ERROR(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_SYSLOG_ERROR(__VA_ARGS__)
-#define AIM_SYSLOG_RL_ERROR(_documentation, ...) \
+#define AIM_SYSLOG_RL_ERROR(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_RL_SYSLOG_ERROR(__VA_ARGS__)
 
-#define AIM_SYSLOG_WARN(_documentation, ...) \
+#define AIM_SYSLOG_WARN(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_SYSLOG_WARN(__VA_ARGS__)
-#define AIM_SYSLOG_RL_WARN(_documentation, ...) \
+#define AIM_SYSLOG_RL_WARN(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_RL_SYSLOG_WARN(__VA_ARGS__)
 
-#define AIM_SYSLOG_NOTICE(_documentation, ...) \
+#define AIM_SYSLOG_NOTICE(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_SYSLOG_NOTICE(__VA_ARGS__)
-#define AIM_SYSLOG_RL_NOTICE(_documentation, ...) \
+#define AIM_SYSLOG_RL_NOTICE(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_RL_SYSLOG_NOTICE(__VA_ARGS__)
 
-#define AIM_SYSLOG_INFO(_documentation, ...) \
+#define AIM_SYSLOG_INFO(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_SYSLOG_INFO(__VA_ARGS__)
-#define AIM_SYSLOG_RL_INFO(_documentation, ...) \
+#define AIM_SYSLOG_RL_INFO(_human_readable_format_str, _documentation, ...) \
     AIM_LOG_RL_SYSLOG_INFO(__VA_ARGS__)
 
 #define AIM_SYSLOG_DEBUG(...) \
