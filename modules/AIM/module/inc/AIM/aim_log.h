@@ -1232,46 +1232,138 @@ extern aim_log_t AIM_LOG_STRUCT;
 #endif /* AIM_LOG_MODULE_NAME */
 
 
+/**
+ * All messages sent through the AIM_SYSLOG mechanism are embedded as
+ * self-documenting strings in the compiled binary.
+ *
+ * The format of the string is as follows:
+ * AIM_SYSLOG_REFERENCE:{ python dictionary key/value pairs }
+ *
+ * The python dictionary contains the following keys:
+ *   module: The name of the module generating the message.
+ *   level: The SYSLOG level for the message.
+ *   file: The source file name.
+ *   line: The source line number.
+ *   format: The human-readable format string for the message.
+ *   doc: The message documentation.
+ *
+ * These self-documenting strings can be extracted from a binary using
+ * the infra/tools/asre.py script for autogenerating documentation.
+ *
+ */
+extern char* aim_syslog_reference;
+
+#define __PYTHON_KV(_key, _value)               \
+    "'" #_key "': \"\"\"" _value "\"\"\","
+
+#define __AIM_SYSLOG_REFERENCE_FINAL(_level, _h, _doc, _line)           \
+    aim_syslog_reference = "AIM_SYSLOG_REFERENCE:{" \
+        __PYTHON_KV(module, AIM_LOG_MODULE_NAME_STR) \
+        __PYTHON_KV(level, _level) \
+        __PYTHON_KV(file, __FILE__) \
+        __PYTHON_KV(line, #_line) \
+        __PYTHON_KV(format, _h)  \
+        __PYTHON_KV(doc, _doc) "}"
+
+#define __AIM_SYSLOG_REFERENCE_LINE(_level, _h, _doc, _line) __AIM_SYSLOG_REFERENCE_FINAL(_level, _h, _doc, _line)
+#define AIM_SYSLOG_REFERENCE(_level, _h, _doc) __AIM_SYSLOG_REFERENCE_LINE(#_level, _h, _doc, __LINE__)
+
+
 /* Syslog macros */
 #define AIM_SYSLOG_EMERG(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_SYSLOG_EMERG(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(EMERG,_human_readable_format_str, _documentation); \
+        AIM_LOG_SYSLOG_EMERG(__VA_ARGS__);                              \
+    } while(0)
+
 #define AIM_SYSLOG_RL_EMERG(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_RL_SYSLOG_EMERG(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(EMERG, _human_readable_format_str, _documentation); \
+        AIM_LOG_RL_SYSLOG_EMERG(__VA_ARGS__);                           \
+    } while(0)
 
 #define AIM_SYSLOG_ALERT(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_SYSLOG_ALERT(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(ALERT, _human_readable_format_str, _documentation); \
+        AIM_LOG_SYSLOG_ALERT(__VA_ARGS__);                              \
+    } while(0)
+
 #define AIM_SYSLOG_RL_ALERT(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_RL_SYSLOG_ALERT(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(ALERT, _human_readable_format_str, _documentation); \
+        AIM_LOG_RL_SYSLOG_ALERT(__VA_ARGS__);                           \
+    } while(0)
 
 #define AIM_SYSLOG_CRIT(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_SYSLOG_CRIT(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(CRIT, _human_readable_format_str, _documentation); \
+        AIM_LOG_SYSLOG_CRIT(__VA_ARGS__);                               \
+    } while(0)
+
+
 #define AIM_SYSLOG_RL_CRIT(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_RL_SYSLOG_CRIT(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(CRIT, _human_readable_format_str, _documentation); \
+        AIM_LOG_RL_SYSLOG_CRIT(__VA_ARGS__);                            \
+    } while(0)
 
 #define AIM_SYSLOG_ERROR(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_SYSLOG_ERROR(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(ERROR, _human_readable_format_str, _documentation); \
+        AIM_LOG_SYSLOG_ERROR(__VA_ARGS__);                              \
+    } while(0)
+
 #define AIM_SYSLOG_RL_ERROR(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_RL_SYSLOG_ERROR(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(ERROR, _human_readable_format_str, _documentation); \
+        AIM_LOG_RL_SYSLOG_ERROR(__VA_ARGS__);                           \
+    } while(0)
 
 #define AIM_SYSLOG_WARN(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_SYSLOG_WARN(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(WARN, _human_readable_format_str, _documentation); \
+        AIM_LOG_SYSLOG_WARN(__VA_ARGS__);                               \
+    } while(0)
+
 #define AIM_SYSLOG_RL_WARN(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_RL_SYSLOG_WARN(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(WARN, _human_readable_format_str, _documentation); \
+        AIM_LOG_RL_SYSLOG_WARN(__VA_ARGS__);                            \
+    } while(0)
 
 #define AIM_SYSLOG_NOTICE(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_SYSLOG_NOTICE(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(NOTICE, _human_readable_format_str, _documentation); \
+        AIM_LOG_SYSLOG_NOTICE(__VA_ARGS__);                             \
+    } while(0)
+
 #define AIM_SYSLOG_RL_NOTICE(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_RL_SYSLOG_NOTICE(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(NOTICE, _human_readable_format_str, _documentation); \
+        AIM_LOG_RL_SYSLOG_NOTICE(__VA_ARGS__);                          \
+    } while(0)
 
 #define AIM_SYSLOG_INFO(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_SYSLOG_INFO(__VA_ARGS__)
-#define AIM_SYSLOG_RL_INFO(_human_readable_format_str, _documentation, ...) \
-    AIM_LOG_RL_SYSLOG_INFO(__VA_ARGS__)
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(INFO, _human_readable_format_str, _documentation); \
+        AIM_LOG_SYSLOG_INFO(__VA_ARGS__);                               \
+    } while(0)
 
-#define AIM_SYSLOG_DEBUG(...) \
-    AIM_LOG_SYSLOG_DEBUG(__VA_ARGS__)
-#define AIM_SYSLOG_RL_DEBUG(...) \
-    AIM_LOG_RL_SYSLOG_DEBUG(__VA_ARGS__)
+#define AIM_SYSLOG_RL_INFO(_human_readable_format_str, _documentation, ...) \
+    do {                                                                \
+        AIM_SYSLOG_REFERENCE(INFO, _human_readable_format_str, _documentation); \
+        AIM_LOG_RL_SYSLOG_INFO(__VA_ARGS__);                            \
+    } while(0)
+
+#define AIM_SYSLOG_DEBUG(...)                                           \
+    do {                                                                \
+        AIM_LOG_SYSLOG_DEBUG(__VA_ARGS__);                              \
+    } while(0)
+
+#define AIM_SYSLOG_RL_DEBUG(...)                                        \
+    do {                                                                \
+        AIM_LOG_RL_SYSLOG_DEBUG(__VA_ARGS__);                           \
+    } while(0)
 
 
 /**

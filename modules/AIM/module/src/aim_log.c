@@ -181,7 +181,7 @@ aim_log_show(aim_log_t* lobj, aim_pvs_t* pvs)
 aim_pvs_t*
 aim_log_pvs_get(aim_log_t* lobj)
 {
-    return (lobj && lobj->logf == aim_pvs_logf) ? 
+    return (lobj && lobj->logf == aim_pvs_logf) ?
         (aim_pvs_t*) lobj->log_cookie : NULL;
 }
 
@@ -212,7 +212,7 @@ aim_log_pvs_set_all(aim_pvs_t* pvs)
 /**
  * Get the log function and cookie
  */
-void 
+void
 aim_logf_get(aim_log_t* lobj, aim_log_f* logf, void** cookie)
 {
     if(lobj) {
@@ -690,6 +690,11 @@ aim_log_syslog_level_map(const char *syslog_str, uint32_t *flags)
     return -1;
 }
 
+/**
+ * This variable is used as an assignment location for
+ * AIM SYSLOG meta documentation strings.
+ */
+char* aim_syslog_reference;
 
 /**************************************************************************//**
  *
