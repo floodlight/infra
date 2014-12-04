@@ -69,7 +69,7 @@ ops = ap.parse_args()
 if os.path.isdir(ops.target):
     for root, dirs, files in os.walk(ops.target):
         for f in files:
-            process_file("%s/%s" % (root, f))
+            process_file(os.path.join(root, f))
 else:
     process_file(ops.target)
 
