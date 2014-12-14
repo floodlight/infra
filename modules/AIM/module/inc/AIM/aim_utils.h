@@ -237,6 +237,43 @@ aim_is_pow2_u32(uint32_t x)
 }
 
 /**
+ * Set or clear a flag.
+ */
+#define AIM_FLAG_SET_VALUE(_flags, _flag, _value)           \
+    do {                                                    \
+        if(_value) {                                        \
+            (_flags) |= (_flag);                            \
+        }                                                   \
+        else {                                              \
+            (_flags) &= ~(_flag);                           \
+        }                                                   \
+    } while(0)
+
+#define AIM_FLAG_GET_VALUE(_flags, _flag)       \
+    ( ((_flags) & (_flag)) ? 1 : 0)
+
+/**
+ * Set a flag
+ */
+#define AIM_FLAG_SET(_flags, _flag) AIM_FLAG_SET_VALUE(_flags, _flag, 1)
+
+/**
+ * Clear a flag
+ */
+#define AIM_FLAG_CLR(_flags, _flag) AIM_FLAG_SET_VALUE(_flags, _flag, 0)
+
+/**
+ * Flag is set.
+ */
+#define AIM_FLAG_IS_SET(_flags, _flag) AIM_FLAG_GET_VALUE(_flags, _flag)
+
+/**
+ * Flag is not set.
+ */
+#define AIM_FLAG_NOT_SET(_flags, _flag) (!AIM_FLAG_IS_SET(_flags, _flag))
+
+
+/**
  * Return the truncated log(2) of x
  *
  * If x is not a power of 2 then the result will be rounded down.
