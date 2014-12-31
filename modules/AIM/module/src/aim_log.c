@@ -651,14 +651,26 @@ aim_log_syslog_level_map(const char *syslog_str, uint32_t *flags)
         return -1;
     }
 
+    /* Enable all syslog levels by default */
+    *flags = AIM_LOG_BIT_SYSLOG_EMERG;
+    *flags += AIM_LOG_BIT_SYSLOG_ALERT;
+    *flags += AIM_LOG_BIT_SYSLOG_CRIT;
+    *flags += AIM_LOG_BIT_SYSLOG_ERROR;
+    *flags += AIM_LOG_BIT_SYSLOG_WARN;
+    *flags += AIM_LOG_BIT_SYSLOG_NOTICE;
+    *flags += AIM_LOG_BIT_SYSLOG_INFO;
+    *flags += AIM_LOG_BIT_SYSLOG_DEBUG;
+
     /* Map string to level */
-    *flags = AIM_LOG_BIT_FATAL;
+    *flags += AIM_LOG_BIT_FATAL;
     *flags += AIM_LOG_BIT_MSG;
+    *flags += AIM_LOG_BIT_BUG;
     if (strcmp("emergencies", syslog_str) == 0) {
         return 0;
     }
 
     *flags += AIM_LOG_BIT_ERROR;
+    *flags += AIM_LOG_BIT_INTERNAL;
     if ((strcmp("alerts", syslog_str) == 0) ||
         (strcmp("critical", syslog_str) == 0) ||
         (strcmp("errors", syslog_str) == 0)) {
