@@ -31,6 +31,7 @@
 #include <string.h>
 #include <assert.h>
 #include <AIM/aim_rl.h>
+#include <AIM/aim_bitmap.h>
 
 #define AIM_LOG_MODULE_NAME aim_utest
 #include <AIM/aim_log.h>
@@ -40,7 +41,7 @@ AIM_LOG_STRUCT_DEFINE(1, 0xFFFFFFFF, NULL, 0);
 extern int utest_list(void);
 
 
-static void 
+static void
 test_logf(void* cookie, aim_log_flag_t flag, const char* str)
 {
     printf("%s: cookie 0x%p, flag %s, msg %s",
@@ -244,7 +245,86 @@ int aim_main(int argc, char* argv[])
         aim_free(rv);
     }
 
+    /* Test Bitmaps */
+    {
+        aim_bitmap_t* bmapZero = aim_bitmap_alloc(NULL, 128);
+        aim_bitmap_t* bmapAll = aim_bitmap_alloc(NULL, 128);
+        aim_bitmap_t* bmap1 = aim_bitmap_alloc(NULL, 128);
+        aim_bitmap_t* bmap2 = aim_bitmap_alloc(NULL, 128);
+        aim_bitmap_t* bmapTmp = aim_bitmap_alloc(NULL, 128);
+
+        int i;
+        for(i = 0; i < 128; i++) {
+            AIM_BITMAP_SET(bmapAll, i);
+            if(i & 1) {
+                AIM_BITMAP_SET(bmap1, i);
+            }
+            else {
+                AIM_BITMAP_SET(bmap2, i);
+            }
+        }
+
+        assert(AIM_BITMAP_WORD_GET32(bmapZero, 0) == 0x0);
+        assert(AIM_BITMAP_WORD_GET32(bmapZero, 1) == 0x0);
+        assert(AIM_BITMAP_WORD_GET32(bmapZero, 2) == 0x0);
+        assert(AIM_BITMAP_WORD_GET32(bmapZero, 3) == 0x0);
+
+        assert(AIM_BITMAP_WORD_GET32(bmapAll, 0) == 0xFFFFFFFF);
+        assert(AIM_BITMAP_WORD_GET32(bmapAll, 1) == 0xFFFFFFFF);
+        assert(AIM_BITMAP_WORD_GET32(bmapAll, 2) == 0xFFFFFFFF);
+        assert(AIM_BITMAP_WORD_GET32(bmapAll, 3) == 0xFFFFFFFF);
+
+        assert(AIM_BITMAP_WORD_GET32(bmap1, 0) == 0xAAAAAAAA);
+        assert(AIM_BITMAP_WORD_GET32(bmap1, 1) == 0xAAAAAAAA);
+        assert(AIM_BITMAP_WORD_GET32(bmap1, 2) == 0xAAAAAAAA);
+        assert(AIM_BITMAP_WORD_GET32(bmap1, 3) == 0xAAAAAAAA);
+
+        assert(AIM_BITMAP_WORD_GET32(bmap2, 0) == 0x55555555);
+        assert(AIM_BITMAP_WORD_GET32(bmap2, 1) == 0x55555555);
+        assert(AIM_BITMAP_WORD_GET32(bmap2, 2) == 0x55555555);
+        assert(AIM_BITMAP_WORD_GET32(bmap2, 3) == 0x55555555);
+
+        /*
+         * bmap1 & bmap2 == 0
+         */
+        AIM_BITMAP_ASSIGN(bmapTmp, bmap1);
+        AIM_BITMAP_AND(bmapTmp, bmap2);
+        assert(AIM_BITMAP_IS_EQ(bmapZero, bmapTmp));
+
+        /*
+         * bmap1 | bmap2 == all
+         */
+        AIM_BITMAP_ASSIGN(bmapTmp, bmap1);
+        AIM_BITMAP_OR(bmapTmp, bmap2);
+        assert(AIM_BITMAP_IS_EQ(bmapAll, bmapTmp));
+
+        /*
+         * bmap1 ^ bmap2 == all
+         */
+        AIM_BITMAP_ASSIGN(bmapTmp, bmap1);
+        AIM_BITMAP_XOR(bmapTmp, bmap2);
+        assert(AIM_BITMAP_IS_EQ(bmapAll, bmapTmp));
+
+        /*
+         * bmap1 ^ bmap1 == zero
+         * bmap2 ^ bmap2 == zero
+         */
+        AIM_BITMAP_ASSIGN(bmapTmp, bmap1);
+        AIM_BITMAP_XOR(bmapTmp, bmap1);
+        assert(AIM_BITMAP_IS_EQ(bmapZero, bmapTmp));
+        AIM_BITMAP_ASSIGN(bmapTmp, bmap2);
+        AIM_BITMAP_XOR(bmapTmp, bmap2);
+        assert(AIM_BITMAP_IS_EQ(bmapZero, bmapTmp));
+
+        aim_bitmap_free(bmapZero);
+        aim_bitmap_free(bmapAll);
+        aim_bitmap_free(bmap1);
+        aim_bitmap_free(bmap2);
+        aim_bitmap_free(bmapTmp);
+    }
+
+
     test_logging();
 
     return 0;
-}
+    }
