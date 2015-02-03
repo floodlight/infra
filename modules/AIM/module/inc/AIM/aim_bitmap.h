@@ -127,7 +127,7 @@ void aim_bitmap_free(aim_bitmap_t* bmap);
 #define AIM_BITMAP_BIT_POS(_bit)                        \
     ( (1L << (_bit % AIM_BITMAP_BITS_PER_WORD)) )
 
-/** Check if two bitmaps are of same size */ 
+/** Check if two bitmaps are of same size */
 #define AIM_BITMAP_SIZE_EQ(_hdr_a, _hdr_b)              \
     ( ((_hdr_a)->wordcount == (_hdr_b)->wordcount) &&   \
       ((_hdr_a)->maxbit == (_hdr_b)->maxbit) )
@@ -249,11 +249,11 @@ aim_bitmap_count(aim_bitmap_hdr_t* hdr)
 }
 
 /**
- * @brief Check if both bitmaps are equal. 
+ * @brief Check if both bitmaps are equal.
  * @param hdr_a The bitmap header.
  * @param hdr_b The bitmap header.
  */
-static inline int 
+static inline int
 aim_bitmap_is_eq(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 {
     if (!AIM_BITMAP_SIZE_EQ(hdr_a, hdr_b)) {
@@ -269,7 +269,7 @@ aim_bitmap_is_eq(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 }
 
 /**
- * @brief Assign second bitmap to first one. 
+ * @brief Assign second bitmap to first one.
  * @param hdr_a The bitmap header.
  * @param hdr_b The bitmap header.
  */
@@ -285,7 +285,7 @@ aim_bitmap_assign(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 }
 
 /**
- * @brief Performs binary OR operation on bitmaps. 
+ * @brief Performs binary OR operation on bitmaps.
  * @param hdr_a The bitmap header.
  * @param hdr_b The bitmap header.
  */
@@ -304,7 +304,28 @@ aim_bitmap_or(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 }
 
 /**
- * @brief Performs binary AND operation on bitmaps. 
+ * @brief Performs binary XOR operation on bitmaps.
+ * @param hdr_a The bitmap header.
+ * @param hdr_b The bitmap header.
+ */
+static inline void
+aim_bitmap_xor(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
+{
+    int idx = 0;
+
+    if (!AIM_BITMAP_SIZE_EQ(hdr_a, hdr_b)) {
+        AIM_DIE("Binary XOR on different size bitmaps");
+    }
+
+    for ( ; idx < hdr_a->wordcount; idx++) {
+        hdr_a->words[idx] ^= hdr_b->words[idx];
+    }
+}
+
+
+
+/**
+ * @brief Performs binary AND operation on bitmaps.
  * @param hdr_a The bitmap header.
  * @param hdr_b The bitmap header.
  */
@@ -415,7 +436,9 @@ aim_bitmap_is_intersecting(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 #define AIM_BITMAP_IS_INTERSECTING(_bmap_a, _bmap_b)     \
     aim_bitmap_is_intersecting(&((_bmap_a)->hdr), &((_bmap_b)->hdr))
 
-
+/** bitmap_a ^= _bmap_b */
+#define AIM_BITMAP_XOR(_bmap_a, _bmap_b)                        \
+    aim_bitmap_xor(&((_bmap_a)->hdr), &((_bmap_b)->hdr))
 
 
 #endif /* __AIM_BITMAP_H__ */
