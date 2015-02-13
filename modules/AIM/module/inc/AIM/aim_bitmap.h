@@ -409,7 +409,7 @@ aim_bitmap_is_intersecting(aim_bitmap_hdr_t* hdr_a, aim_bitmap_hdr_t* hdr_b)
 
 /** Iterate through all bits set in the bitmap */
 #define AIM_BITMAP_ITER(_bmap, _bit)                   \
-    for(_bit = 0; _bit <= (_bmap)->hdr.maxbit; _bit++) \
+    for(_bit = 0; _bit < (_bmap)->hdr.maxbit; _bit++)  \
         if(AIM_BITMAP_GET(_bmap, _bit))
 
 /** See if both bitmaps are equal */
