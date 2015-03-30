@@ -193,7 +193,9 @@ int aim_main(int argc, char* argv[])
             aim_printf(&aim_pvs_stdout, "second: %s", s);
             free(s);
             aim_pvs_buffer_reset(pvs);
+            assert(aim_pvs_buffer_size(pvs) == 0);
             s = aim_pvs_buffer_get(pvs);
+            assert(s == NULL);
             free(s);
             aim_pvs_destroy(pvs);
         }

@@ -198,6 +198,7 @@ aim_pvs_buffer_reset(aim_pvs_t* _pvs)
     }
 
     pvs->next = NULL;
+    pvs->size = 0;
 }
 
 void
