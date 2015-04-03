@@ -39,23 +39,13 @@
 #define AIM_STATUS_E_ARG -1
 #define AIM_STATUS_OK 0
 
-/*
- * Not necessary, but the aim_list conflicts with the list module
- * at the moment, so we don't want it exported yet.
- */
-typedef struct __aim_datatype_s {
-    aim_datatype_t dt;
-    /** Internal list management */
-    list_links_t links;
-} __aim_datatype_t;
-
 static LIST_DEFINE(aim_datatype_list__);
 
 #define DT_LIST_FOREACH(_ll) LIST_FOREACH(&aim_datatype_list__, _ll)
 #define DT_LIST_FOREACH_SAFE(_cur, _next) \
     LIST_FOREACH_SAFE(&aim_datatype_list__, _cur, _next)
 
-#define DT_ENTRY(_ll) (aim_datatype_t*) container_of(_ll, links, __aim_datatype_t)
+#define DT_ENTRY(_ll) container_of(_ll, links, aim_datatype_t)
 
 static int
 aim_datatype_equals__(const aim_datatype_t* dt, char c, const char* type)
@@ -111,7 +101,7 @@ aim_datatype_register(char c, const char* type, const char* desc,
 int
 aim_datatype_register_struct(aim_datatype_t* dt)
 {
-    __aim_datatype_t* ndt = NULL;
+    aim_datatype_t* ndt = NULL;
 
     if( (dt == NULL) || (dt->c == 0 && dt->type == NULL) ||
         (dt->from_str == NULL && dt->to_str == NULL) ) {
@@ -122,7 +112,7 @@ aim_datatype_register_struct(aim_datatype_t* dt)
     aim_datatype_unregister(dt->c, dt->type);
 
     ndt = aim_zmalloc(sizeof(*ndt));
-    ndt->dt = *dt;
+    *ndt = *dt;
     list_push(&aim_datatype_list__, &ndt->links);
     return 0;
 }
@@ -136,7 +126,7 @@ aim_datatype_unregister(char c, const char* type)
     DT_LIST_FOREACH(ll) {
         dt = DT_ENTRY(ll);
         if(aim_datatype_equals__(dt, c, type)) {
-            list_remove(&((__aim_datatype_t*)dt)->links);
+            list_remove(&dt->links);
             aim_free(dt);
             break;
         }
