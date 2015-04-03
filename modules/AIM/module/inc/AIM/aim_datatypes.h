@@ -175,6 +175,9 @@ int aim_datatype_register_fmap(char c, const char* type, const char* desc,
  *
  *****************************************************************************/
 typedef struct aim_datatype_s {
+    /** Internal list management */
+    list_links_t links;
+
     /** character shortcut */
     char c;
 
@@ -194,9 +197,6 @@ typedef struct aim_datatype_s {
 
     /** private cookie */
     void* cookie;
-
-    /** Internal list management */
-    list_links_t links;
 } aim_datatype_t;
 
 /**
