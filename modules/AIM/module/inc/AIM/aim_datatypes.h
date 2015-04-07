@@ -32,6 +32,7 @@
 #include <AIM/aim_map.h>
 #include <AIM/aim_valist.h>
 #include <AIM/aim_pvs.h>
+#include <AIM/aim_list.h>
 
 /** Return this if your datatype handler encounters an error. */
 #define AIM_DATATYPE_ERROR -1
@@ -174,6 +175,9 @@ int aim_datatype_register_fmap(char c, const char* type, const char* desc,
  *
  *****************************************************************************/
 typedef struct aim_datatype_s {
+    /** Internal list management */
+    list_links_t links;
+
     /** character shortcut */
     char c;
 
@@ -193,7 +197,6 @@ typedef struct aim_datatype_s {
 
     /** private cookie */
     void* cookie;
-
 } aim_datatype_t;
 
 /**
