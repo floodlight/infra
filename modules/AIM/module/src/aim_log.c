@@ -510,7 +510,8 @@ aim_log_output__(aim_log_t* l, aim_log_flag_t flag,
     if(l->options & (1 << AIM_LOG_OPTION_FUNC)) {
         aim_printf(msg, " [%s]", fname);
     }
-    if(l->options & (1 << AIM_LOG_OPTION_FILE_LINE)) {
+    if(l->options & (1 << AIM_LOG_OPTION_FILE_LINE)
+            || flag == AIM_LOG_FLAG_FATAL) {
         aim_printf(msg, " [%s:%d]", file, line);
     }
     aim_printf(msg, "\n");
