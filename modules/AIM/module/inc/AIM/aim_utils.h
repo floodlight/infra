@@ -184,8 +184,7 @@ extern int aim_modules_init(void);
         int _rv;                                                \
         _rv = (_expr);                                          \
         if(_rv < 0) {                                           \
-            AIM_LOG_FATAL("'%s' returned %d @%s:%d",            \
-                          #_expr, _rv, __FILE__, __LINE__);     \
+            AIM_LOG_FATAL("'%s' returned %d", #_expr, _rv);     \
             exit(1);                                            \
         }                                                       \
     } while(0)
