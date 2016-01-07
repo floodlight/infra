@@ -125,5 +125,5 @@ class ConfigManager:
                                     allList.append(k)
 
 
-        return list(set(allList))
+        return sorted(list(set(allList)))
 

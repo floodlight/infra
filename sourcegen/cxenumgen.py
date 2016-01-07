@@ -44,7 +44,8 @@ class CXEnumGenerator(CObjectGenerator):
     def Define(self):
 
         s = "#ifdef %s\n" % self.name
-        for (k,v) in self.members.iteritems():
+
+        for (k,v) in sorted(self.members.iteritems()):
             desc = v['desc'] if 'desc' in v else ""
             s += util.fcall(self.name, "%s, \"%s\"" % (k, desc)) + "\n"
         s += "#undef %s\n" % self.name
