@@ -51,9 +51,9 @@ typedef uint64_t (*aim_ratelimiter_monotonic_f)(void);
  */
 typedef struct aim_ratelimiter_s {
     /** Averate time units per event (inverse of the rate) */
-    uint32_t interval;
+    uint64_t interval;
     /** Depth of bucket. */
-    uint32_t burst;
+    uint64_t burst;
     /** Time in the future the bucket will become empty. */
     uint64_t empty_time;
     /** monotonic timer (optional) */
@@ -71,8 +71,8 @@ typedef struct aim_ratelimiter_s {
  * @note If you don't specify the timer, you must always pass the current
  * time to the ratelimiter functions.
  */
-void aim_ratelimiter_init(aim_ratelimiter_t* rl, uint32_t interval,
-                          uint32_t burst, aim_ratelimiter_monotonic_f monotonic);
+void aim_ratelimiter_init(aim_ratelimiter_t* rl, uint64_t interval,
+                          uint64_t burst, aim_ratelimiter_monotonic_f monotonic);
 
 /**
  * @brief Rate limit check.

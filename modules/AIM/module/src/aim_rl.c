@@ -27,8 +27,8 @@
 #include "aim_util.h"
 
 void
-aim_ratelimiter_init(aim_ratelimiter_t* rl, uint32_t interval,
-                     uint32_t burst, aim_ratelimiter_monotonic_f monotonic)
+aim_ratelimiter_init(aim_ratelimiter_t* rl, uint64_t interval,
+                     uint64_t burst, aim_ratelimiter_monotonic_f monotonic)
 {
     if(rl) {
         AIM_MEMSET(rl, 0, sizeof(*rl));
