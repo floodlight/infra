@@ -76,7 +76,7 @@ cdefs: &cdefs
     default: 0
 - AIM_CONFIG_INCLUDE_DAEMONIZE:
     doc: "Include daemon and restart support. (Requires posix)."
-    default: 0
+    default: 1
 - AIM_CONFIG_INCLUDE_PVS_SYSLOG:
     doc: "Include syslog pvs."
     default: 0
@@ -89,6 +89,9 @@ cdefs: &cdefs
 - AIM_CONFIG_PVS_SYSLOG_FACILITY_DEFAULT:
     doc: "Default facility for openlog()"
     default: LOG_DAEMON
+- AIM_CONFIG_INCLUDE_OS_POSIX:
+    doc: "Include support for the POSIX OS abstraction."
+    default: 1
 
 aim_error_types: &aim_error_types
 - none:
@@ -230,6 +233,3 @@ definitions:
     aim:
       objects:
         - strlcpy
-
-
-

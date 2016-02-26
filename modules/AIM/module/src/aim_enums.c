@@ -31,6 +31,162 @@
 #include <AIM/aim_error.h>
 
 /* <auto.start.enum(ALL).source> */
+aim_map_si_t aim_error_map[] =
+{
+    { "none", AIM_ERROR_NONE },
+    { "param", AIM_ERROR_PARAM },
+    { "not_found", AIM_ERROR_NOT_FOUND },
+    { "internal", AIM_ERROR_INTERNAL },
+    { NULL, 0 }
+};
+
+aim_map_si_t aim_error_desc_map[] =
+{
+    { "No error.", AIM_ERROR_NONE },
+    { "One of the function parameters was invalid.", AIM_ERROR_PARAM },
+    { "The requested object was not found.", AIM_ERROR_NOT_FOUND },
+    { "An unexpected internal error occurred.", AIM_ERROR_INTERNAL },
+    { NULL, 0 }
+};
+
+const char*
+aim_error_name(aim_error_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_error_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_error'";
+    }
+}
+
+int
+aim_error_value(const char* str, aim_error_t* e, int substr)
+{
+    int i;
+    AIM_REFERENCE(substr);
+    if(aim_map_si_s(&i, str, aim_error_map, 0)) {
+        /* Enum Found */
+        *e = i;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+const char*
+aim_error_desc(aim_error_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_error_desc_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_error'";
+    }
+}
+
+int
+aim_error_valid(aim_error_t e)
+{
+    return aim_map_si_i(NULL, e, aim_error_map, 0) ? 1 : 0;
+}
+
+
+aim_map_si_t aim_log_bit_map[] =
+{
+    { "msg", AIM_LOG_BIT_MSG },
+    { "fatal", AIM_LOG_BIT_FATAL },
+    { "error", AIM_LOG_BIT_ERROR },
+    { "warn", AIM_LOG_BIT_WARN },
+    { "info", AIM_LOG_BIT_INFO },
+    { "verbose", AIM_LOG_BIT_VERBOSE },
+    { "trace", AIM_LOG_BIT_TRACE },
+    { "internal", AIM_LOG_BIT_INTERNAL },
+    { "bug", AIM_LOG_BIT_BUG },
+    { "ftrace", AIM_LOG_BIT_FTRACE },
+    { "syslog_emerg", AIM_LOG_BIT_SYSLOG_EMERG },
+    { "syslog_alert", AIM_LOG_BIT_SYSLOG_ALERT },
+    { "syslog_crit", AIM_LOG_BIT_SYSLOG_CRIT },
+    { "syslog_error", AIM_LOG_BIT_SYSLOG_ERROR },
+    { "syslog_warn", AIM_LOG_BIT_SYSLOG_WARN },
+    { "syslog_notice", AIM_LOG_BIT_SYSLOG_NOTICE },
+    { "syslog_info", AIM_LOG_BIT_SYSLOG_INFO },
+    { "syslog_debug", AIM_LOG_BIT_SYSLOG_DEBUG },
+    { NULL, 0 }
+};
+
+aim_map_si_t aim_log_bit_desc_map[] =
+{
+    { "None", AIM_LOG_BIT_MSG },
+    { "None", AIM_LOG_BIT_FATAL },
+    { "None", AIM_LOG_BIT_ERROR },
+    { "None", AIM_LOG_BIT_WARN },
+    { "None", AIM_LOG_BIT_INFO },
+    { "None", AIM_LOG_BIT_VERBOSE },
+    { "None", AIM_LOG_BIT_TRACE },
+    { "None", AIM_LOG_BIT_INTERNAL },
+    { "None", AIM_LOG_BIT_BUG },
+    { "None", AIM_LOG_BIT_FTRACE },
+    { "None", AIM_LOG_BIT_SYSLOG_EMERG },
+    { "None", AIM_LOG_BIT_SYSLOG_ALERT },
+    { "None", AIM_LOG_BIT_SYSLOG_CRIT },
+    { "None", AIM_LOG_BIT_SYSLOG_ERROR },
+    { "None", AIM_LOG_BIT_SYSLOG_WARN },
+    { "None", AIM_LOG_BIT_SYSLOG_NOTICE },
+    { "None", AIM_LOG_BIT_SYSLOG_INFO },
+    { "None", AIM_LOG_BIT_SYSLOG_DEBUG },
+    { NULL, 0 }
+};
+
+const char*
+aim_log_bit_name(aim_log_bit_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_log_bit_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_log_bit'";
+    }
+}
+
+int
+aim_log_bit_value(const char* str, aim_log_bit_t* e, int substr)
+{
+    int i;
+    AIM_REFERENCE(substr);
+    if(aim_map_si_s(&i, str, aim_log_bit_map, 0)) {
+        /* Enum Found */
+        *e = i;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+const char*
+aim_log_bit_desc(aim_log_bit_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_log_bit_desc_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_log_bit'";
+    }
+}
+
+int
+aim_log_bit_valid(aim_log_bit_t e)
+{
+    return aim_map_si_i(NULL, e, aim_log_bit_map, 0) ? 1 : 0;
+}
+
+
 aim_map_si_t aim_log_flag_map[] =
 {
     { "msg", AIM_LOG_FLAG_MSG },
@@ -178,162 +334,6 @@ int
 aim_log_option_valid(aim_log_option_t e)
 {
     return aim_map_si_i(NULL, e, aim_log_option_map, 0) ? 1 : 0;
-}
-
-
-aim_map_si_t aim_log_bit_map[] =
-{
-    { "msg", AIM_LOG_BIT_MSG },
-    { "fatal", AIM_LOG_BIT_FATAL },
-    { "error", AIM_LOG_BIT_ERROR },
-    { "warn", AIM_LOG_BIT_WARN },
-    { "info", AIM_LOG_BIT_INFO },
-    { "verbose", AIM_LOG_BIT_VERBOSE },
-    { "trace", AIM_LOG_BIT_TRACE },
-    { "internal", AIM_LOG_BIT_INTERNAL },
-    { "bug", AIM_LOG_BIT_BUG },
-    { "ftrace", AIM_LOG_BIT_FTRACE },
-    { "syslog_emerg", AIM_LOG_BIT_SYSLOG_EMERG },
-    { "syslog_alert", AIM_LOG_BIT_SYSLOG_ALERT },
-    { "syslog_crit", AIM_LOG_BIT_SYSLOG_CRIT },
-    { "syslog_error", AIM_LOG_BIT_SYSLOG_ERROR },
-    { "syslog_warn", AIM_LOG_BIT_SYSLOG_WARN },
-    { "syslog_notice", AIM_LOG_BIT_SYSLOG_NOTICE },
-    { "syslog_info", AIM_LOG_BIT_SYSLOG_INFO },
-    { "syslog_debug", AIM_LOG_BIT_SYSLOG_DEBUG },
-    { NULL, 0 }
-};
-
-aim_map_si_t aim_log_bit_desc_map[] =
-{
-    { "None", AIM_LOG_BIT_MSG },
-    { "None", AIM_LOG_BIT_FATAL },
-    { "None", AIM_LOG_BIT_ERROR },
-    { "None", AIM_LOG_BIT_WARN },
-    { "None", AIM_LOG_BIT_INFO },
-    { "None", AIM_LOG_BIT_VERBOSE },
-    { "None", AIM_LOG_BIT_TRACE },
-    { "None", AIM_LOG_BIT_INTERNAL },
-    { "None", AIM_LOG_BIT_BUG },
-    { "None", AIM_LOG_BIT_FTRACE },
-    { "None", AIM_LOG_BIT_SYSLOG_EMERG },
-    { "None", AIM_LOG_BIT_SYSLOG_ALERT },
-    { "None", AIM_LOG_BIT_SYSLOG_CRIT },
-    { "None", AIM_LOG_BIT_SYSLOG_ERROR },
-    { "None", AIM_LOG_BIT_SYSLOG_WARN },
-    { "None", AIM_LOG_BIT_SYSLOG_NOTICE },
-    { "None", AIM_LOG_BIT_SYSLOG_INFO },
-    { "None", AIM_LOG_BIT_SYSLOG_DEBUG },
-    { NULL, 0 }
-};
-
-const char*
-aim_log_bit_name(aim_log_bit_t e)
-{
-    const char* name;
-    if(aim_map_si_i(&name, e, aim_log_bit_map, 0)) {
-        return name;
-    }
-    else {
-        return "-invalid value for enum type 'aim_log_bit'";
-    }
-}
-
-int
-aim_log_bit_value(const char* str, aim_log_bit_t* e, int substr)
-{
-    int i;
-    AIM_REFERENCE(substr);
-    if(aim_map_si_s(&i, str, aim_log_bit_map, 0)) {
-        /* Enum Found */
-        *e = i;
-        return 0;
-    }
-    else {
-        return -1;
-    }
-}
-
-const char*
-aim_log_bit_desc(aim_log_bit_t e)
-{
-    const char* name;
-    if(aim_map_si_i(&name, e, aim_log_bit_desc_map, 0)) {
-        return name;
-    }
-    else {
-        return "-invalid value for enum type 'aim_log_bit'";
-    }
-}
-
-int
-aim_log_bit_valid(aim_log_bit_t e)
-{
-    return aim_map_si_i(NULL, e, aim_log_bit_map, 0) ? 1 : 0;
-}
-
-
-aim_map_si_t aim_error_map[] =
-{
-    { "none", AIM_ERROR_NONE },
-    { "param", AIM_ERROR_PARAM },
-    { "not_found", AIM_ERROR_NOT_FOUND },
-    { "internal", AIM_ERROR_INTERNAL },
-    { NULL, 0 }
-};
-
-aim_map_si_t aim_error_desc_map[] =
-{
-    { "No error.", AIM_ERROR_NONE },
-    { "One of the function parameters was invalid.", AIM_ERROR_PARAM },
-    { "The requested object was not found.", AIM_ERROR_NOT_FOUND },
-    { "An unexpected internal error occurred.", AIM_ERROR_INTERNAL },
-    { NULL, 0 }
-};
-
-const char*
-aim_error_name(aim_error_t e)
-{
-    const char* name;
-    if(aim_map_si_i(&name, e, aim_error_map, 0)) {
-        return name;
-    }
-    else {
-        return "-invalid value for enum type 'aim_error'";
-    }
-}
-
-int
-aim_error_value(const char* str, aim_error_t* e, int substr)
-{
-    int i;
-    AIM_REFERENCE(substr);
-    if(aim_map_si_s(&i, str, aim_error_map, 0)) {
-        /* Enum Found */
-        *e = i;
-        return 0;
-    }
-    else {
-        return -1;
-    }
-}
-
-const char*
-aim_error_desc(aim_error_t e)
-{
-    const char* name;
-    if(aim_map_si_i(&name, e, aim_error_desc_map, 0)) {
-        return name;
-    }
-    else {
-        return "-invalid value for enum type 'aim_error'";
-    }
-}
-
-int
-aim_error_valid(aim_error_t e)
-{
-    return aim_map_si_i(NULL, e, aim_error_map, 0) ? 1 : 0;
 }
 
 
