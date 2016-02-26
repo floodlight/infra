@@ -90,7 +90,6 @@ cdefs: &cdefs
     doc: "Default facility for openlog()"
     default: LOG_DAEMON
 
-
 aim_error_types: &aim_error_types
 - none:
     value: 0
@@ -146,6 +145,22 @@ aim_log_bits: &aim_log_bits
 - syslog_info:    (1 << AIM_LOG_FLAG_SYSLOG_INFO)
 - syslog_debug:   (1 << AIM_LOG_FLAG_SYSLOG_DEBUG)
 
+
+aim_log_handler_options: &aim_log_handler_options
+- set_all
+- to_dbglog
+- to_syslog
+- to_stdout
+- to_stderr
+
+aim_log_handler_flags: &aim_log_handler_flags
+- set_all:          (1 << AIM_LOG_HANDLER_OPTION_SET_ALL)
+- to_dbglog:        (1 << AIM_LOG_HANDLER_OPTION_TO_DBGLOG)
+- to_syslog:        (1 << AIM_LOG_HANDLER_OPTION_TO_SYSLOG)
+- to_stdout:        (1 << AIM_LOG_HANDLER_OPTION_TO_STDOUT)
+- to_stderr:        (1 << AIM_LOG_HANDLER_OPTION_TO_STDERR)
+
+
 definitions:
   cdefs:
     AIM_CONFIG_HEADER:
@@ -181,6 +196,13 @@ definitions:
 
     aim_error:
       members: *aim_error_types
+
+    aim_log_handler_option:
+      members: *aim_log_handler_options
+
+    aim_log_handler_flag:
+      linear: false
+      members: *aim_log_handler_flags
 
   portingmacro:
     AIM:
