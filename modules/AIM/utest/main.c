@@ -328,5 +328,10 @@ int aim_main(int argc, char* argv[])
 
     test_logging();
 
+    {
+        extern int aim_os_test(void);
+        aim_os_test();
+    }
+
     return 0;
     }
