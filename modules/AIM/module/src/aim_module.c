@@ -25,15 +25,18 @@
  *****************************************************************************/
 #include <AIM/aim_config.h>
 #include <AIM/aim_datatypes.h>
+#include <AIM/aim_log_handler.h>
 
 void
 __aim_module_init__(void)
 {
     aim_datatypes_init();
+    aim_log_handler_init();
 }
 
 void
 __aim_module_denit__(void)
 {
+    aim_log_handler_denit();
     aim_datatypes_denit();
 }

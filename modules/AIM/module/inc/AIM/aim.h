@@ -47,6 +47,7 @@
 #include <AIM/aim_bitmap.h>
 #include <AIM/aim_daemon.h>
 #include <AIM/aim_memory.h>
+#include <AIM/aim_log_handler.h>
 
 #endif /* __AIM_H__ */
 /*@}*/

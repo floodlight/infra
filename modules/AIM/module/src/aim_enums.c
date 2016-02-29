@@ -273,6 +273,128 @@ aim_log_flag_desc(aim_log_flag_t e)
 }
 
 
+aim_map_si_t aim_log_handler_flag_map[] =
+{
+    { "to_dbglog", AIM_LOG_HANDLER_FLAG_TO_DBGLOG },
+    { "to_syslog", AIM_LOG_HANDLER_FLAG_TO_SYSLOG },
+    { "to_stdout", AIM_LOG_HANDLER_FLAG_TO_STDOUT },
+    { "to_stderr", AIM_LOG_HANDLER_FLAG_TO_STDERR },
+    { NULL, 0 }
+};
+
+aim_map_si_t aim_log_handler_flag_desc_map[] =
+{
+    { "None", AIM_LOG_HANDLER_FLAG_TO_DBGLOG },
+    { "None", AIM_LOG_HANDLER_FLAG_TO_SYSLOG },
+    { "None", AIM_LOG_HANDLER_FLAG_TO_STDOUT },
+    { "None", AIM_LOG_HANDLER_FLAG_TO_STDERR },
+    { NULL, 0 }
+};
+
+const char*
+aim_log_handler_flag_name(aim_log_handler_flag_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_log_handler_flag_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_log_handler_flag'";
+    }
+}
+
+int
+aim_log_handler_flag_value(const char* str, aim_log_handler_flag_t* e, int substr)
+{
+    int i;
+    AIM_REFERENCE(substr);
+    if(aim_map_si_s(&i, str, aim_log_handler_flag_map, 0)) {
+        /* Enum Found */
+        *e = i;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+const char*
+aim_log_handler_flag_desc(aim_log_handler_flag_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_log_handler_flag_desc_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_log_handler_flag'";
+    }
+}
+
+int
+aim_log_handler_flag_valid(aim_log_handler_flag_t e)
+{
+    return aim_map_si_i(NULL, e, aim_log_handler_flag_map, 0) ? 1 : 0;
+}
+
+
+aim_map_si_t aim_log_handler_option_map[] =
+{
+    { "to_dbglog", AIM_LOG_HANDLER_OPTION_TO_DBGLOG },
+    { "to_syslog", AIM_LOG_HANDLER_OPTION_TO_SYSLOG },
+    { "to_stdout", AIM_LOG_HANDLER_OPTION_TO_STDOUT },
+    { "to_stderr", AIM_LOG_HANDLER_OPTION_TO_STDERR },
+    { NULL, 0 }
+};
+
+aim_map_si_t aim_log_handler_option_desc_map[] =
+{
+    { "None", AIM_LOG_HANDLER_OPTION_TO_DBGLOG },
+    { "None", AIM_LOG_HANDLER_OPTION_TO_SYSLOG },
+    { "None", AIM_LOG_HANDLER_OPTION_TO_STDOUT },
+    { "None", AIM_LOG_HANDLER_OPTION_TO_STDERR },
+    { NULL, 0 }
+};
+
+const char*
+aim_log_handler_option_name(aim_log_handler_option_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_log_handler_option_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_log_handler_option'";
+    }
+}
+
+int
+aim_log_handler_option_value(const char* str, aim_log_handler_option_t* e, int substr)
+{
+    int i;
+    AIM_REFERENCE(substr);
+    if(aim_map_si_s(&i, str, aim_log_handler_option_map, 0)) {
+        /* Enum Found */
+        *e = i;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
+const char*
+aim_log_handler_option_desc(aim_log_handler_option_t e)
+{
+    const char* name;
+    if(aim_map_si_i(&name, e, aim_log_handler_option_desc_map, 0)) {
+        return name;
+    }
+    else {
+        return "-invalid value for enum type 'aim_log_handler_option'";
+    }
+}
+
+
 aim_map_si_t aim_log_option_map[] =
 {
     { "enable", AIM_LOG_OPTION_ENABLE },

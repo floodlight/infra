@@ -209,7 +209,7 @@ struct aim_pvs_s;
 
 
 #ifndef AIM_CONFIG_INCLUDE_DAEMONIZE
-#define AIM_CONFIG_INCLUDE_DAEMONIZE 0
+#define AIM_CONFIG_INCLUDE_DAEMONIZE 1
 #endif
 
 /**
