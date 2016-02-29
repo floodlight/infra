@@ -16,19 +16,7 @@
 # License.
 #
 ################################################################
-include ../../../init.mk
-
-MODULE := AIM_utest
-TEST_MODULE :=  AIM
-
-GLOBAL_CFLAGS += -DAIM_CONFIG_INCLUDE_POSIX=1
-GLOBAL_CFLAGS += -DAIM_CONFIG_INCLUDE_MAIN=1
-
-GLOBAL_LINK_LIBS += -lpthread -lrt
-PEDANTIC := 1
-
-include $(BUILDER)/build-unit-test.mk
-
-
-
+LIBRARY := AIM_posix
+$(LIBRARY)_SUBDIR := $(dir $(lastword $(MAKEFILE_LIST)))
+include $(BUILDER)/lib.mk
 

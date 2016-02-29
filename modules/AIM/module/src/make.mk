@@ -25,6 +25,6 @@
 #
 ###############################################################################
 LIBRARY := AIM
-AIM_SUBDIR := $(dir $(lastword $(MAKEFILE_LIST)))
+$(LIBRARY)_SUBDIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(BUILDER)/lib.mk
 

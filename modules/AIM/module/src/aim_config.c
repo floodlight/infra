@@ -142,6 +142,11 @@ aim_config_settings_t aim_config_settings[] =
 #else
 { AIM_CONFIG_PVS_SYSLOG_FACILITY_DEFAULT(__aim_config_STRINGIFY_NAME), "__undefined__" },
 #endif
+#ifdef AIM_CONFIG_INCLUDE_OS_POSIX
+    { __aim_config_STRINGIFY_NAME(AIM_CONFIG_INCLUDE_OS_POSIX), __aim_config_STRINGIFY_VALUE(AIM_CONFIG_INCLUDE_OS_POSIX) },
+#else
+{ AIM_CONFIG_INCLUDE_OS_POSIX(__aim_config_STRINGIFY_NAME), "__undefined__" },
+#endif
     { NULL, NULL }
 };
 #undef __aim_config_STRINGIFY_VALUE

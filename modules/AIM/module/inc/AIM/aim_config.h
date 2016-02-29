@@ -252,6 +252,16 @@ struct aim_pvs_s;
 #define AIM_CONFIG_PVS_SYSLOG_FACILITY_DEFAULT LOG_DAEMON
 #endif
 
+/**
+ * AIM_CONFIG_INCLUDE_OS_POSIX
+ *
+ * Include support for the POSIX OS abstraction. */
+
+
+#ifndef AIM_CONFIG_INCLUDE_OS_POSIX
+#define AIM_CONFIG_INCLUDE_OS_POSIX 1
+#endif
+
 
 
 /**
