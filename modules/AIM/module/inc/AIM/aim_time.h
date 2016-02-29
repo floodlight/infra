@@ -39,7 +39,7 @@ typedef uint64_t aim_time_t;
 uint64_t aim_time_monotonic(void);
 
 /**
- * @brief Current time in ms.
+ * @brief Current time in us.
  */
 uint64_t aim_time_realtime(void);
 
