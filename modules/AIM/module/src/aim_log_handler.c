@@ -262,6 +262,7 @@ aim_log_handler_basic_init_all(const char* ident,
 
     basic_handler__ = aim_log_handler_create(&config);
     aim_logf_set_all("{aim_log_handler}", aim_log_handler_logf, basic_handler__);
+    aim_log_option_set_all(AIM_LOG_OPTION_TIMESTAMP, 0);
     return 0;
 }
 
