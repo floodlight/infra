@@ -111,12 +111,12 @@ void aim_log_handler_logf(void* cookie, aim_log_flag_t flag, const char* str);
  * @param max_debug_count  Maximum number of rotated debug logs.
  *
  * @note This is designed to be a simple and generic initialization
- * for both daemonized and console-based clients. It will initialize
+ * for both daemonized and console-based clients.
  */
 int aim_log_handler_basic_init_all(const char* ident,
-                                    const char* debug_log_file,
-                                    int max_debug_log_size,
-                                    int max_debug_logs);
+                                   const char* debug_log_file,
+                                   int max_debug_log_size,
+                                   int max_debug_logs);
 
 /**
  * @brief Deinitialize basic log handling support.

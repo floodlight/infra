@@ -122,6 +122,9 @@ rotate_debug_log__(aim_log_handler_t handler)
             fclose(handler->debug_fp);
             rename(handler->config.debug_log_name, dst);
             handler->debug_fp = fopen(handler->config.debug_log_name, "a");
+
+            aim_free(src);
+            aim_free(dst);
         }
     }
 }
@@ -270,5 +273,3 @@ aim_log_handler_basic_denit_all(void)
     aim_log_handler_destroy(basic_handler__);
     basic_handler__ = NULL;
 }
-
-
