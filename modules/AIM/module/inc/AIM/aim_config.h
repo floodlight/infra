@@ -205,11 +205,11 @@ struct aim_pvs_s;
 /**
  * AIM_CONFIG_INCLUDE_DAEMONIZE
  *
- * Include daemon and restart support. (Requires posix). */
+ * Include daemon and restart support. Requires AIM_CONFIG_INCLUDE_MAIN and POSIX. */
 
 
 #ifndef AIM_CONFIG_INCLUDE_DAEMONIZE
-#define AIM_CONFIG_INCLUDE_DAEMONIZE 1
+#define AIM_CONFIG_INCLUDE_DAEMONIZE AIM_CONFIG_INCLUDE_MAIN
 #endif
 
 /**
