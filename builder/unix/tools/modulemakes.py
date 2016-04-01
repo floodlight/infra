@@ -82,6 +82,7 @@ s = """
 for p in patterns:
     for f in found[p]:
         root = os.path.abspath(f['root'])
+        root = root.replace(os.path.abspath(ops.root)+"/", "$(%s_BASEDIR)" % (ops.name))
         root = root.replace(os.path.abspath(ops.root), "$(%s_BASEDIR)" % (ops.name))
         name = f['file']
         s += "include %s/%s\n" % (root, name)
