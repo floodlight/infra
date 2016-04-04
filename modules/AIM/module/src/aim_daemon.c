@@ -234,26 +234,44 @@ aim_daemonize(aim_daemon_config_t* config,
      * Set a new working directory, if specified.
      */
     if(config && config->wd) {
-        chdir(config->wd);
+        if (chdir(config->wd) < 0) {
+            perror("chdir");
+            exit(1);
+        }
     }
 
     /*
      * Reopen stdin as /dev/null
      */
-    freopen("/dev/null", "r", stdin);
+    if (freopen("/dev/null", "r", stdin) == NULL) {
+        perror("freopen(stdin)");
+        exit(1);
+    }
 
     if(config && config->stdlog != NULL) {
         /* stdout and stderr should go to the given file. */
         daemon_dbg__("opening %s as new stdout/stderr", config->stdlog);
         unlink(config->stdlog);
-        freopen(config->stdlog, "w", stdout);
-        freopen(config->stdlog, "w", stderr);
+        if (freopen(config->stdlog, "w", stdout) == NULL) {
+            perror("freopen(stdout)");
+            exit(1);
+        }
+        if (freopen(config->stdlog, "w", stderr) == NULL) {
+            perror("freopen(stderr)");
+            exit(1);
+        }
     }
     else {
         /* stdout and stderr should go to /dev/null as well. */
         daemon_dbg__("opening /dev/null as new stdout/stderr");
-        freopen("/dev/null", "w", stdout);
-        freopen("/dev/null", "w", stderr);
+        if (freopen("/dev/null", "w", stdout) == NULL) {
+            perror("freopen(stdout)");
+            exit(1);
+        }
+        if (freopen("/dev/null", "w", stderr) == NULL) {
+            perror("freopen(stderr)");
+            exit(1);
+        }
     }
 
 
