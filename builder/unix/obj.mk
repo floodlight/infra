@@ -28,12 +28,12 @@
 # TARGET is specified by the calling makefile.
 #
 ifndef $(TARGET)_SRCS
-$(TARGET)_SRCS := $(wildcard $($(TARGET)_SUBDIR)/*.c)
+$(TARGET)_SRCS := $(wildcard $($(TARGET)_SUBDIR)*.c)
 endif
 
 $(TARGET)_LSRCS := $(notdir $($(TARGET)_SRCS))
 $(TARGET)_LOBJS := $(addsuffix .o, $(basename $($(TARGET)_LSRCS)))
-$(TARGET)_OBJS := $(addprefix $(OBJECT_DIR)/$($(TARGET)_SUBDIR)/, $($(TARGET)_LOBJS)) $(EXTRA_$(TARGET)_OBJS)
+$(TARGET)_OBJS := $(addprefix $(OBJECT_DIR)$($(TARGET)_SUBDIR), $($(TARGET)_LOBJS)) $(EXTRA_$(TARGET)_OBJS)
 
 ALL_TARGETS := $(ALL_TARGETS) $(TARGET)
 
@@ -48,7 +48,7 @@ include $(TOOLCHAIN_DIR)/obj.mk
 # Add a rule to build all objects into the object directory based on
 # their relative path.
 #
-$($(TARGET)_SUBDIR)/%.o: $(OBJECT_DIR)/$($(TARGET)_SUBDIR)/%.o
+$($(TARGET)_SUBDIR)%.o: $(OBJECT_DIR)$($(TARGET)_SUBDIR)%.o
 
 
 #

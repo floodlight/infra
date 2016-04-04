@@ -26,7 +26,7 @@ ifdef OBJECT_DIR
 
 THIS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
-MAKE_DIR=$(OBJECT_DIR)/$($(TARGET)_SUBDIR)
+MAKE_DIR=$(OBJECT_DIR)$($(TARGET)_SUBDIR)
 include $(BUILDER)/makedir.mk
 
 ifndef GCC
@@ -105,14 +105,14 @@ endif
 
 # Rule to build object files from c files for this target.
 # Note that we also generate dependencies automatically with -MD
-$(OBJECT_DIR)/$($(TARGET)_SUBDIR)/%.o: $($(TARGET)_SUBDIR)/%.c
+$(OBJECT_DIR)$($(TARGET)_SUBDIR)%.o: $($(TARGET)_SUBDIR)%.c
 	@echo "    Compiling$(CINFO): $(TARGET)::$(notdir $<)"
 	$(VERBOSE) $(CCACHE) $(GCC) $(DEBUG_FLAGS) $(COVERAGE_FLAGS) $(ANALYZE_FLAGS) -I. $($(TARGET)_INCLUDES) $($(TARGET)_CFLAGS) $(GLOBAL_INCLUDES) $(GLOBAL_CFLAGS) $(GCC_PEDANTIC_FLAGS) $(GCC_FLAGS) $(GCC_WARNING_FLAGS) -MD -c $< -o $@
 
 # Dependecies Files for these targets
 $(TARGET)_DEPS := $($(TARGET)_OBJS:%.o=%.d)
 
-$(OBJECT_DIR)/$($(TARGET)_SUBDIR)/%.o: TARGET:=$(TARGET)
+$(OBJECT_DIR)$($(TARGET)_SUBDIR)%.o: TARGET:=$(TARGET)
 
 endif
 
