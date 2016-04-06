@@ -270,14 +270,17 @@ class GModuleModuleMake(ModuleMakefile):
 ###############################################################################
 
 class GModuleMake(ModuleMakefile):
+    INIT_MK="../../init.mk"
+
     def finit(self):
         self.fname = "%(MODULE_BASE_DIR)s/Makefile"
+        config = "include %s" % self.INIT_MK
         self.body=(
-"""include ../../init.mk
+config + """
 MODULE := %(MODULE_NAME)s
 AUTOMODULE := %(MODULE_NAME)s
 include $(BUILDER)/definemodule.mk
-""")
+""" )
 
 ###############################################################################
 class GModuleSrcMake(ModuleMakefile):
@@ -577,20 +580,23 @@ The documentation overview for this module should go here.
 class GModuleDoxyFile(ModuleFile):
     def finit(self):
         self.fname = "%(MODULE_BASE_DIR)s/%(MODULE_NAME)s.doxy" % self.__dict__
-        body = subprocess.check_output(["/usr/bin/doxygen", "-g", "-"])
-        body = body.replace("%", " percent");
-        body = body.replace("PROJECT_NAME           = \"My Project\"",
-                          "PROJECT_NAME           = \"%(MODULE_NAME)s\"")
-        body = body.replace("PROJECT_BRIEF          =",
-                          "PROJECT_BRIEF          = \"%(MODULE_DESC)s\"")
-        body = body.replace("OUTPUT_DIRECTORY       =",
-                          "OUTPUT_DIRECTORY       = doc")
-        body = body.replace("OPTIMIZE_OUTPUT_FOR_C  = NO",
-                          "OPTIMIZE_OUTPUT_FOR_C  = YES")
-        body = body.replace("RECURSIVE              = NO",
-                          "RECURSIVE              = YES")
-        body = body.replace("INPUT                  =",
-                            "INPUT                  = module/inc")
+        if os.path.exists('/usr/bin/doxygen'):
+            body = subprocess.check_output(["/usr/bin/doxygen", "-g", "-"])
+            body = body.replace("%", " percent");
+            body = body.replace("PROJECT_NAME           = \"My Project\"",
+                              "PROJECT_NAME           = \"%(MODULE_NAME)s\"")
+            body = body.replace("PROJECT_BRIEF          =",
+                              "PROJECT_BRIEF          = \"%(MODULE_DESC)s\"")
+            body = body.replace("OUTPUT_DIRECTORY       =",
+                              "OUTPUT_DIRECTORY       = doc")
+            body = body.replace("OPTIMIZE_OUTPUT_FOR_C  = NO",
+                              "OPTIMIZE_OUTPUT_FOR_C  = YES")
+            body = body.replace("RECURSIVE              = NO",
+                              "RECURSIVE              = YES")
+            body = body.replace("INPUT                  =",
+                                "INPUT                  = module/inc")
+        else:
+            body = ""
         self.body = body
 
 
@@ -607,12 +613,12 @@ class GModuleDoxyFile(ModuleFile):
 # module repository in your repositories integration script.
 #
 class ModuleUnitTestTargetMake(ModuleMakefile):
-
+    INIT_MK="../../../init.mk"
     def finit(self):
         self.fname = "%(MODULE_UNIT_TEST_DIR)s/Makefile"
+        config = "include %s" % self.INIT_MK
         self.body=(
-"""
-include ../../../init.mk
+config + """
 MODULE := %(MODULE_NAME)s_utest
 TEST_MODULE := %(MODULE_NAME)s
 DEPENDMODULES := AIM
