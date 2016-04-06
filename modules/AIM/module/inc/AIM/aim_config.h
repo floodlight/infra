@@ -314,6 +314,26 @@ int aim_config_show(struct aim_pvs_s* pvs);
     #endif
 #endif
 
+
+/**
+ * AIM_CONFIG_INCLUDE_DAEMONIZE requires AIM_CONFIG_INCLUDE_MAIN
+ * in order to access the cached program arguments in the hidden
+ * __aim_argv__ variable. If you specify AIM_CONFIG_INCLUDE_DAEMONIZE without
+ * AIM_CONFIG_INCLUDE_MAIN your build might be broken.
+ *
+ * The fix for this issue is to add the program argument vector to the
+ * aim_daemon_restart_config_t structure and require the client to pass
+ * it explicitly at initialization time and remove the __aim_argv__ hidden
+ * variable completely.
+ *
+ * Until this API change is made the following consistency check needs
+ * to happen.
+ */
+#if AIM_CONFIG_INCLUDE_DAEMONIZE == 1 && AIM_CONFIG_INCLUDE_MAIN == 0
+#error AIM_CONFIG_INCLUDE_DAEMONIZE requires AIM_CONFIG_INCLUDE_MAIN. Disable AIM_CONFIG_INCLUDE_DAEMONIZE or enable AIM_CONFIG_INCLUDE_MAIN.
+#endif
+
+
 #include <stdint.h>
 
 #include "aim_porting.h"
