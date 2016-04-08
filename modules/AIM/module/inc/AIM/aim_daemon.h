@@ -93,6 +93,11 @@ typedef struct aim_daemon_restart_config_s {
      */
     aim_pvs_t* pvs;
 
+    /**
+     * Program argument vector.
+     */
+    char** argv;
+
 } aim_daemon_restart_config_t;
 
 
@@ -126,7 +131,8 @@ typedef struct aim_daemon_config_s {
  * to aim_daemonize()
  */
 void aim_daemon_restart_config_init(aim_daemon_restart_config_t* config,
-                                    int signalbits, int exitbits);
+                                    int signalbits, int exitbits,
+                                    char** argv);
 
 
 /**

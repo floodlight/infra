@@ -32,15 +32,15 @@
 #if AIM_CONFIG_INCLUDE_MODULES_INIT == 1
 
 /*
- * These must be static. 
+ * These must be static.
  *
  * When AIM is linked into multiple binaries that may be loaded together at runtime
  * (such as multiple shared libraries) the aim_modules_init() global symbol will
- * only be available from one of them. This static version makes sure we get 
+ * only be available from one of them. This static version makes sure we get
  * access to the modulelist specific to this library's build, rather than
- * someone else's that has already been loaded. 
+ * someone else's that has already been loaded.
  *
- * The shared-library constructors must call the static versions. 
+ * The shared-library constructors must call the static versions.
  */
 static int
 aim_modules_init__(void)
@@ -193,9 +193,6 @@ env_args_free__(char** argv)
 
 #endif /* AIM_CONFIG_INCLUDE_ENV_ARGV */
 
-/* fixme */
-char** __aim_argv__ = NULL;
-
 int
 main(int argc, char* argv[])
 {
@@ -218,7 +215,6 @@ main(int argc, char* argv[])
     }
 #endif
 
-    __aim_argv__ = argv;
 
 #if AIM_CONFIG_INCLUDE_MODULES_INIT == 1
     aim_modules_init();

@@ -49,7 +49,8 @@
  */
 void
 aim_daemon_restart_config_init(aim_daemon_restart_config_t* config,
-                               int signalbits, int exitbits)
+                               int signalbits, int exitbits,
+                               char** argv)
 {
     AIM_MEMSET(config, 0, sizeof(*config));
 
@@ -64,6 +65,12 @@ aim_daemon_restart_config_init(aim_daemon_restart_config_t* config,
     }
 
     AIM_BITMAP_CLR(&config->exit_restarts, AIM_DAEMON_EXIT_CODE_ABORT_RESTART);
+
+    if(argv == NULL || *argv == NULL) {
+        AIM_DIE("aim_daemon_restart_config_init: program arguments must be set.");
+    }
+
+    config->argv = argv;
 }
 
 
@@ -394,9 +401,8 @@ aim_daemonize(aim_daemon_config_t* config,
                 pid = fork();
                 if(pid == 0) {
                     /* New child -- exec with original arguments. (Fixme) */
-                    extern char** __aim_argv__;
-                    daemon_msg__("execvp %s ...", __aim_argv__[0]);
-                    if(execvp(__aim_argv__[0], __aim_argv__) < 0) {
+                    daemon_msg__("execvp %s ...", restart_config->argv[0]);
+                    if(execvp(restart_config->argv[0], restart_config->argv) < 0) {
                         daemon_msg__("execvp failed: %d (%s)\n",
                                      errno, strerror(errno));
 
