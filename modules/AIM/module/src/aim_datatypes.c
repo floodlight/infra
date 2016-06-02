@@ -35,6 +35,8 @@
 #include <string.h>
 #endif
 
+#include <arpa/inet.h>
+
 /* FIXME */
 #define AIM_STATUS_E_ARG -1
 #define AIM_STATUS_OK 0
@@ -585,6 +587,43 @@ aim_datatype_ts__ipv4a__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
 }
 
 static int
+aim_datatype_fs__ipv6a__(aim_datatype_context_t* dtc, const char* arg,
+                         aim_va_list_t* vargs)
+{
+    uint8_t* rv = va_arg(vargs->val, uint8_t*);
+    struct in6_addr addr;
+
+    AIM_REFERENCE(dtc);
+
+    if (inet_pton(AF_INET6, arg, &addr) == 1) {
+        AIM_MEMCPY(rv, addr.s6_addr, 16);
+        return AIM_STATUS_OK;
+    } else {
+        return AIM_STATUS_E_ARG;
+    }
+}
+
+static int
+aim_datatype_ts__ipv6a__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
+                         const char** rv)
+{
+    char b[64];
+    uint8_t *v = va_arg(vargs->val, uint8_t *);
+    struct in6_addr addr;
+
+    AIM_REFERENCE(dtc);
+
+    AIM_MEMCPY(addr.s6_addr, v, 16);
+    if (inet_ntop(AF_INET6, &addr, b, sizeof(b))) {
+        *rv = aim_strdup(b);
+        return AIM_STATUS_OK;
+    } else {
+        /* FIXME better return code? */
+        return AIM_STATUS_E_ARG;
+    }
+}
+
+static int
 aim_datatype_fs__ip4conn__(aim_datatype_context_t* dtc, const char* arg,
                             aim_va_list_t* vargs)
 {
@@ -809,6 +848,9 @@ aim_datatypes_init()
                           NULL);
     aim_datatype_register(0, "ipv4a", "IPv4 Address",
                            aim_datatype_fs__ipv4a__, aim_datatype_ts__ipv4a__,
+                           NULL);
+    aim_datatype_register(0, "ipv6a", "IPv6 Address",
+                           aim_datatype_fs__ipv6a__, aim_datatype_ts__ipv6a__,
                            NULL);
     aim_datatype_register(0, "data", "data string",
                            aim_datatype_fs__data__, aim_datatype_ts__data__,
