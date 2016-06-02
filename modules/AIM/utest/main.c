@@ -333,5 +333,22 @@ int aim_main(int argc, char* argv[])
         aim_os_test();
     }
 
-    return 0;
+    {
+        char *sdata = "fe80::a:b:c:d";
+        uint8_t edata[] = {
+            0xfe, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x0a, 0x00, 0x0b, 0x00, 0x0c, 0x00, 0x0d,
+        };
+        uint8_t data[16];
+        aim_sparse(&sdata, &aim_pvs_stdout, "{ipv6a}", data);
+        assert(memcmp(data, edata, sizeof(edata)) == 0);
+
+        aim_pvs_t *pvs = aim_pvs_buffer_create();
+        aim_printf(pvs, "%{ipv6a}", data);
+        char* s = aim_pvs_buffer_get(pvs);
+        assert(strcmp(sdata, s) == 0);
+        aim_pvs_destroy(pvs);
     }
+
+    return 0;
+}
