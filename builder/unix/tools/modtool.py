@@ -72,7 +72,7 @@ class ModuleTool(object):
                 dp += self.dependmodules(self.modules[module]['depends'])
             else:
                 dp.append(module)
-        return sorted(list(set(dp)))
+        return list(set(dp))
 
     def show_dependencies(self):
         for (nname, module) in sorted(self.modules.iteritems()):
