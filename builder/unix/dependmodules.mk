@@ -35,7 +35,6 @@ ifdef BUILDER_MODULE_DATABASE
 # Use the module database to find inter-module dependencies automatically.
 
 DEPENDMODULES := $(shell $(BUILDER)/tools/modtool.py --db $(BUILDER_MODULE_DATABASE) --dependmodules $(DEPENDMODULES))
-$(info New DEPENDMODULES is: $(DEPENDMODULES))
 
 endif
 
