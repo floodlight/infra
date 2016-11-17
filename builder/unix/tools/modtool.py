@@ -63,16 +63,27 @@ class ModuleTool(object):
                 self.write_make_manifest(f)
 
     def dependmodules(self, modules):
+        #
+        # Dependent modules can only be added to the end of the list.
+        # The original order of the explicit modules must remain unchanged.
+        #
+        # dp contains all of the dependent modules
         dp = []
         for module in modules:
             if module not in self.modules:
                 raise AttributeError("module %s does not exist." % module)
             elif 'depends' in self.modules[module]:
-                dp.append(module)
                 dp += self.dependmodules(self.modules[module]['depends'])
-            else:
-                dp.append(module)
-        return list(set(dp))
+
+        # The input list and all resulting dependencies in original order
+        allmodules = modules + list(set(dp))
+
+        # This makes sure there are no duplicates between the original list
+        # the dependency list that was just added (while keeping the original order)
+        rv = sorted(set(allmodules),key=lambda x: allmodules.index(x))
+
+        return rv
+
 
     def show_dependencies(self):
         for (nname, module) in sorted(self.modules.iteritems()):
