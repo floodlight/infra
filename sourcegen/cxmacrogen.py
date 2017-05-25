@@ -46,7 +46,14 @@ class CXMacroGenerator(CObjectGenerator):
     def XMacroEntries(self):
         s = ""
         for args in self.members:
-            s += util.fcall(self.name, args) + "\n"
+            arglist = []
+            # hack for enumerations with custom description fields
+            for a in args:
+                if type(a) is dict:
+                    arglist.extend(a.values())
+                else:
+                    arglist.append(a)
+            s += util.fcall(self.name, arglist) + "\n"
         return s
 
 
