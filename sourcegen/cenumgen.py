@@ -343,6 +343,10 @@ class CEnumGenerator(CObjectGenerator):
                 # Member has a specific value
                 return False
 
+        # If the flags attribute is present then the mappingis nonlinear.
+        if hasattr(self, 'flags'):
+            return False
+
         return True
 
 
@@ -438,6 +442,11 @@ class CEnumGenerator(CObjectGenerator):
                     s += " = 0x%x" % int(member.value)
                 else:
                     s += " = %s" % member.value
+            if hasattr(self, 'flags'):
+                if self.flags is True:
+                    s += " = (1 << %d)" % (self.members.index(member))
+                else:
+                    s += " = (1 << %s%s)" % (self.flags, member.name)
 
             s += ",\n"
 
@@ -598,7 +607,3 @@ if __name__ == "__main__":
                                                   ['member3']])
 
     print e.Define()
-
-
-
-
