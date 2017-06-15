@@ -53,6 +53,9 @@ class CXMacroGenerator(CObjectGenerator):
                     arglist.extend(a.values())
                 else:
                     arglist.append(a)
+                if hasattr(self, 'noargs') and self.noargs is True:
+                    # No additional arguments to the macro
+                    break
             s += util.fcall(self.name, arglist) + "\n"
         return s
 
