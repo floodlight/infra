@@ -140,13 +140,42 @@ aim_datatype_map_t*
 aim_datatype_map_find_value(aim_datatype_map_t* map, const char* name)
 {
     aim_datatype_map_t* p;
+
+    /** Exact match */
     for(p = map; p->s; p++) {
         if(!AIM_STRCMP(p->s, name)) {
             return p;
         }
     }
-    return NULL;
+
+    /** Case-insensitive match */
+    for(p = map; p->s; p++) {
+        if(!strcasecmp(p->s, name)) {
+            return p;
+        }
+    }
+
+    /** Check for unique substring match */
+
+    /** hack - under _GNU_SOURCE */
+    extern char *strcasestr(const char *haystack, const char *needle);
+
+    aim_datatype_map_t* rv = NULL;
+    for(p = map; p->s; p++) {
+        if(strcasestr(p->s, name)) {
+            if(rv) {
+                /** Multiple matches. */
+                rv = NULL;
+                break;
+            }
+            else {
+                rv = p;
+            }
+        }
+    }
+    return rv;
 }
+
 aim_datatype_map_t*
 aim_datatype_map_find_name(aim_datatype_map_t* map, int value)
 {
@@ -907,4 +936,3 @@ aim_datatypes_denit()
         aim_datatype_unregister(dt->c, dt->type);
     }
 }
-
