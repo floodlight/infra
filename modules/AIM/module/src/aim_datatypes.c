@@ -33,6 +33,7 @@
 
 #if AIM_CONFIG_INCLUDE_POSIX == 1
 #include <string.h>
+#include <strings.h>
 #endif
 
 #include <arpa/inet.h>
