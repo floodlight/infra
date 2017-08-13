@@ -56,6 +56,10 @@ class CXMacroGenerator(CObjectGenerator):
                 if hasattr(self, 'noargs') and self.noargs is True:
                     # No additional arguments to the macro
                     break
+            if hasattr(self, 'allcases') and self.allcases is True:
+                arglist.append(args[0].upper())
+                arglist.append(args[0].lower())
+
             s += util.fcall(self.name, arglist) + "\n"
         return s
 
