@@ -26,7 +26,7 @@ class ModuleTool(object):
             raise AttributeError("invalid module file")
 
         if d['name'] in self.modules:
-            raise RuntimeError("duplicate module %s" % d['name'])
+            self.logger.warn("duplicate module %s" % d['name'])
 
         if 'depends' in d and type(d['depends']) is str:
             d['depends'] = [ d['depends'] ]
