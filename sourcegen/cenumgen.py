@@ -448,17 +448,17 @@ class CEnumGenerator(CObjectGenerator):
         s += "enum %s {\n" % self.f.EnumName(self.name)
         for member in self.members:
             s += "    %s" % self.f.EnumEntry(member.name, self.name)
-            if member.value and (self.novalue == False):
-                # Value specified
-                if hasattr(self, 'hex'):
-                    s += " = 0x%x" % int(member.value)
-                else:
-                    s += " = %s" % member.value
             if hasattr(self, 'flags'):
                 if self.flags is True:
                     s += " = (1 << %d)" % (self.members.index(member))
                 else:
                     s += " = (1 << %s%s)" % (self.flags, member.name)
+            elif member.value and (self.novalue == False) :
+                # Value specified
+                if hasattr(self, 'hex'):
+                    s += " = 0x%x" % int(member.value)
+                else:
+                    s += " = %s" % member.value
 
             s += ",\n"
 
