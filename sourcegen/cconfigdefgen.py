@@ -79,7 +79,7 @@ class CConfigDefLookupFunction(CFunctionGenerator):
         self.args = [ ["const char*", 'setting'] ]
         self.body = """    int i;
     for(i = 0; %s[i].name; i++) {
-        if(%s(%s[i].name, setting)) {
+        if(!%s(%s[i].name, setting)) {
             return %s[i].value;
         }
     }
