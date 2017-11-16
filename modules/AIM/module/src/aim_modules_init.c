@@ -242,7 +242,6 @@ main(int argc, char* argv[])
 #endif /* AIM_CONFIG_INCLUDE_MAIN */
 
 
-#if AIM_CONFIG_INCLUDE_CTOR_DTOR == 1
 static __attribute__((constructor)) void
 __aim_ctor__(void)
 {
@@ -265,5 +264,3 @@ __aim_dtor__(void)
 
     __aim_module_denit__();
 }
-
-#endif /* AIM_CONFIG_INCLUDE_CTOR_DTOR */
