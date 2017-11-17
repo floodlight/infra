@@ -27,6 +27,10 @@
 #################################################################
 from cenumgen import *
 
+import re
+
+IDENT_RE = re.compile("^[a-zA-Z_][a-zA-Z0-9_]*$")
+
 class PyEnumGenerator(CEnumGenerator):
     """ Python Enum Generator Subclass """
 
@@ -57,7 +61,10 @@ class PyEnumGenerator(CEnumGenerator):
         v = 0
         s = "class %s(Enumeration):\n" % (self.name.upper())
         for member in self.members:
-            s += "    %s" % self.f.EnumEntry(member.name, "")[1:]; #self.name)
+            name = self.f.EnumEntry(member.name, "")[1:]
+            if not IDENT_RE.match(name):
+                name = '_' + name
+            s += "    %s" % name
             if member.value and (self.novalue == False):
                 # Value specified
                 if hasattr(self, 'hex'):

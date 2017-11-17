@@ -163,16 +163,6 @@ struct aim_pvs_s;
 #endif
 
 /**
- * AIM_CONFIG_INCLUDE_CTOR_DTOR
- *
- * Define the AIM shared library constructors and destructors. These functions will call modules_init() and modules_denit() at load and unload time. */
-
-
-#ifndef AIM_CONFIG_INCLUDE_CTOR_DTOR
-#define AIM_CONFIG_INCLUDE_CTOR_DTOR 0
-#endif
-
-/**
  * AIM_CONFIG_INCLUDE_ENV_ARGV
  *
  * Support retrieval of program arguments from the environment. Requires AIM_CONFIG_INCLUDE_MAIN. */

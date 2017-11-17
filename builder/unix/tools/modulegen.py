@@ -602,6 +602,10 @@ class GModuleDoxyFile(ModuleFile):
 
 ###############################################################################
 
+class GModuleManifest(ModuleFile):
+    def finit(self):
+        self.fname = "%(MODULE_BASE_DIR)s/.module" % self.__dict__
+        self.body = "name: %(MODULE_NAME)s\n"
 
 ###############################################################################
 #
@@ -702,7 +706,3 @@ class ModuleGenerator(object):
 
 if __name__ == "__main__":
     ModuleGenerator.main()
-
-
-
-

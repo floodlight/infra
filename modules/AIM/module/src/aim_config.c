@@ -97,11 +97,6 @@ aim_config_settings_t aim_config_settings[] =
 #else
 { AIM_CONFIG_AIM_MAIN_FUNCTION(__aim_config_STRINGIFY_NAME), "__undefined__" },
 #endif
-#ifdef AIM_CONFIG_INCLUDE_CTOR_DTOR
-    { __aim_config_STRINGIFY_NAME(AIM_CONFIG_INCLUDE_CTOR_DTOR), __aim_config_STRINGIFY_VALUE(AIM_CONFIG_INCLUDE_CTOR_DTOR) },
-#else
-{ AIM_CONFIG_INCLUDE_CTOR_DTOR(__aim_config_STRINGIFY_NAME), "__undefined__" },
-#endif
 #ifdef AIM_CONFIG_INCLUDE_ENV_ARGV
     { __aim_config_STRINGIFY_NAME(AIM_CONFIG_INCLUDE_ENV_ARGV), __aim_config_STRINGIFY_VALUE(AIM_CONFIG_INCLUDE_ENV_ARGV) },
 #else
@@ -157,7 +152,7 @@ aim_config_lookup(const char* setting)
 {
     int i;
     for(i = 0; aim_config_settings[i].name; i++) {
-        if(strcmp(aim_config_settings[i].name, setting)) {
+        if(!strcmp(aim_config_settings[i].name, setting)) {
             return aim_config_settings[i].value;
         }
     }
