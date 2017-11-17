@@ -450,7 +450,8 @@ class CEnumGenerator(CObjectGenerator):
             s += "    %s" % self.f.EnumEntry(member.name, self.name)
             if hasattr(self, 'flags'):
                 if self.flags is True:
-                    s += " = (1 << %d)" % (self.members.index(member))
+                    offset = getattr(self, "flag_offset", 0)
+                    s += " = (1 << %d)" % (offset + self.members.index(member))
                 else:
                     s += " = (1 << %s%s)" % (self.flags, member.name)
             elif member.value and (self.novalue == False) :
