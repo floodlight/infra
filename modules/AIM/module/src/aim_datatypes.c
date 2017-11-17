@@ -228,6 +228,26 @@ aim_datatype_ts__rmap__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
 }
 
 static int
+aim_datatype_fs__rfmap__(aim_datatype_context_t* dtc, const char* arg,
+                         aim_va_list_t* vargs)
+{
+    uint32_t* flags = va_arg(vargs->val, uint32_t*);
+    aim_datatype_map_t* map = (aim_datatype_map_t*)dtc->dt->cookie;
+
+    aim_tokens_t* tokens = aim_strsplit(arg, ",");
+    int i;
+    *flags = 0;
+    for(i = 0; i < tokens->count; i++) {
+        int v = 0;
+        if(aim_map_si_s(&v, tokens->tokens[i], map, 0) < 0) {
+            return AIM_DATATYPE_ERROR;
+        }
+        *flags |= v;
+    }
+    return AIM_DATATYPE_OK;
+}
+
+static int
 aim_datatype_ts__rfmap__(aim_datatype_context_t* dtc, aim_va_list_t* vargs,
                         const char** rv)
 {
@@ -291,7 +311,7 @@ aim_datatype_register_fmap(char c, const char* type, const char* desc,
                            aim_datatype_map_t* map)
 {
     return aim_datatype_register(c, type, desc,
-                                 NULL,
+                                 aim_datatype_fs__rfmap__,
                                  aim_datatype_ts__rfmap__,
                                  map);
 }
