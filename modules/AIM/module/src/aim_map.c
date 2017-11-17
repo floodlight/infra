@@ -45,7 +45,7 @@ aim_map_si_s(int* rv, const char* s, aim_map_si_t* maps, unsigned int count)
         }
     }
 
-    return 0;
+    return -1;
 }
 
 int
@@ -61,7 +61,5 @@ aim_map_si_i(const char** rv, int i, aim_map_si_t* maps, unsigned int count)
             return 1;
         }
     }
-    return 0;
+    return -1;
 }
-
-
