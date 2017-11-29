@@ -239,7 +239,7 @@ aim_datatype_fs__rfmap__(aim_datatype_context_t* dtc, const char* arg,
     *flags = 0;
     for(i = 0; i < tokens->count; i++) {
         int v = 0;
-        if(aim_map_si_s(&v, tokens->tokens[i], map, 0) < 0) {
+        if(!aim_map_si_s(&v, tokens->tokens[i], map, 0)) {
             return AIM_DATATYPE_ERROR;
         }
         *flags |= v;
