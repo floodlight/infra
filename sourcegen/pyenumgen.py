@@ -52,7 +52,6 @@ class PyEnumGenerator(CEnumGenerator):
     ############################################################
     def Define(self):
         """ Generate an Enum Definition """
-
         #
         # The default behavior is to typedef all enums.
         # If you don't want a typedef, specify 'typedef:False'
@@ -70,7 +69,10 @@ class PyEnumGenerator(CEnumGenerator):
                 if hasattr(self, 'hex'):
                     s += " = EnumerationItem(0x%x)" % int(member.value)
                 else:
-                    s += " = %s" % member.value
+                    if hasattr(self, 'flags') and self.flags is True:
+                        s += " = (1 << %d)" % int(member.value)
+                    else:
+                        s += " = %s" % member.value
             elif hasattr(self, 'flags'):
                 if self.flags is True:
                     s += " = (1 << %d)" % (self.members.index(member))
