@@ -16,7 +16,6 @@
  * License.
  *
  ***************************************************************/
-#define _BSD_SOURCE
 
 #include <AIM/aim.h>
 #include <AIM/aim_sem.h>
@@ -103,7 +102,7 @@ sem_test_multiple(uint32_t flags, int giving_threads, int taking_threads)
         t->take = take;
         t->give = give;
         sprintf(t->name, "(1:%.4d)", i);
-        t->timeout = ( (random() % 10) + 1 ) * 100000;
+        t->timeout = ( (rand() % 10) + 1 ) * 100000;
         t->timeout_required = 1;
         t->acquired = &acquired;
         pthread_create(&t->thread, NULL, sem_test_thread__, t);
@@ -121,7 +120,7 @@ sem_test_multiple(uint32_t flags, int giving_threads, int taking_threads)
         t->take = give;
         t->give = NULL;
         sprintf(t->name, "(2:%.4d)", i);
-        t->timeout = 2000000 + (( (random() % 10) + 1 ) * 100000);
+        t->timeout = 2000000 + (( (rand() % 10) + 1 ) * 100000);
         t->give = 0;
         t->timeout_required = 0;
         t->acquired = &acquired;
