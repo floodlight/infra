@@ -280,16 +280,17 @@ class CEnumGenerator(CObjectGenerator):
             raise Exception("Enumeration members must be lists.")
 
         # Lists of lists should be collapsed
-        extended = []
-        for m in members:
-            if type(m) is list:
-                extended.extend(m)
-            else:
-                extended = None
-                break
+        if 'memberfilter' not in data:
+            extended = []
+            for m in members:
+                if type(m) is list:
+                    extended.extend(m)
+                else:
+                    extended = None
+                    break
 
-        if extended is not None:
-            members = extended
+            if extended is not None:
+                members = extended
 
         for m in members:
             if type(m) == util.DotDict:
