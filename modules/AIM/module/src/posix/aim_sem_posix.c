@@ -67,7 +67,7 @@ aim_sem_create(int count)
 }
 
 
-#define VALIDATE(_sem) AIM_TRUE_OR_DIE(_sem != NULL, "null semaphore passed to  %s", __FUNCTION__)
+#define VALIDATE(_sem) AIM_TRUE_OR_DIE(_sem != NULL, "null semaphore passed to  %s", __func__)
 
 void
 aim_sem_destroy(aim_sem_t sem)

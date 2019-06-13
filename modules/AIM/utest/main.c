@@ -45,7 +45,7 @@ static void
 test_logf(void* cookie, aim_log_flag_t flag, const char* str)
 {
     printf("%s: cookie 0x%p, flag %s, msg %s",
-           __FUNCTION__, cookie, aim_log_flag_name(flag), str);
+           __func__, cookie, aim_log_flag_name(flag), str);
 }
 
 #define LOG_MACROS                               \
