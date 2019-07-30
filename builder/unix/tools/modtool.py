@@ -90,6 +90,10 @@ class ModuleTool(object):
             print "%s : %s" % (module['name'], module.get('depends', None))
 
 
+    def foreach_module(self, cmd):
+        for (nname, module) in self.modules.iteritems():
+            import subprocess
+            subprocess.check_call(cmd % module, shell=True)
 
 if __name__ == '__main__':
     import argparse
@@ -105,6 +109,7 @@ if __name__ == '__main__':
     ap.add_argument("--dependmodules", help="Generate all required modules based on inter-module dependencies", nargs='+')
     ap.add_argument("--show-dependencies", help="Show module dependencies.", action='store_true')
     ap.add_argument("--force", help="Force regeneration of existing files.", action='store_true')
+    ap.add_argument("--foreach-module", help="Run a script over each module.")
 
     ops = ap.parse_args()
 
@@ -135,3 +140,6 @@ if __name__ == '__main__':
         if not os.path.exists(ops.make_manifest) or ops.force:
             mm.make_manifest(ops.make_manifest)
         print ops.make_manifest
+
+    if ops.foreach_module:
+        mm.foreach_module(ops.foreach_module)
