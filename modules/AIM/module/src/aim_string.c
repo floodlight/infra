@@ -28,6 +28,7 @@
 #include <AIM/aim.h>
 #include "aim_int.h"
 #include "aim_util.h"
+#include <ctype.h>
 
 char*
 aim_strdup(const char* src)
@@ -343,4 +344,24 @@ aim_tokens_free(aim_tokens_t* tokens)
     aim_free(tokens->tokens);
 
     aim_free(tokens);
+}
+
+char*
+aim_pstrdup(const char* src, char replacement)
+{
+    char* rv;
+    char* p;
+
+    if(src == NULL) {
+        return NULL;
+    }
+
+    rv = aim_strdup(src);
+    for(p = rv; *p; p++) {
+        if(!isprint(*p)) {
+            *p = replacement;
+        }
+    }
+
+    return rv;
 }

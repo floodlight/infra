@@ -350,5 +350,16 @@ int aim_main(int argc, char* argv[])
         aim_pvs_destroy(pvs);
     }
 
+    {
+        char* sdata = "A\001B\002C\003D";
+        char* rv = aim_pstrdup(sdata, '?');
+        assert(!strcmp(rv, "A?B?C?D"));
+        aim_free(rv);
+
+        rv = aim_dfstrdup("%{pstr}", sdata, '.');
+        assert(!strcmp(rv, "A.B.C.D"));
+        aim_free(rv);
+    }
+
     return 0;
 }

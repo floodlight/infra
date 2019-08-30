@@ -163,5 +163,14 @@ aim_tokens_t* aim_strsplit(const char* string, const char* delim);
  */
 void aim_tokens_free(aim_tokens_t* tokens);
 
+/**
+ * @brief Convert the source string to printable characters only.
+ * @param src The source string.
+ * @param replacement The replacement character for unprintable characters.
+ * @returns A copy of the source string with printable characters replaced by the given character.
+ * @note You must free the returned buffer.
+ */
+char* aim_pstrdup(const char* src, char replacement);
+
 #endif /* __AIM_STRING_H__ */
 /*@}*/
