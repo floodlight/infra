@@ -1,13 +1,13 @@
 ################################################################
 #
-#        Copyright 2013, Big Switch Networks, Inc. 
-# 
+#        Copyright 2013, Big Switch Networks, Inc.
+#
 # Licensed under the Eclipse Public License, Version 1.0 (the
 # "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
-# 
+#
 #        http://www.eclipse.org/legal/epl-v10.html
-# 
+#
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
 # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
@@ -107,7 +107,12 @@ endif
 # Note that we also generate dependencies automatically with -MD
 $(OBJECT_DIR)$($(TARGET)_SUBDIR)%.o: $($(TARGET)_SUBDIR)%.c
 	@echo "    Compiling$(CINFO): $(TARGET)::$(notdir $<)"
-	$(VERBOSE) $(CCACHE) $(GCC) $(DEBUG_FLAGS) $(COVERAGE_FLAGS) $(ANALYZE_FLAGS) -I. $($(TARGET)_INCLUDES) $($(TARGET)_CFLAGS) $(GLOBAL_INCLUDES) $(GLOBAL_CFLAGS) $(GCC_PEDANTIC_FLAGS) $(GCC_FLAGS) $(GCC_WARNING_FLAGS) -MD -c $< -o $@
+ifdef $(TARGET)_BROKEN_CFLAGS
+	@echo "***"
+	@echo "$(TARGET) has the following broken flags: $($(TARGET)_BROKEN_CFLAGS)"
+	@echo "***"
+endif
+	$(VERBOSE) $(CCACHE) $(GCC) $(DEBUG_FLAGS) $(COVERAGE_FLAGS) $(ANALYZE_FLAGS) -I. $($(TARGET)_INCLUDES) $($(TARGET)_CFLAGS) $($(TARGET)_BROKEN_CFLAGS) $(GLOBAL_INCLUDES) $(GLOBAL_CFLAGS) $(GCC_PEDANTIC_FLAGS) $(GCC_FLAGS) $(GCC_WARNING_FLAGS) -MD -c $< -o $@
 
 # Dependecies Files for these targets
 $(TARGET)_DEPS := $($(TARGET)_OBJS:%.o=%.d)
@@ -115,4 +120,3 @@ $(TARGET)_DEPS := $($(TARGET)_OBJS:%.o=%.d)
 $(OBJECT_DIR)$($(TARGET)_SUBDIR)%.o: TARGET:=$(TARGET)
 
 endif
-
