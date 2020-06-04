@@ -274,3 +274,23 @@ aim_log_handler_basic_denit_all(void)
     aim_log_handler_destroy(basic_handler__);
     basic_handler__ = NULL;
 }
+
+void
+aim_log_handler_basic_config_get(uint32_t *debug_logs,
+                                 uint32_t *debug_log_size) {
+    if (basic_handler__) {
+        *debug_logs     = basic_handler__->config.max_debug_logs;
+        *debug_log_size = basic_handler__->config.max_debug_log_size;
+    }
+}
+
+void
+aim_log_handler_basic_config_set(uint32_t debug_logs,
+                                 uint32_t debug_log_size) {
+    if (basic_handler__) {
+        aim_sem_take(basic_handler__->debug_lock);
+        basic_handler__->config.max_debug_logs     = debug_logs;
+        basic_handler__->config.max_debug_log_size = debug_log_size;
+        aim_sem_give(basic_handler__->debug_lock);
+    }
+}
