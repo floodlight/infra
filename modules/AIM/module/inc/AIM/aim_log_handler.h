@@ -78,6 +78,12 @@ void aim_log_handler_init(void);
  */
 void aim_log_handler_denit(void);
 
+void
+aim_log_handler_basic_config_get(uint32_t *debug_logs,
+                                 uint32_t *debug_file_size);
+void
+aim_log_handler_basic_config_set(uint32_t debug_logs,
+                                 uint32_t debug_file_size);
 
 /**
  * Create an AIM log handler instance.
