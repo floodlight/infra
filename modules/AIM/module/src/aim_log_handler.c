@@ -104,23 +104,26 @@ rotate_debug_log__(aim_log_handler_t handler)
     if (stat(handler->config.debug_log_name, &fp_log_stat) != -1) {
         if (fp_log_stat.st_size >= handler->config.max_debug_log_size) {
 
-            int debug_log_name_len = strlen(handler->config.debug_log_name);
-            char* src = aim_malloc(debug_log_name_len + 16);
-            char* dst = aim_malloc(debug_log_name_len + 16);
+            int rotate_log_name_len = strlen(handler->config.rotate_log_name);
+            char* src = aim_malloc(rotate_log_name_len + 16);
+            char* dst = aim_malloc(rotate_log_name_len + 16);
 
             int i;
 
             /* move older logs first */
             for (i = handler->config.max_debug_logs-1; i >= 1; i--) {
-                sprintf(src, "%s.%d", handler->config.debug_log_name, i);
-                sprintf(dst, "%s.%d", handler->config.debug_log_name, i+1);
+                sprintf(src, "%s.%d", handler->config.rotate_log_name, i);
+                sprintf(dst, "%s.%d", handler->config.rotate_log_name, i+1);
                 rename(src, dst);
             }
 
             /* close log, move it to .1, and open a new file */
-            sprintf(dst, "%s.1", handler->config.debug_log_name);
+            sprintf(dst, "%s.1", handler->config.rotate_log_name);
             fclose(handler->debug_fp);
-            rename(handler->config.debug_log_name, dst);
+
+            char move_files[255];
+            sprintf(move_files, "mv -f %s %s", handler->config.debug_log_name, dst);
+            system(move_files);
             handler->debug_fp = fopen(handler->config.debug_log_name, "a");
 
             aim_free(src);
@@ -234,9 +237,10 @@ static aim_log_handler_t basic_handler__ = NULL;
 
 int
 aim_log_handler_basic_init_all(const char* ident,
-                           const char* debug_log,
-                           int max_debug_log_size,
-                           int max_debug_logs)
+                               const char* debug_log,
+                               const char* rotate_log,
+                               int max_debug_log_size,
+                               int max_debug_logs)
 {
     aim_log_handler_config_t config;
     AIM_MEMSET(&config, 0, sizeof(config));
@@ -256,8 +260,15 @@ aim_log_handler_basic_init_all(const char* ident,
         /** Log to debug log file */
         config.flags |= AIM_LOG_HANDLER_FLAG_TO_DBGLOG;
         config.debug_log_name = aim_strdup(debug_log);
+        /* Initialize rotate_log_name as debug_log */
+        config.rotate_log_name = aim_strdup(debug_log);
         config.max_debug_log_size = max_debug_log_size;
         config.max_debug_logs = max_debug_logs;
+    }
+
+    /* If rotate_log is given then update it */
+    if(rotate_log) {
+        config.rotate_log_name = aim_strdup(rotate_log);
     }
 
     basic_handler__ = aim_log_handler_create(&config);
