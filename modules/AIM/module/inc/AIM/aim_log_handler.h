@@ -65,6 +65,9 @@ typedef struct aim_log_handler_config_s {
     /** Syslog facility to use (if applicable) */
     uint32_t syslog_facility;
 
+    /** Metadata appeneded to debug_log before rotation */
+    char* debug_log_metadata;
+
 } aim_log_handler_config_t;
 
 
@@ -125,6 +128,7 @@ void aim_log_handler_logf(void* cookie, aim_log_flag_t flag, const char* str);
  */
 int aim_log_handler_basic_init_all(const char* ident,
                                    const char* debug_log_file,
+                                   const char* debug_log_metadata,
                                    const char* rotate_log_file,
                                    int max_debug_log_size,
                                    int max_debug_logs);

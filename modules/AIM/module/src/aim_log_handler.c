@@ -33,8 +33,7 @@
 #include <syslog.h>
 #include <errno.h>
 
-
-/**
+/*
  * This lock is used to syncronized output to stdout/stderr.
  */
 static aim_sem_t stdio_lock__ = NULL;
@@ -104,24 +103,33 @@ rotate_debug_log__(aim_log_handler_t handler)
     if (stat(handler->config.debug_log_name, &fp_log_stat) != -1) {
         if (fp_log_stat.st_size >= handler->config.max_debug_log_size) {
 
+            /* Append the debug_log_metadata into debug file*/
+            if (handler->config.debug_log_metadata) {
+                fputs(handler->config.debug_log_metadata, handler->debug_fp);
+            }
+
             int rotate_log_name_len = strlen(handler->config.rotate_log_name);
             char* src = aim_malloc(rotate_log_name_len + 16);
             char* dst = aim_malloc(rotate_log_name_len + 16);
 
             int i;
+            char move_files[255]="";
 
             /* move older logs first */
             for (i = handler->config.max_debug_logs-1; i >= 1; i--) {
                 sprintf(src, "%s.%d", handler->config.rotate_log_name, i);
                 sprintf(dst, "%s.%d", handler->config.rotate_log_name, i+1);
-                rename(src, dst);
+                /* rename() is not working when path has any special charecter
+                 * hence using mv */
+                sprintf(move_files, "mv -f %s %s", src, dst);
+                system(move_files);
+                sprintf(move_files, "%s", "");
             }
 
             /* close log, move it to .1, and open a new file */
             sprintf(dst, "%s.1", handler->config.rotate_log_name);
             fclose(handler->debug_fp);
 
-            char move_files[255];
             sprintf(move_files, "mv -f %s %s", handler->config.debug_log_name, dst);
             system(move_files);
             handler->debug_fp = fopen(handler->config.debug_log_name, "a");
@@ -238,6 +246,7 @@ static aim_log_handler_t basic_handler__ = NULL;
 int
 aim_log_handler_basic_init_all(const char* ident,
                                const char* debug_log,
+                               const char* debug_log_metadata,
                                const char* rotate_log,
                                int max_debug_log_size,
                                int max_debug_logs)
@@ -269,6 +278,13 @@ aim_log_handler_basic_init_all(const char* ident,
     /* If rotate_log is given then update it */
     if(rotate_log) {
         config.rotate_log_name = aim_strdup(rotate_log);
+    }
+
+    /* If debug_log_metadata is given then update it */
+    if(debug_log_metadata) {
+        config.debug_log_metadata = aim_strdup(debug_log_metadata);
+    } else {
+        config.debug_log_metadata = NULL;
     }
 
     basic_handler__ = aim_log_handler_create(&config);
